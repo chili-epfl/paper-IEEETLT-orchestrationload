@@ -18,6 +18,10 @@ output: html_document
 
 
 # Study 2: Exploring Teacher Expertise in an University Course
+```{r child='Study2.Rmd'}
+```
+
+
 
 # Study 3: Exploring Technology Novelty in a Primary School Classroom
 
