@@ -10,7 +10,12 @@ output: html_document
 # Methodology
 
 
+
 # Study 1: Feasibility Pilot in an Open Doors Day
+```{r child='Study1.Rmd'}
+```
+
+
 
 # Study 2: Exploring Teacher Expertise in an University Course
 
