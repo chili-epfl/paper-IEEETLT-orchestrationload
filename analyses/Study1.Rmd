@@ -83,7 +83,7 @@ loaddata$PCALoad = res.pca.norm$ind$coord[,1]
 # We plot the loads for each session, along with some smoothing
 for(session in sessions){
     sessiondata <- loaddata[loaddata$session==session,]
-    p1 <- ggplot(sessiondata, aes(x=time, y=PCALoad, col=PCALoad)) + 
+    p1 <- ggplot(sessiondata, aes(x=time/60000, y=PCALoad, col=PCALoad)) + 
             ggtitle(paste("PCA Load Index ",session,sep="")) + 
             geom_line(size=1) + stat_smooth(method="loess",span=0.1,se=F) +
             #theme(axis.text.x = element_text(size=18),plot.title=element_text(size=20, face="bold"),axis.title=element_text(size=18),panel.background = element_rect(fill = 'white')) +
@@ -123,3 +123,9 @@ anova(lm1, test="Chisq")
 ```
 
 We observe that, for these episodes coded, a simple linear model of the three orchestration dimensions explains 36% of the variance in PCA Load Index. In this case we see that the focus of the gaze is a significant contributor to the predictor model, most notably through the TABletop episodes, which are in general less load. The intercept (EXPlanations, looking at students BAKs, in a CLSroom social level) represent a good predictor for higher loads.
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
+
+# We go back to the root directory for the next study's scripts
+setwd(rootdir)
+```
