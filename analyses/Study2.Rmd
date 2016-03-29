@@ -154,9 +154,9 @@ anova(mod_fit_base, mod_fit, test ="Chisq")
 # McFadden's pseudo-Rsquared, to get an idea of the proportion of variance explained
 library(pscl)
 print("McFadden's pseudo Rsquared, base model WITHOUT PCA Load")
-pR2(mod_fit_base)["McFadden"]  # look for 'McFadden', 0.34
+pR2(mod_fit_base)["McFadden"]  # look for 'McFadden', 0.38
 print("McFadden's pseudo Rsquared, model WITH PCA Load")
-pR2(mod_fit)["McFadden"]  # look for 'McFadden', 0.43
+pR2(mod_fit)["McFadden"]  # look for 'McFadden', 0.48
 
 # Wald test for individual predictors
 library(survey)
@@ -253,6 +253,129 @@ anova(lmnov, test="Chisq")
 
 We observe that, for these episodes coded, a simple linear model of the three orchestration dimensions explains 6% of the variance in PCA Load Index. In this case we see that predictor linear model is not a good predictor (e.g., not even its p-value is significantly better than a constant predictor). The most probable explanation for this is that there is not enough data for this teacher to see clear trends (only one session recorded, vs. two for the expert teacher, or three in study 1).
 
+
+
+
+## Appendix: Using Factor analysis instead of PCA load index
+
+... results are largely the same, even if some of the coefficient estimations are different
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
+
+library(psych)
+
+#Expert
+Xe <- dataexpert[, c(14,17,20,23)]
+Ne <- nrow(dataexpert[, c(14,17,20,23)])
+corMate <- cor(Xe)
+faPCe  <- fa(r=corMate, nfactors=1, n.obs=Ne, rotate="varimax")
+bartlette <- factor.scores(x=Xe, f=faPCe, method="Bartlett")
+dataexpert$FALoad <- bartlette$scores[,1]
+# factor.plot(faPCe, cut=0.3)
+# fa.diagram(faPCe)
+# fa.parallel(Xe)
+# vss(Xe, n.obs=Ne, rotate="varimax")
+
+#Novice
+Xn <- datanovice[, c(14,17,20,23)]
+Nn <- nrow(datanovice[, c(14,17,20,23)])
+corMatn <- cor(Xn)
+faPCn  <- fa(r=corMatn, nfactors=1, n.obs=Nn, rotate="varimax")
+bartlettn <- factor.scores(x=Xn, f=faPCn, method="Bartlett")
+datanovice$FALoad <- bartlettn$scores[,1]
+# factor.plot(faPCn, cut=0.3)
+# fa.diagram(faPCn)
+# fa.parallel(Xn)
+# vss(Xn, n.obs=Nn, rotate="varimax")
+
+loaddata <- rbind(dataexpert,datanovice)
+
+behdata <- loaddata[!is.na(loaddata$Activity) & !is.na(loaddata$Social) & !is.na(loaddata$Focus),]
+
+# We remove the levels for which we do not have enough data
+behdata <- behdata[behdata$Social!="GRP",]
+behdata$Social <- factor(behdata$Social)
+behdata <- behdata[behdata$Focus!="BAK",]
+behdata <- behdata[behdata$Focus!="TAB",]
+behdata <- behdata[behdata$Focus!="TEA",]
+behdata$Focus <- factor(behdata$Focus)
+
+library(caret)
+set.seed(1)
+Train <- createDataPartition(behdata$TeacherLoad, p=0.7, list=FALSE)
+training <- behdata[ Train, ]
+testing <- behdata[ -Train, ]
+#mod_fit <- train(TeacherLoad ~ Activity + Social + Focus + FALoad,  
+#                 data=training, method="glm", family="binomial")
+mod_fit <- glm(TeacherLoad ~ Activity + Social + Focus + FALoad, 
+                   data=training, family="binomial")
+mod_fit_base <- glm(TeacherLoad ~ Activity + Social + Focus, 
+                   data=training, family="binomial")
+# Compare the model with FA load with the model without it
+print("ANOVA of logistic regression models with and without the FA Load as a variable")
+anova(mod_fit_base, mod_fit, test ="Chisq")
+# McFadden's pseudo-Rsquared, to get an idea of the proportion of variance explained
+library(pscl)
+print("McFadden's pseudo Rsquared, base model WITHOUT FA Load")
+pR2(mod_fit_base)["McFadden"]  # look for 'McFadden'
+print("McFadden's pseudo Rsquared, model WITH FA Load")
+pR2(mod_fit)["McFadden"]  # look for 'McFadden'
+# Wald test for individual predictors
+library(survey)
+#regTermTest(mod_fit, "Activity")
+#regTermTest(mod_fit, "Social") # 
+#regTermTest(mod_fit, "Focus")
+print("Wald test: would removing the FA Load harm the model fit")
+regTermTest(mod_fit, "FALoad") #
+# Variable importance
+print("Variable importance")
+varImp(mod_fit) # FALoad is the most important variable
+
+
+# What about the orchestration patterns?
+
+# Expert teacher
+behexpert <- dataexpert[!is.na(dataexpert$Activity) & !is.na(dataexpert$Social) & !is.na(dataexpert$Focus),]
+#ggplot(behexpert,aes(x=FALoad))+geom_density()
+# The distribution of coded values goes continuouosly along the dimension, so we do a linear model
+# Optional: delete the factor values with too few occurrences?
+behexpert$Social <- factor(behexpert$Social)
+behexpert <- behexpert[behexpert$Focus!="BAK",]
+behexpert <- behexpert[behexpert$Focus!="SCOMP",]
+behexpert <- behexpert[behexpert$Focus!="TAB",]
+behexpert <- behexpert[behexpert$Focus!="TEA",]
+behexpert$Focus <- factor(behexpert$Focus)
+lmexp <- lm(FALoad ~ Activity + Social + Focus, data = behexpert)
+summary(lmexp)
+anova(lmexp, test="Chisq")
+
+# Novice teacher
+behnovice <- datanovice[!is.na(datanovice$Activity) & !is.na(datanovice$Social) & !is.na(datanovice$Focus),]
+#ggplot(behnovice,aes(x=FALoad))+geom_density()
+# The distribution of coded values goes continuouosly along the dimension, so we do a linear model
+# Optional: delete the factor values with too few occurrences?
+behnovice <- behnovice[behnovice$Activity!="QUEST",]
+behnovice <- behnovice[behnovice$Activity!="TDT",]
+behnovice$Activity <- factor(behnovice$Activity)
+behnovice <- behnovice[behnovice$Social!="GRP",]
+behnovice$Social <- factor(behnovice$Social)
+behnovice <- behnovice[behnovice$Focus!="BAK",]
+behnovice <- behnovice[behnovice$Focus!="PROJ",]
+behnovice <- behnovice[behnovice$Focus!="TAB",]
+behnovice <- behnovice[behnovice$Focus!="TEA",]
+behnovice <- behnovice[behnovice$Focus!="WHIT",]
+behnovice$Focus <- factor(behnovice$Focus)
+lmnov <- lm(FALoad ~ Activity + Social + Focus, data = behnovice)
+summary(lmnov)
+anova(lmnov, test="Chisq")
+
+```
+
+
+
+
+
+***
 
 
 

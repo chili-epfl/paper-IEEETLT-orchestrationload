@@ -124,6 +124,72 @@ anova(lm1, test="Chisq")
 
 We observe that, for these episodes coded, a simple linear model of the three orchestration dimensions explains 36% of the variance in PCA Load Index. In this case we see that the focus of the gaze is a significant contributor to the predictor model, most notably through the TABletop episodes, which are in general less load. The intercept (EXPlanations, looking at students BAKs, in a CLSroom social level) represent a good predictor for higher loads.
 
+
+## Appendix: Using Factor analysis instead of PCA load index
+
+... results are largely the same, even if some of the coefficient estimations are different
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
+
+library(psych)
+X <- loaddata[, c(13,16,19,22)]
+N <- nrow(loaddata[, c(13,16,19,22)])
+corMat <- cor(X)
+faPC  <- fa(r=corMat, nfactors=1, n.obs=N, rotate="varimax")
+bartlett <- factor.scores(x=X, f=faPC, method="Bartlett")
+loaddata$FALoad <- bartlett$scores[,1]
+# factor.plot(faPC, cut=0.3)
+# fa.diagram(faPC)
+# fa.parallel(loaddata[, c(13,16,19,22)])
+# vss(loaddata[, c(13,16,19,22)], n.obs=nrow(loaddata[, c(13,16,19,22)]), rotate="varimax")
+
+# We plot the loads for each session, along with some smoothing -- values are different, but smoothing is pretty similar between PCA and FA
+# for(session in sessions){
+#     sessiondata <- loaddata[loaddata$session==session,]
+# 
+#     p1 <- ggplot(sessiondata, aes(x=time/60000, y=PCALoad, col=PCALoad)) + 
+#             ggtitle(paste("PCA Load Index ",session,sep="")) + 
+#             geom_line(size=1) + stat_smooth(method="loess",span=0.1,se=F) +
+#             #theme(axis.text.x = element_text(size=18),plot.title=element_text(size=20, face="bold"),axis.title=element_text(size=18),panel.background = element_rect(fill = 'white')) +
+#             theme(panel.background = element_rect(fill = 'white')) +
+#             scale_color_gradient(low="green",high="red")
+#     print(p1)
+# 
+#     
+#     p1b <- ggplot(sessiondata, aes(x=time/60000, y=FALoad, col=FALoad)) + 
+#             ggtitle(paste("FA Load Index ",session,sep="")) + 
+#             geom_line(size=1) + stat_smooth(method="loess",span=0.1,se=F) +
+#             #theme(axis.text.x = element_text(size=18),plot.title=element_text(size=20, face="bold"),axis.title=element_text(size=18),panel.background = element_rect(fill = 'white')) +
+#             theme(panel.background = element_rect(fill = 'white')) +
+#             scale_color_gradient(low="green",high="red")
+#     print(p1b)
+# 
+# }
+
+behdata <- loaddata[!is.na(loaddata$Activity) & !is.na(loaddata$Social) & !is.na(loaddata$Focus),]
+
+#ggplot(behdata,aes(x=PCALoad))+geom_density()
+# The distribution of coded values goes continuouosly along the dimension, so we do a linear model
+
+# Optional: delete the factor values with too few occurrences?
+behdata <- behdata[behdata$Focus!="TEA",]
+behdata <- behdata[behdata$Focus!="W",]
+behdata <- behdata[behdata$Focus!="M",]
+behdata <- behdata[behdata$Focus!="RES",]
+behdata$Focus <- factor(behdata$Focus)
+
+lm2 <- lm(FALoad ~ Activity + Social + Focus, data = behdata)
+summary(lm2)
+anova(lm2, test="Chisq")
+```
+
+
+
+
+
+***
+
+
 ```{r, cache=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
 
 # We go back to the root directory for the next study's scripts
