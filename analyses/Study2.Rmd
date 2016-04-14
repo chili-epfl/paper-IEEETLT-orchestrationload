@@ -131,9 +131,9 @@ behdata$Focus <- factor(behdata$Focus)
 
 
 # We train the logistic regression model
-# lr1 <- glm(TeacherLoad ~ Activity + Social + Focus + PCALoad, family=binomial(link='logit'), data=behdata)
-# summary(lr1)
-# anova(lr1, test="Chisq")
+lr1 <- glm(TeacherLoad ~ Activity + Social + Focus + PCALoad, family=binomial(link='logit'), data=behdata)
+summary(lr1)
+anova(lr1, test="Chisq")
 library(caret)
 set.seed(1)
 Train <- createDataPartition(behdata$TeacherLoad, p=0.7, list=FALSE)
@@ -191,6 +191,7 @@ varImp(mod_fit) # PCALoad is the most important variable
 
 ```
 
+We observe that not only the PCALoad is a significant predictor of the assumed ground truth variable, it is actually the most important variable in the model, even more so than the other process variables (activity, social & focus).
 
 
 ## Orchestration load patterns (linear model)
@@ -221,7 +222,7 @@ summary(lmexp)
 anova(lmexp, test="Chisq")
 ```
 
-We observe that, for these episodes coded, a simple linear model of the three orchestration dimensions explains 13% of the variance in PCA Load Index. In this case we see that the social level and the focus of the gaze are significant contributors to the predictor model, most notably through the TeacherCOMPuter focus (which is on average much lower PCA load than the intercept -- the student faces).
+We observe that, for these episodes coded, a simple linear model of the three orchestration dimensions explains only 3% of the variance in PCA Load Index, and the predictor is not significantly better than a constant/random one. In this case we see that the social level is the only variable that hints at a significant contribution to the predictor model (load of INDividual interaction episodes tend to be lower than the intercept CLSs-wide ones).
 
 **Novice teacher**
 
@@ -251,7 +252,7 @@ summary(lmnov)
 anova(lmnov, test="Chisq")
 ```
 
-We observe that, for these episodes coded, a simple linear model of the three orchestration dimensions explains 6% of the variance in PCA Load Index. In this case we see that predictor linear model is not a good predictor (e.g., not even its p-value is significantly better than a constant predictor). The most probable explanation for this is that there is not enough data for this teacher to see clear trends (only one session recorded, vs. two for the expert teacher, or three in study 1).
+We observe that, for these episodes coded, a simple linear model of the three orchestration dimensions explains 11% of the variance in PCA Load Index, and the model is not significantly better than a trivial one. Only the teaching activity seems to be predicting significantly (EXPlanations seem to be higher load in general).
 
 
 

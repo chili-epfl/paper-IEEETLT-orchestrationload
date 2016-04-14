@@ -9,7 +9,7 @@ output: html_document
 
 # Methodology
 
-
+(brief table/description of the study cases and methods)
 
 # Study 1: Feasibility Pilot in an Open Doors Day
 ```{r child='Study1.Rmd'}
@@ -21,10 +21,16 @@ output: html_document
 ```{r child='Study2.Rmd'}
 ```
 
-
-
 # Study 3: Exploring Technology Novelty in a Primary School Classroom
+```{r child='Study3.Rmd'}
+```
+
 
 # Study 4: Exploring Additional Support in an Open Doors Day
+```{r child='Study4.Rmd'}
+```
+
 
 # Summary and Conclusion
+
+TODO: Make a linear model with all the data, to see the orchestration patterns of all teachers?

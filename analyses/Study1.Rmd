@@ -124,7 +124,7 @@ anova(lm1, test="Chisq")
 
 We observe that, for these episodes coded, a simple linear model of the three orchestration dimensions explains 36% of the variance in PCA Load Index. In this case we see that the focus of the gaze is a significant contributor to the predictor model, most notably through the TABletop episodes, which are in general less load. The intercept (EXPlanations, looking at students BAKs, in a CLSroom social level) represent a good predictor for higher loads.
 
-
+<!--TODO: Remove the appendix?-->
 ## Appendix: Using Factor analysis instead of PCA load index
 
 ... results are largely the same, even if some of the coefficient estimations are different

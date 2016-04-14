@@ -27,7 +27,7 @@ replaceOutliers <- function(data, valueNA=T, coef=3, method="sd"){
         if(valueNA) newdata[newdata < ind$stats[1] | newdata > ind$stats[5]] <- NA
         else{
             newdata[newdata < ind$stats[1]] <- ind$stats[1]
-            newdata[newdata > ind$stats[5]] <- ind$stats[1]
+            newdata[newdata > ind$stats[5]] <- ind$stats[5]
         }
     }else if(method=="sd"){
         # Alternative method: coef is the number of SDs around the mean for defining an outlier

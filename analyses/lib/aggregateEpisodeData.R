@@ -176,7 +176,7 @@ aggregateVideoCodingData <- function(sessions, datadir=".", initendtimes=NULL, w
         inittime <- ifelse(is.null(initendtimes), 0, initendtimes[initendtimes$session == session,"start"])
         endtime <- ifelse(is.null(initendtimes), max(sessiondata$end), initendtimes[initendtimes$session == session,"end"])
         
-        tiers <- c("Experimental","Social","Activity")
+        tiers <- c("Experimental","Social","Activity","Focus")
         
         sessionvideocodes <- data.frame()
         
