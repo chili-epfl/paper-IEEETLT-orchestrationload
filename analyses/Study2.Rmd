@@ -18,6 +18,7 @@ source("./lib/extremeLoadExtraction.R")
 source("./lib/aggregateEpisodeData.R")
 source("./lib/multiplot.R")
 source("./lib/outliers.R")
+source("./lib/predictor.R")
 
 # Create the directory structure onto which download the data
 rootdir <- getwd()
@@ -56,7 +57,7 @@ if(!file.exists(cleandatafile)){
 #countOutliers(totaldata$value.Sac,coef = 5, method="iqr") # 5xinter-quartile range
 totaldata$value.Sac <- replaceOutliers(totaldata$value.Sac,valueNA = F,coef = 5, method="iqr")
 
-loaddata <- calculateCoarseFineLoadIndex(totaldata,3:6,normalize=T) # We ensure that the values are normalized for those of the first window in which little load is assumed (just putting the eyetracker on)
+loaddata <- calculateCoarseFineLoadIndex(totaldata,3:6,normalize=T,stablenorm = 3) # We ensure that the values are normalized for those of the first window in which little load is assumed (just putting the eyetracker on)
 #str(loaddata)
 #names(loaddata)
 
@@ -113,9 +114,6 @@ for(session in sessions){
 
 That is: Can this PCA Load index help us distinguish between expert teacher sessions and novice teacher sessions? Or, put another way, is the PCA Load index different, once we remove the effect of the other process variables (teacher activity, social plane of interaction, main focus of the gaze)
 
-
-To do so, we train a logistic regression model that tries to predict the "teacher expertise condition" on the basis of the PCA Load index and the orchestration process variables coded by a human:
-
 ```{r, cache=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
 
 behdata <- loaddata[!is.na(loaddata$Activity) & !is.na(loaddata$Social) & !is.na(loaddata$Focus),]
@@ -127,7 +125,27 @@ behdata <- behdata[behdata$Focus!="BAK",]
 behdata <- behdata[behdata$Focus!="TAB",]
 behdata <- behdata[behdata$Focus!="TEA",]
 behdata$Focus <- factor(behdata$Focus)
+```
 
+### Error in a linear model
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
+lmbase <- lm(PCALoad ~ Activity + Social + Focus, data = behdata)
+summary(lmbase)
+anova(lmbase)
+
+behdata$errorlm <- getModelError(behdata,c("Activity","Social","Focus"), lmbase, "PCALoad")
+t.test(behdata[behdata$TeacherLoad==0,"errorlm"],behdata[behdata$TeacherLoad==1,"errorlm"])
+ggplot(behdata, aes(x=errorlm, col=factor(TeacherLoad)))+geom_density()
+
+```
+
+
+### Logistic regression model
+
+To do so, we train a logistic regression model that tries to predict the "teacher expertise condition" on the basis of the PCA Load index and the orchestration process variables coded by a human:
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
 
 
 # We train the logistic regression model
@@ -301,6 +319,10 @@ behdata <- behdata[behdata$Focus!="TAB",]
 behdata <- behdata[behdata$Focus!="TEA",]
 behdata$Focus <- factor(behdata$Focus)
 
+# Validation of FALoad using logistic regression model
+lr1 <- glm(TeacherLoad ~ Activity + Social + Focus + FALoad, family=binomial(link='logit'), data=behdata)
+summary(lr1)
+anova(lr1, test="Chisq")
 library(caret)
 set.seed(1)
 Train <- createDataPartition(behdata$TeacherLoad, p=0.7, list=FALSE)
@@ -381,7 +403,6 @@ anova(lmnov, test="Chisq")
 
 
 ```{r, cache=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
-
 # We go back to the root directory for the next study's scripts
 setwd(rootdir)
 ```

@@ -69,7 +69,7 @@ if(!file.exists(cleandatafile)){
 #countOutliers(totaldata$value.Sac,coef = 5, method="iqr") # 5xinter-quartile range
 totaldata$value.Sac <- replaceOutliers(totaldata$value.Sac,valueNA = F,coef = 5, method="iqr")
 
-loaddata <- calculateCoarseFineLoadIndex(totaldata,3:6,normalize=T) # We ensure that the values are normalized for those of the first windows in which little load is assumed (just putting the eyetracker on)
+loaddata <- calculateCoarseFineLoadIndex(totaldata,3:6,normalize=T,stablenorm = 3) # We ensure that the values are normalized for those of the first windows in which little load is assumed (just putting the eyetracker on)
 #names(loaddata)
 
 library(FactoMineR)
@@ -191,7 +191,6 @@ anova(lm2, test="Chisq")
 
 
 ```{r, cache=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
-
 # We go back to the root directory for the next study's scripts
 setwd(rootdir)
 ```

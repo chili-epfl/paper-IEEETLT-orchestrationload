@@ -24,9 +24,7 @@ source("./lib/aggregateEpisodeData.R")
 source("./lib/multiplot.R")
 source("./lib/outliers.R")
 source("./lib/preprocessVideoCoding.R")
-#source('./lib/codeAnalyses.R')
-#source('./lib/generateVideoSnippetScript.R')
-
+source("./lib/predictor.R")
 
 # Create the directory structure onto which download the data
 rootdir <- getwd()
@@ -76,7 +74,7 @@ totaldata <- totaldata[!is.na(totaldata$value.Sac),]
 #countOutliers(totaldata$value.Sac,coef = 5, method="iqr") # 5xinter-quartile range
 totaldata$value.Sac <- replaceOutliers(totaldata$value.Sac,valueNA = F,coef = 5, method="iqr")
 
-loaddata <- calculateCoarseFineLoadIndex(totaldata,3:6,normalize=T) # We ensure that the values are normalized for those of the first window in which little load is assumed (just putting the eyetracker on)
+loaddata <- calculateCoarseFineLoadIndex(totaldata,3:6,normalize=T,stablenorm = 3) # We ensure that the values are normalized for those of the first window in which little load is assumed (just putting the eyetracker on)
 #str(loaddata)
 #names(loaddata)
 
@@ -130,8 +128,6 @@ for(session in sessions){
 That is: Can this PCA Load index help us distinguish between episodes where the teacher had help and those were teacher did not have help? Or, put another way, is the PCA Load index different, once we remove the effect of the other process variables (teacher activity, social plane of interaction, main focus of the gaze)
 
 
-To do so, we train a logistic regression model that tries to predict the "had helper condition" on the basis of the PCA Load index and the orchestration process variables coded by a human:
-
 ```{r, cache=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
 
 behdata <- loaddata[!is.na(loaddata$value.Activity) & !is.na(loaddata$value.Social) & !is.na(loaddata$value.Focus),]
@@ -152,6 +148,30 @@ behdata <- behdata[behdata$value.Focus!="TPAP",]
 behdata$value.Focus <- factor(behdata$value.Focus)
 
 beh <- behdata[!is.na(behdata$TeacherLoad),]
+```
+
+### Error in a linear model
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
+lmbase <- lm(PCALoad ~ value.Activity + value.Social + value.Focus, data = beh)
+summary(lmbase)
+anova(lmbase)
+
+beh$errorlm <- getModelError(beh,c("value.Activity","value.Social","value.Focus"), lmbase, "PCALoad")
+t.test(beh[beh$TeacherLoad==0,"errorlm"],beh[beh$TeacherLoad==1,"errorlm"])
+ggplot(beh, aes(x=errorlm, col=factor(TeacherLoad)))+geom_density()
+
+```
+
+
+### Logistic regression model
+
+To do so, we train a logistic regression model that tries to predict the "had helper condition" on the basis of the PCA Load index and the orchestration process variables coded by a human:
+
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
+
+
 # We train the logistic regression model
 lr1 <- glm(TeacherLoad ~ value.Activity + value.Social + value.Focus + PCALoad, family=binomial(link='logit'), data=beh) # The PCA load goes in the wrong direction!!!!??? recheck the data...
 summary(lr1)
@@ -216,3 +236,60 @@ varImp(mod_fit) # PCALoad is the most important variable
 We observe that not only the PCALoad is a significant predictor of the assumed ground truth variable, it is actually the most important variable in the model, even more so than the other process variables (activity, social & focus).
 
 TODO: Check whether the sign of the influence of PCA Load is correct in all studies!
+
+
+TODO: complete the rest of sections!
+
+
+
+## Appendix: Using Factor analysis instead of PCA load index
+
+... results are ...
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
+
+library(psych)
+
+#All data
+X <- loaddata[, c(11,14,17,20)]
+N <- nrow(loaddata[, c(11,14,17,20)])
+corMat <- cor(X)
+faPC  <- fa(r=corMat, nfactors=1, n.obs=N, rotate="varimax")
+bartlett <- factor.scores(x=X, f=faPC, method="Bartlett")
+loaddata$FALoad <- bartlett$scores[,1]
+# factor.plot(faPC, cut=0.3)
+# fa.diagram(faPC)
+# fa.parallel(X)
+# vss(X, n.obs=N, rotate="varimax")
+
+behdata <- loaddata[!is.na(loaddata$value.Activity) & !is.na(loaddata$value.Social) & !is.na(loaddata$value.Focus),]
+# table(behdata$TeacherLoad,behdata$value.Activity)
+# table(behdata$TeacherLoad,behdata$value.Social)
+# table(behdata$TeacherLoad,behdata$value.Focus)
+
+# We remove the levels for which we do not have enough data
+behdata <- behdata[behdata$value.Activity!="EXP",]
+behdata <- behdata[behdata$value.Activity!="OFF",]
+behdata <- behdata[behdata$value.Activity!="TEC",]
+behdata$value.Activity <- factor(behdata$value.Activity)
+behdata <- behdata[behdata$value.Focus!="WHI",]
+behdata <- behdata[behdata$value.Focus!="TCOMP",]
+behdata <- behdata[behdata$value.Focus!="TD",]
+behdata <- behdata[behdata$value.Focus!="TEA",]
+behdata <- behdata[behdata$value.Focus!="TPAP",]
+behdata$value.Focus <- factor(behdata$value.Focus)
+
+beh <- behdata[!is.na(behdata$TeacherLoad),]
+
+# Validation of FALoad using logistic regression model
+lr1 <- glm(TeacherLoad ~ value.Activity + value.Social + value.Focus + FALoad, family=binomial(link='logit'), data=beh)
+summary(lr1)
+anova(lr1, test="Chisq")
+
+
+```
+
+
+
+
+

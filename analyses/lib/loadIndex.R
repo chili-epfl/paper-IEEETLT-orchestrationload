@@ -61,10 +61,12 @@ calculateCoarseFineLoadIndex <- function(data, loadcolumns, normalize=F, inverse
                 colname <- names(sessiondata)[[col]]
                 
                 #If normalization is needed, we normalize by the first window value
+                #Alternative: Use the average of the first X episodes instead (i.e., =1 for the old method), to make it more stable?
                 colnamenorm <- ""
                 if(normalize){
                     colnamenorm <- paste(colname,".norm",sep="")
-                    if(sessiondata[1,col]!=0) sessiondata[,colnamenorm] <- sessiondata[,col]/sessiondata[1,col]
+                    normal <- mean(sessiondata[1:stablenorm,col], na.rm = T)
+                    if(normal!=0) sessiondata[,colnamenorm] <- sessiondata[,col]/normal
                     else sessiondata[,colnamenorm] <- sessiondata[,col] # If it is the rare case of the median being a zero count
                 }
                 
