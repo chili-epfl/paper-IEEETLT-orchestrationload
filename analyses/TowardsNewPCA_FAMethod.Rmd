@@ -1,0 +1,146 @@
+---
+title: "Towards a New PCA/FA Method"
+output: html_document
+---
+
+# Load clean/preprocessed data
+
+The script assumes that you will put the clean datafiles (sold separately) in ```./data/study1```, ```./data/study2```, etc
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+# Data for study 1
+data1 <- get(load("./data/study1/study1ProcessedData.Rda"))
+
+# Data for study 2
+data2 <- get(load("./data/study2/study2ProcessedData.Rda"))
+
+# Data for study 3
+data3 <- get(load("./data/study3/study3ProcessedData.Rda"))
+
+# Data for study 4
+data4 <- get(load("./data/study4/study4ProcessedData.Rda"))
+
+```
+
+
+# Example current analysis: for Study 4
+
+This is what I was doing so far, using PCA or FA. Do check the code in case you see anything odd or plain wrong...
+
+```{r, message=FALSE, warning=FALSE}
+# from the preprocessing, the categorical values have too many levels, we fix it
+data4$value.Experimental <- factor(data4$value.Experimental)
+data4$value.Social <- factor(data4$value.Social)
+data4$value.Activity <- factor(data4$value.Activity)
+data4$value.Focus <- factor(data4$value.Focus)
+# The value.Sac metric is prone to measurement errors (NAs or huge outlier values)
+totaldata <- data4[!is.na(data4$value.Sac),] # remove samples where it was NA
+source("./lib/outliers.R")
+#countOutliers(totaldata$value.Sac,coef = 5, method="iqr") # 5xinter-quartile range seems like a reasonable boundary for outliers
+totaldata$value.Sac <- replaceOutliers(totaldata$value.Sac,valueNA = F,coef = 5, method="iqr") # We crop outliers beyond 5xinter-quartile range, giving them the value 5xIQR
+
+
+# In order to enable comparison across different sessions (even for the same subject, things like tiredness can vary the eye gaze patterns of a subject), we normalize the metrics by the average of the first three 10-second windows of the session (in which we assume similar, small load)
+source("./lib/loadIndex.R")
+loaddata <- calculateCoarseFineLoadIndex(totaldata,3:6,normalize=T,stablenorm = 3)
+
+# We select only the interesting columns
+d4 <- loaddata[,c(1,2,7:10,11,14,17,20)]
+
+# To make the target variable (value.Experimental) clearer (we want our measure to distinguish C1 from C2, ignoring COM samples), we put our "ground truth" in a new variable (1 if high load, 0 if low load, NA otherwise)
+d4$TeacherLoad <- ifelse(d4$value.Experimental=="C2",1,ifelse(d4$value.Experimental=="C1",0,NA))
+d4 <- d4[,-3]
+
+# The clean dataset: session, timestamp within session, the 3 videocoded confounding/process variables, and the 4 metrics (for each 10s window, normalized agaoinst the session start), and the target/ground truth variable
+str(d4)
+
+
+```
+
+
+## Using 1st PCA component
+
+We see the different measures projected onto the 1st-2nd PCA dimensions. Our PCA load index is the X axis (three of the measures are positively correlated with it, the other is negatively correlated)
+
+```{r, message=FALSE, warning=FALSE}
+# We calculate the PCA load index (score in the 1st PCA component)
+library(FactoMineR)
+pca.study4 = PCA(d4[, 6:9], scale.unit=TRUE, ncp=2, graph=F)
+plot.PCA(pca.study4, axes=c(1, 2), choix="var", title="PCA All sessions, Study 4")
+# We add the PCA load index to our dataset
+d4$PCALoad = pca.study4$ind$coord[,1]
+```
+
+We now validate whether this PCA Load index helps us distinguish between episodes where the teacher had help (TeacherLoad=0) and those were teacher did not have help (TeacherLoad=1)? Or, put another way, is the PCA Load index different, once we remove the effect of the other process variables (teacher activity, social plane of interaction, main focus of the gaze)
+
+```{r, message=FALSE, warning=FALSE}
+# clean up further the dataset, to keep only those samples for which we have process variables
+behdata <- d4[!is.na(d4$value.Activity) & !is.na(d4$value.Social) & !is.na(d4$value.Focus),]
+# We take only the samples for which we have a meaningful ground truth
+behdata <- behdata[!is.na(behdata$TeacherLoad),]
+# ... and we remove the samples with categorical variables that appear only very seldom
+behdata <- behdata[behdata$value.Activity!="EXP",]
+behdata <- behdata[behdata$value.Activity!="OFF",]
+behdata <- behdata[behdata$value.Activity!="TEC",]
+behdata$value.Activity <- factor(behdata$value.Activity)
+behdata <- behdata[behdata$value.Social!="IND",]
+behdata$value.Social <- factor(behdata$value.Social)
+behdata <- behdata[behdata$value.Focus!="WHI",]
+behdata <- behdata[behdata$value.Focus!="TCOMP",]
+behdata <- behdata[behdata$value.Focus!="TD",]
+behdata <- behdata[behdata$value.Focus!="TEA",]
+behdata <- behdata[behdata$value.Focus!="TPAP",]
+behdata$value.Focus <- factor(behdata$value.Focus)
+
+# We train the logistic regression model
+lr1 <- glm(TeacherLoad ~ value.Activity + value.Social + value.Focus + PCALoad, family=binomial(link='logit'), data=behdata) # The PCA load coefficient goes in the wrong direction!!!!???
+summary(lr1)
+anova(lr1, test="Chisq") # PCA Load is a very significant predictor
+```
+
+
+## Using 1st FA factor
+
+We do a similar thing to the previous one, this time with factor analysis scores for the 1st factor:
+
+```{r, message=FALSE, warning=FALSE}
+library(psych)
+
+X <- d4[, 6:9]
+N <- nrow(d4[, 6:9])
+corMat <- cor(X)
+faPC  <- fa(r=corMat, nfactors=1, n.obs=N, rotate="varimax") # Factor analysis, varimax rotation
+bartlett <- factor.scores(x=X, f=faPC, method="Bartlett") # Factor scores, using Bartlett method
+d4$FALoad <- bartlett$scores[,1]
+# factor.plot(faPC)
+# fa.diagram(faPC)
+
+# clean up further the dataset, to keep only those samples for which we have process variables
+behdata <- d4[!is.na(d4$value.Activity) & !is.na(d4$value.Social) & !is.na(d4$value.Focus),]
+# We take only the samples for which we have a meaningful ground truth
+behdata <- behdata[!is.na(behdata$TeacherLoad),]
+# ... and we remove the samples with categorical variables that appear only very seldom
+behdata <- behdata[behdata$value.Activity!="EXP",]
+behdata <- behdata[behdata$value.Activity!="OFF",]
+behdata <- behdata[behdata$value.Activity!="TEC",]
+behdata$value.Activity <- factor(behdata$value.Activity)
+behdata <- behdata[behdata$value.Social!="IND",]
+behdata$value.Social <- factor(behdata$value.Social)
+behdata <- behdata[behdata$value.Focus!="WHI",]
+behdata <- behdata[behdata$value.Focus!="TCOMP",]
+behdata <- behdata[behdata$value.Focus!="TD",]
+behdata <- behdata[behdata$value.Focus!="TEA",]
+behdata <- behdata[behdata$value.Focus!="TPAP",]
+behdata$value.Focus <- factor(behdata$value.Focus)
+
+# We train the logistic regression model
+lr2 <- glm(TeacherLoad ~ value.Activity + value.Social + value.Focus + FALoad, family=binomial(link='logit'), data=behdata) # The FA load coefficient goes in the wrong direction!!!!???
+summary(lr2)
+anova(lr2, test="Chisq") # FA Load is a very significant predictor
+
+```
+
+# The new cool method that will change the world X-D
+
+... How can we get a different index that selects the index in the right way, taking into account that all measures are supposed to be positively correlated with high cognitive load?
+
