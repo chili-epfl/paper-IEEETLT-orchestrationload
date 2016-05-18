@@ -140,6 +140,110 @@ anova(lr2, test="Chisq") # FA Load is a very significant predictor
 
 ```
 
+
+# Same thing with the raw (instead of normalized) values
+
+```{r, message=FALSE, warning=FALSE}
+
+# We select only the interesting columns
+d4b <- loaddata[,c(1,2,3:6,7:10)]
+
+# To make the target variable (value.Experimental) clearer (we want our measure to distinguish C1 from C2, ignoring COM samples), we put our "ground truth" in a new variable (1 if high load, 0 if low load, NA otherwise)
+d4b$TeacherLoad <- ifelse(d4b$value.Experimental=="C2",1,ifelse(d4b$value.Experimental=="C1",0,NA))
+d4b <- d4b[,-7]
+
+# The clean dataset: session, timestamp within session, the 3 videocoded confounding/process variables, and the 4 metrics (for each 10s window, normalized agaoinst the session start), and the target/ground truth variable
+str(d4b)
+
+
+```
+
+## Using 1st PCA component
+
+We see the different measures projected onto the 1st-2nd PCA dimensions. Our PCA load index is the X axis (three of the measures are positively correlated with it, the other is negatively correlated)
+
+```{r, message=FALSE, warning=FALSE}
+# We calculate the PCA load index (score in the 1st PCA component)
+library(FactoMineR)
+pca.study4 = PCA(d4b[, 3:6], scale.unit=TRUE, ncp=2, graph=F)
+plot.PCA(pca.study4, axes=c(1, 2), choix="var", title="PCA All sessions, Study 4")
+# We add the PCA load index to our dataset
+d4b$PCALoad = pca.study4$ind$coord[,1]
+```
+
+We now validate whether this PCA Load index helps us distinguish between episodes where the teacher had help (TeacherLoad=0) and those were teacher did not have help (TeacherLoad=1)? Or, put another way, is the PCA Load index different, once we remove the effect of the other process variables (teacher activity, social plane of interaction, main focus of the gaze)
+
+```{r, message=FALSE, warning=FALSE}
+# clean up further the dataset, to keep only those samples for which we have process variables
+behdata <- d4b[!is.na(d4b$value.Activity) & !is.na(d4b$value.Social) & !is.na(d4b$value.Focus),]
+# We take only the samples for which we have a meaningful ground truth
+behdata <- behdata[!is.na(behdata$TeacherLoad),]
+# ... and we remove the samples with categorical variables that appear only very seldom
+behdata <- behdata[behdata$value.Activity!="EXP",]
+behdata <- behdata[behdata$value.Activity!="OFF",]
+behdata <- behdata[behdata$value.Activity!="TEC",]
+behdata$value.Activity <- factor(behdata$value.Activity)
+behdata <- behdata[behdata$value.Social!="IND",]
+behdata$value.Social <- factor(behdata$value.Social)
+behdata <- behdata[behdata$value.Focus!="WHI",]
+behdata <- behdata[behdata$value.Focus!="TCOMP",]
+behdata <- behdata[behdata$value.Focus!="TD",]
+behdata <- behdata[behdata$value.Focus!="TEA",]
+behdata <- behdata[behdata$value.Focus!="TPAP",]
+behdata$value.Focus <- factor(behdata$value.Focus)
+
+# We train the logistic regression model
+lr1 <- glm(TeacherLoad ~ value.Activity + value.Social + value.Focus + PCALoad, family=binomial(link='logit'), data=behdata) # The PCA load coefficient goes in the right direction, but is not significant
+summary(lr1)
+anova(lr1, test="Chisq") # PCA Load is not a significant predictor
+```
+
+
+## Using 1st FA factor
+
+We do a similar thing to the previous one, this time with factor analysis scores for the 1st factor:
+
+```{r, message=FALSE, warning=FALSE}
+library(psych)
+
+X <- d4b[, 3:6]
+N <- nrow(d4b[, 3:6])
+corMat <- cor(X)
+faPC  <- fa(r=corMat, nfactors=1, n.obs=N, rotate="varimax") # Factor analysis, varimax rotation
+bartlett <- factor.scores(x=X, f=faPC, method="Bartlett") # Factor scores, using Bartlett method
+d4b$FALoad <- bartlett$scores[,1]
+# factor.plot(faPC)
+# fa.diagram(faPC)
+
+# clean up further the dataset, to keep only those samples for which we have process variables
+behdata <- d4b[!is.na(d4b$value.Activity) & !is.na(d4b$value.Social) & !is.na(d4b$value.Focus),]
+# We take only the samples for which we have a meaningful ground truth
+behdata <- behdata[!is.na(behdata$TeacherLoad),]
+# ... and we remove the samples with categorical variables that appear only very seldom
+behdata <- behdata[behdata$value.Activity!="EXP",]
+behdata <- behdata[behdata$value.Activity!="OFF",]
+behdata <- behdata[behdata$value.Activity!="TEC",]
+behdata$value.Activity <- factor(behdata$value.Activity)
+behdata <- behdata[behdata$value.Social!="IND",]
+behdata$value.Social <- factor(behdata$value.Social)
+behdata <- behdata[behdata$value.Focus!="WHI",]
+behdata <- behdata[behdata$value.Focus!="TCOMP",]
+behdata <- behdata[behdata$value.Focus!="TD",]
+behdata <- behdata[behdata$value.Focus!="TEA",]
+behdata <- behdata[behdata$value.Focus!="TPAP",]
+behdata$value.Focus <- factor(behdata$value.Focus)
+
+# We train the logistic regression model
+lr2 <- glm(TeacherLoad ~ value.Activity + value.Social + value.Focus + FALoad, family=binomial(link='logit'), data=behdata) # The FA load coefficient goes in the right direction, but is not significant
+summary(lr2)
+anova(lr2, test="Chisq") # FA Load is not a significant predictor
+
+```
+
+
+
+
+
 # The new cool method that will change the world X-D
 
 ... How can we get a different index that selects the index in the right way, taking into account that all measures are supposed to be positively correlated with high cognitive load?
