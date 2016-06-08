@@ -1,0 +1,203 @@
+---
+title: "Towards a New PCA/FA Method"
+output: html_document
+---
+
+# Load clean/preprocessed data
+
+The script assumes that you will put the clean datafiles (sold separately) in ```./data/study1```, ```./data/study2```, etc
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+source("./lib/outliers.R")
+# In order to enable comparison across different sessions (even for the same subject, things like tiredness can vary the eye gaze patterns of a subject), we normalize the metrics by the average of the first three 10-second windows of the session (in which we assume similar, small load). Other possibilities for normalization: median value, scale/norm, coefficient of variance
+source("./lib/loadIndex.R")
+
+# Data for study 1
+data1 <- get(load("./data/study1/study1ProcessedData.Rda"))
+data1$Study <- 1
+
+# Data for study 2
+data2 <- get(load("./data/study2/study2ProcessedData.Rda"))
+data2$Study <- 2
+
+# Data for study 3
+data3 <- get(load("./data/study3/study3ProcessedData.Rda"))
+data3$Study <- 3
+
+# Data for study 4
+data4 <- get(load("./data/study4/study4ProcessedData.Rda"))
+data4$Study <- 4
+
+# Cleanup of study 4 data
+names(data4)[7:10] <- c("Experimental","Social","Activity","Focus")
+# from the preprocessing, the categorical values have too many levels, we fix it
+data4$Experimental <- factor(data4$Experimental)
+data4$Social <- factor(data4$Social)
+data4$Activity <- factor(data4$Activity)
+data4$Focus <- factor(data4$Focus)
+data4$GroundTruth <- ifelse(data4$Experimental=="C2",1,ifelse(data4$Experimental=="C1",0,NA))
+data4 <- data4[,-7] # Remove Experimental, now substituted by GroundTruth
+data4 <- data4[!is.na(data4$value.Sac),] # remove samples where it was NA
+#countOutliers(data4$value.Sac,coef = 5, method="iqr") # 5xinter-quartile range seems like a reasonable boundary for outliers
+data4$value.Sac <- replaceOutliers(data4$value.Sac,valueNA = F,coef = 10, method="iqr") # We crop outliers beyond 10xinter-quartile range, giving them the value 5xIQR
+data4$Social <- as.character(data4$Social)
+data4$Activity <- as.character(data4$Activity)
+data4$Focus <- as.character(data4$Focus)
+data4$Subject <- "L"
+
+# Cleanup of study 3 data
+data3 <- data3[,-c(7:10,14:18)]
+# Reorder the columns as in data4
+data3 <- data3[,c(1:6,9,8,7,10)]
+data3$GroundTruth <- ifelse(data3$session=="ISL2015NOVEL-Session3-eyetracking" | data3$session=="ISL2015NOVEL-Session4-eyetracking",1,ifelse(data3$session=="ISL2014BASELINE-Session1-eyetracking" | data3$session=="ISL2014BASELINE-Session2-eyetracking",0,NA))
+data3 <- data3[!is.na(data3$value.Sac),] # remove samples where it was NA
+#countOutliers(data3$value.Sac,coef = 5, method="iqr") # 5xinter-quartile range seems like a reasonable boundary for outliers
+data3$value.Sac <- replaceOutliers(data3$value.Sac,valueNA = F,coef = 10, method="iqr") # We crop outliers beyond 10xinter-quartile range, giving them the value 5xIQR
+data3$Social <- as.character(data3$Social)
+data3$Activity <- as.character(data3$Activity)
+data3$Focus <- as.character(data3$Focus)
+# Solve inconsistency with other studies labels
+data3[!is.na(data3$Focus) & data3$Focus=="PRJ","Focus"] <- "PROJ"
+data3$Subject <- "W"
+
+
+# Cleanup of study 2 data
+data2 <- data2[,-c(7:10)]
+# Reorder the columns as in data4
+data2 <- data2[,c(1:6,9,8,7,10)]
+data2$GroundTruth <- ifelse(data2$session=="DELANA-Session3-Novice-eyetracking",1,ifelse(data2$session=="DELANA-Session1-Expert-eyetracking" | data2$session=="DELANA-Session2-Expert-eyetracking",0,NA))
+data2 <- data2[!is.na(data2$value.Sac),] # remove samples where it was NA
+#countOutliers(data2$value.Sac,coef = 10, method="iqr") # 5xinter-quartile range seems like a reasonable boundary for outliers
+data2$value.Sac <- replaceOutliers(data2$value.Sac,valueNA = F,coef = 10, method="iqr") # We crop outliers beyond 10xinter-quartile range, giving them the value 5xIQR
+data2$Social <- as.character(data2$Social)
+data2$Activity <- as.character(data2$Activity)
+data2$Focus <- as.character(data2$Focus)
+# Solve inconsistency with other studies labels
+data2[!is.na(data2$Activity) & data2$Activity=="QUEST","Activity"] <- "QUE"
+data2[!is.na(data2$Focus) & data2$Focus=="WHIT","Focus"] <- "WHI"
+data2[data2$GroundTruth==1,"Subject"] <- "K"
+data2[data2$GroundTruth==0,"Subject"] <- "K"
+
+# Cleanup of study 1 data
+data1 <- data1[,-c(7:9)]
+# Reorder the columns as in data4
+data1 <- data1[,c(1:6,8,7,9,10)]
+data1$GroundTruth <- NA
+data1 <- data1[!is.na(data1$value.Sac),] # remove samples where it was NA
+#countOutliers(data1$value.Sac,coef = 10, method="iqr") # 5xinter-quartile range seems like a reasonable boundary for outliers
+data1$value.Sac <- replaceOutliers(data1$value.Sac,valueNA = F,coef = 10, method="iqr") # We crop outliers beyond 10xinter-quartile range, giving them the value 5xIQR
+levels(data1$Social) <- c("CLS","GRP")
+data1$Social <- as.character(data1$Social)
+data1$Activity <- as.character(data1$Activity)
+data1$Focus <- as.character(data1$Focus)
+data1$Subject <- "L"
+
+# Join all studies' data
+totaldata <- rbind(data1,data2,data3,data4)
+
+# Calculate different normalizations of the eyetracking metrics, and the basic load indices
+loaddata <- calculateLoadIndexAndNormalizations(totaldata,3:6,stablenorm = 3)
+
+write.csv(loaddata,file="./data/loaddata-clean.csv")
+
+```
+
+
+## Using 1st PCA component
+
+```{r, message=FALSE, warning=FALSE}
+# We calculate the PCA load index (score in the 1st PCA component)
+library(FactoMineR)
+pca.global = PCA(loaddata[, 3:6], scale.unit=TRUE, ncp=2, graph=F)
+plot.PCA(pca.global, axes=c(1, 2), choix="var", title="PCA All studies")
+# We add the PCA load index to our dataset
+loaddata$PCALoad1 = pca.global$ind$coord[,1]
+loaddata$PCALoad2 = pca.global$ind$coord[,2]
+
+# ADding study as quali variable
+pca.global2 = PCA(loaddata[, c(3:6,10)], scale.unit=TRUE, ncp=2, graph=F, quali.sup = 5)
+plot.PCA(pca.global2, axes=c(1, 2), choix="var", title="PCA All studies+study")
+
+
+
+# clean up further the dataset, to keep only those samples for which we have process variables
+behdata <- loaddata[!is.na(loaddata$Activity) & !is.na(loaddata$Social) & !is.na(loaddata$Focus) & !is.na(loaddata$GroundTruth),]
+
+# We train the logistic regression model
+lr1 <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata)
+summary(lr1)
+anova(lr1, test="Chisq") # PCA Load is a very significant predictor
+1 - (lr1$deviance / lr1$null.deviance) # Pseudo-rsquared
+
+# We train and evaluate for each study separately
+# Study 2
+behdata2 <- behdata[behdata$Study==2,]
+# ... and we remove the samples with categorical variables that appear only very seldom
+#behdata2 <- behdata[behdata$value.Activity!="EXP",]
+# behdata <- behdata[behdata$value.Activity!="OFF",]
+# behdata <- behdata[behdata$value.Activity!="TEC",]
+# behdata2$Activity <- factor(behdata2$Activity)
+# behdata2 <- behdata2[behdata2$Social!="GRP",]
+# behdata2$Social <- factor(behdata2$Social)
+# behdata2 <- behdata2[behdata2$Focus!="TEA",]
+# behdata2 <- behdata2[behdata2$Focus!="BAK",]
+# behdata2$Focus <- factor(behdata2$Focus)
+lr2 <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata2) # The PCA load coefficient goes in the wrong direction!!!!???
+summary(lr2)
+anova(lr2, test="Chisq") # PCA Load is a very significant predictor
+1 - (lr2$deviance / lr2$null.deviance) # Pseudo-rsquared
+
+# Study 3
+behdata3 <- behdata[behdata$Study==3,]
+# ... and we remove the samples with categorical variables that appear only very seldom
+#behdata2 <- behdata[behdata$value.Activity!="EXP",]
+# behdata <- behdata[behdata$value.Activity!="OFF",]
+# behdata <- behdata[behdata$value.Activity!="TEC",]
+# behdata2$Activity <- factor(behdata2$Activity)
+# behdata2 <- behdata2[behdata2$Social!="GRP",]
+# behdata2$Social <- factor(behdata2$Social)
+# behdata2 <- behdata2[behdata2$Focus!="TEA",]
+# behdata2 <- behdata2[behdata2$Focus!="BAK",]
+# behdata2$Focus <- factor(behdata2$Focus)
+lr3 <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata3) # The PCA load coefficient goes in the wrong direction!!!!???
+summary(lr3)
+anova(lr3, test="Chisq") # PCA Load is a very significant predictor
+1 - (lr3$deviance / lr3$null.deviance) # Pseudo-rsquared
+
+# Study 4
+behdata4 <- behdata[behdata$Study==4,]
+# ... and we remove the samples with categorical variables that appear only very seldom
+#behdata2 <- behdata[behdata$value.Activity!="EXP",]
+# behdata <- behdata[behdata$value.Activity!="OFF",]
+# behdata <- behdata[behdata$value.Activity!="TEC",]
+# behdata2$Activity <- factor(behdata2$Activity)
+# behdata2 <- behdata2[behdata2$Social!="GRP",]
+# behdata2$Social <- factor(behdata2$Social)
+# behdata2 <- behdata2[behdata2$Focus!="TEA",]
+# behdata2 <- behdata2[behdata2$Focus!="BAK",]
+# behdata2$Focus <- factor(behdata2$Focus)
+lr4 <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata4) # The PCA load coefficient goes in the wrong direction!!!!???
+summary(lr4)
+anova(lr4, test="Chisq") # PCA Load is a very significant predictor
+1 - (lr4$deviance / lr4$null.deviance) # Pseudo-rsquared
+
+behdata4b <- behdata[behdata$Study==4 & behdata$CoarseLoad %in% c(0,4),]
+behdata4b <- behdata4b[behdata4b$Activity!="OFF",]
+behdata4b$Activity <- factor(behdata4b$Activity)
+behdata4b <- behdata4b[behdata4b$Social!="IND",]
+behdata4b$Social <- factor(behdata4b$Social)
+behdata4b <- behdata4b[behdata4b$Focus!="TCOMP",]
+behdata4b <- behdata4b[behdata4b$Focus!="TD",]
+behdata4b <- behdata4b[behdata4b$Focus!="TEA",]
+behdata4b <- behdata4b[behdata4b$Focus!="TPAP",]
+behdata4b$Focus <- factor(behdata4b$Focus)
+lr4b <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata4b) # The PCA load coefficient goes in the wrong direction!!!!???
+summary(lr4b)
+anova(lr4b, test="Chisq") # PCA Load is a very significant predictor
+1 - (lr4b$deviance / lr4b$null.deviance) # Pseudo-rsquared
+
+
+
+
+```
+

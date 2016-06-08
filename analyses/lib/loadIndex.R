@@ -1,4 +1,72 @@
 # Given a dataset with a number of load-related metrics, marked by columns, 
+# it calculates the coarse and fine load indices, plus a bunch of normalized values
+calculateLoadIndexAndNormalizations <- function(data, loadcolumns, stablenorm=3){
+    
+    # In this method, we always normalize (in several ways!)
+    normalize <- TRUE
+    
+    sessions <- unique(data$session)
+    
+    totaldata <- data.frame()
+    
+    for(session in sessions){
+        
+        #We select the session data
+        sessiondata <- data[data$session == session,]
+        
+        #For each load-metric column
+        colnamecuts <- character()
+        for(col in loadcolumns){
+            colname <- names(sessiondata)[[col]]
+            
+            #Normalization #1: Use the average of the first X episodes (i.e., =1 for the old method), to make it more stable?
+            colnamenorm1 <- ""
+            colnamenorm <- paste(colname,".normFirst",sep="")
+            normal <- mean(sessiondata[1:stablenorm,col], na.rm = T)
+            if(normal!=0) sessiondata[,colnamenorm] <- sessiondata[,col]/normal
+            else sessiondata[,colnamenorm] <- sessiondata[,col] # If it is the rare case of the median being a zero count
+
+            #Normalization #2: Normalize by the median value of the session
+            colnamenorm2 <- ""
+            colnamenorm2 <- paste(colname,".normMed",sep="")
+            normal <- median(sessiondata[,col], na.rm = T)
+            if(normal!=0) sessiondata[,colnamenorm2] <- sessiondata[,col]/normal
+            else sessiondata[,colnamenorm2] <- sessiondata[,col] # If it is the rare case of the median being a zero count
+
+            #Normalization #3: Normalize by doing scale (the result is mean 0, sd 1)
+            colnamenorm3 <- ""
+            colnamenorm3 <- paste(colname,".normScale",sep="")
+            sessiondata[,colnamenorm3] <- scale(sessiondata[,col])
+
+            #Normalization #4: Normalize by the coefficient of variance
+            # TODO
+            
+            #Calculate the median of the session, and the median cut
+            colnamecut <- paste(colname,".above",sep="")
+            medsession <- median(sessiondata[,col], na.rm=T)   
+            sessiondata[,colnamecut] <- as.numeric(sessiondata[,col] > medsession)
+            colnamecuts <- append(colnamecuts, colnamecut)
+            
+
+        }
+
+        # We add up the median cuts, to get the coarse index
+        sessiondata$CoarseLoad <- apply(sessiondata[,colnamecuts],1,sum)
+        
+        # We paste the session data together
+        if(nrow(totaldata)==0) totaldata <- sessiondata
+        else totaldata <- rbind(totaldata,sessiondata)
+    }
+    
+    totaldata
+}
+
+
+
+
+
+
+# Given a dataset with a number of load-related metrics, marked by columns, 
 # it calculates the coarse and fine load indices
 calculateCoarseFineLoadIndex <- function(data, loadcolumns, normalize=F, inversecols=NULL, stablenorm=3){
     

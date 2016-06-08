@@ -74,6 +74,50 @@ datanovice <- loaddata[loaddata$TeacherLoad==1,]
 
 Aside from those variables in Study 1, we have another "assumed ground truth" variable (`TeacherLoad`), which associates the **Expert teacher** sessions with *lower* loads and the **Novice teacher** sessions with *higher* loads.
 
+## Calcualte the PCA Load Index (both teachers)
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+
+# We calculate the PCA load index (separately for the expert and novice teacher)
+library(FactoMineR)
+
+res.pca.norm = PCA(loaddata[, c(14,17,20,23)], scale.unit=TRUE, ncp=5, graph=F)
+plot.PCA(res.pca.norm, axes=c(1, 2), choix="var", title="PCA BOTH expert/novice, Normalized data, dims 1/2")
+loaddata$PCALoad1 = res.pca.norm$ind$coord[,1]
+loaddata$PCALoad2 = res.pca.norm$ind$coord[,2]
+
+
+# clean up further the dataset, to keep only those samples for which we have process variables
+behdata <- loaddata[!is.na(loaddata$Activity) & !is.na(loaddata$Social) & !is.na(loaddata$Focus),]
+# We take only the samples for which we have a meaningful ground truth
+behdata <- behdata[!is.na(behdata$TeacherLoad),]
+# ... and we remove the samples with categorical variables that appear only very seldom
+# behdata <- behdata[behdata$value.Activity!="EXP",]
+# behdata <- behdata[behdata$value.Activity!="OFF",]
+# behdata <- behdata[behdata$value.Activity!="TEC",]
+# behdata$value.Activity <- factor(behdata$value.Activity)
+# behdata <- behdata[behdata$value.Social!="IND",]
+# behdata$value.Social <- factor(behdata$value.Social)
+# behdata <- behdata[behdata$value.Focus!="WHI",]
+# behdata <- behdata[behdata$value.Focus!="TCOMP",]
+# behdata <- behdata[behdata$value.Focus!="TD",]
+# behdata <- behdata[behdata$value.Focus!="TEA",]
+# behdata <- behdata[behdata$value.Focus!="TPAP",]
+# behdata$value.Focus <- factor(behdata$value.Focus)
+
+# We train the logistic regression model
+lr1 <- glm(TeacherLoad ~ Activity + Social + Focus + PCALoad1 + PCALoad2, family=binomial(link='logit'), data=behdata) # The PCA load coefficient goes in the wrong direction!!!!???
+summary(lr1)
+anova(lr1, test="Chisq") # PCA Load is a very significant predictor
+lr2 <- glm(TeacherLoad ~ value.Activity + value.Social + value.Focus + value.Mean.norm + value.SD.norm + value.Fix.norm + value.Sac.norm, family=binomial(link='logit'), data=behdata) # The PCA load coefficient goes in the wrong direction!!!!???
+summary(lr2)
+anova(lr2, test="Chisq") # PCA Load is a very significant predictor
+
+
+
+
+```
+
 
 ## Calculate the PCA Load index
 
