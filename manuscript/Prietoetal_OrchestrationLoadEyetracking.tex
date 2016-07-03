@@ -679,46 +679,76 @@ OL = \beta_0 + \beta_1*A + \beta_2*S + \beta_3*F + \epsilon
 \item ...where A (coordination activity) can be Explanation, Monitoring, Questioning etc.; S (social plane) can be Individual, Small group, Class-wide; and F (focus of activity) can be the different classroom elements on which the teacher may focus, including students (similar to the schema proposed in \cite{Prieto2011recurrent}). 
 \item Hence, if we transform this categorical into binary variables, we are left with:
 \begin{multline}
+\label{formOLS}
 OL = \beta_0 + \beta_{11}*A_{expl} + \beta_{12}*A_{monit} + ... \\ + \beta_{21}*S_{indiv} + ... + \beta_{31}*F_{stud} + ... + \epsilon
 \end{multline}
+\item In this model, as designers of technology, we are interested on mostly on measuring the value of $\epsilon$ (the load once we take away the effect of the process variables), which is the one that our technology might affect (the other being mostly due to the teacher peculiarities and the classroom occurrences out of our control)
 \end{itemize}
 
+\begin{figure}[!t]
+\centering
+\includegraphics[width=2.5in]{img/ModelFactorsOL}
+\caption{A model of factors influencing orchestration load}
+\label{fig:model}
+\end{figure}
 
 
+\section{Estimating Orchestration Load Using Physiological (Eye-tracking) and Behavioral Measures}
 
-\section{Estimating Orchestration Load using Eye-tracking Measures}
+\begin{itemize}
+\item We want to be able to track orchestration load in a moment-to-moment manner, taking away the influence of process variables to know if two situations had distinctly lower/higher load
+\item Since direct measurement of load (e.g., dual-task) is problematic in complex multi-tasking activities \cite{Paas2003}, we have to resort to indirect measures (e.g., physiological)
+\item To estimate the influence of the process variables (teaching activity, social plane, focus of gaze) on load, we can resort to observation of the classroom occurrences (behavioral measures) -- e.g., manual video coding
+\item Mobile eye-tracking can be used to obtain both relevant physiological data about cognitive load \cite{Buettner2013} and audiovisual feed for teacher behavior analysis without additional equipment (crucial when investigating in authentic settings). Indeed, we have used it in explorations of orchestration load in the past \cite{Prieto2014,Prieto2015cscl,Prieto2015ectel}
+\item We propose the following method for analysis combining behavioral and physiological measures:
+\begin{enumerate}
+\item Record eye-tracking of the session
+\item Aggregate the four eye-tracking measures related to cognitive load, in 10s episodes\footnote{10s was chosen because it is short enough to capture variations in eye-tracking measures, but long enough so that can be coded by a researcher in terms of behavior (what the teacher is doing) in a meaningful manner}
+\item Calculate the first Principal Component (in PCA) of the four eye-tracking signals. The score of each 10s episode along this dimension, we will call Orchestration Load Score (OLS, our best approximation to the OLS in formula \ref{formOLS}) %TODO: insert here the Lukasz transform, if applied
+\item Select the "extreme load episodes" of the session (the episodes where all four measures agree on being higher or lower than the session median), and code them manually in terms of the process variables (Activity, Social plane, Focus of gaze)
+\item Build statistical models of the orchestration load, e.g.,  similar to the linear one in formula \ref{formOLS} (see section \ref{sec:study4} to see an example)
+\end{enumerate}
+\end{itemize}
 
-
+\begin{figure}[!t]
+\centering
+\includegraphics[width=2.5in]{img/AnalysisMethodBase}
+\caption{Diagram representing the physiological-behavioral analysis of orchestration load}
+\label{fig:analysis}
+\end{figure}
 
 \section{Case Studies}
 
 \subsection{Methodology}
 
-\subsection{Study 1: Feasibility Pilot in an Open Doors Day}
-% ...or maybe put this one at the end, as a case of application??
+
+\subsection{Study 1: Exploring Teacher Expertise in an University Course}
+
+\subsubsection{Context}
+
+\subsubsection{Results}
+
+\subsection{Study 2: Exploring Technology Novelty in a Primary School Classroom}
+
+\subsubsection{Context}
+
+\subsubsection{Results}
+
+\subsection{Study 3: Exploring Additional Support in an Open Doors Day}
+
+\subsubsection{Context}
+
+\subsubsection{Results}
+
+\subsection{Study 4: Applying the Measure to an Unmanipulated Setting}
+\label{sec:study4}
 
 \subsubsection{Context}
 
 \subsubsection{Results}
 
 
-\subsection{Study 2: Exploring Teacher Expertise in an University Course}
 
-\subsubsection{Context}
-
-\subsubsection{Results}
-
-\subsection{Study 3: Exploring Technology Novelty in a Primary School Classroom}
-
-\subsubsection{Context}
-
-\subsubsection{Results}
-
-\subsection{Study 4: Exploring Additional Support in an Open Doors Day}
-
-\subsubsection{Context}
-
-\subsubsection{Results}
 
 \section{Discussion}
 
@@ -728,6 +758,8 @@ OL = \beta_0 + \beta_{11}*A_{expl} + \beta_{12}*A_{monit} + ... \\ + \beta_{21}*
 \subsection{Orchestration Load Patterns and Learning Technology Insights}
 
 
+... the method still requires manual work, but that is about to change \cite{prieto2016teaching}
+... the eyetracker is too conspicuous, but this is about to change too as eyetrackers become amost undistinguishable from normal glasses
 ... technology affecting the mix of activities and hence the OL, without technology being the focus per se
 
 \section{Conclusion}
@@ -809,7 +841,7 @@ The authors would like to thank...
 % If you have an EPS/PDF photo (graphicx package needed) extra braces are
 % needed around the contents of the optional argument to biography to prevent
 % the LaTeX parser from getting confused when it sees the complicated
-% \includegraphics command within an optional argument. (You could create
+% \graphics command within an optional argument. (You could create
 % your own custom macro containing the \includegraphics command to make things
 % simpler here.)
 %\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{mshell}}]{Michael Shell}
