@@ -172,7 +172,7 @@
 
 % *** MATH PACKAGES ***
 %
-%\usepackage{amsmath}
+\usepackage{amsmath}
 % A popular package from the American Mathematical Society that provides
 % many useful and powerful commands for dealing with mathematics.
 %
@@ -545,7 +545,7 @@ Orchestration load, Eye-tracking, Cognitive load, Classroom studies.
 \item From the educational technology designer perspective, orchestration-related research denotes a focus on `usability at the classroom level' \cite{Dillenbourg2011}
 \item In this sense, LT researchers speak of `orchestration load' \cite{Dillenbourg2013,Cuendet2013,munoz2013sharing}, in analogy to cognitive load, a concept studied thoroughly in cognitive science, educational psychology and human-computer interaction \cite{sweller1994cognitive,oviatt2006human}
 \item However, in contrast with cognitive load (studied in controlled laboratory settings), orchestration load needs to be studied in authentic conditions. This has led to the term being used in high-level, abstract terms \cite{Dillenbourg2013,Cuendet2013}, seldom quantified except through ad-hoc proxies such as classroom workflow efficiency \cite{Alavi2012}
-\item In our previous work we have explored a mixed quanti/quali approach to studying orchestration load in authentic settings in a more concrete and detailed manner \cite{Prieto2015ectel}. However, we still lack models of orchestration, and reliable measures to help us compare different classroom situations in terms of orchestration load
+\item In our previous work we have explored a mixed quanti/quali approach to studying orchestration load in authentic settings in a more concrete and detailed manner \cite{Prieto2015ectel}. However, we still lack models of orchestration load, and reliable measures to help us compare different classroom situations in terms of orchestration load
 \item This paper presents one such model and measure, and their initial validation through several case studies in a variety of authentic educational settings, from primary school students using tabletop technologies to university students
 \item The paper is structured as follows...
 \end{itemize}
@@ -653,9 +653,41 @@ Orchestration load, Eye-tracking, Cognitive load, Classroom studies.
 
 \section{Classroom Orchestration and Cognitive Load Measures}\label{sec:related}
 
+\begin{itemize}
+\item Face-to-face classroom management is important for learning outcomes but also is highly demanding (public space, multiple activities, immediacy, unpredictability) \cite{Doyle2006}
+\item Technology adds another layer of complexity to the classroom, which may explain reluctance for adoption of technology, and focus of LT research on 'orchestration' as 'classroom usability' \cite{Dillenbourg2011}
+\item By testing LTs in authentic classrooms and observing what works, researchers are starting to come up with guidelines of orchestrable technology \cite{Cuendet2013,Dillenbourg2013,Kharrufa2013,Kreitmayer2013}
+\item This approach to classroom usability reminds of the beginnings of usability studies \cite{Webusability} (focus on a few users finishing the task -- ``teacher heroes'' \cite{Dillenbourg2009b})
+\item Another parallel with usability: the use of cognitive load \cite{Paas2004}, or in this case `orchestration load' (``the effort necessary for the teacher -- and other actors -- to conduct learning activities'' \cite{Cuendet2013}) \cite{Dillenbourg2013}
+\item o advance (classroom) usability beyond this artisanal/observational approach, usable (classroom) computer systems require 1) focus on users; 2) iterative design and testing; and 3) empirical measurement of usage \cite{Gould1985}
+\item The first two are already a part of much of LT research. But the third one is made difficult by the simultaneity and immediacy of face-to-face classroom activities. We need empirical evidence of how the orchestration process unfolds!
+\item To do this, we can use the wealth of methods in psychology and HCI to measure cognitive load \cite{Brunken2003} -- as long as we stay within \textit{authentic} educational settings (inherent to classroom orchestration \cite{Roschelle2013})
+\item No single method is accepted as valid for every task, and measures are often taken in controlled lab conditions, with simple tasks. Given this lack of control, the triangulation of different methods might be needed. An example is \cite{Buettner2013}, used four different eye-tracking measurements.
+\item We also need a model of orchestration load to help us start disentangling this multi-tasking, multi-target activity in order to be able to measure it empirically
+\end{itemize}
+
+\section{A Model of Factors in Run-time Classroom Orchestration}
+
+\begin{itemize}
+\item Classroom management/orchestration is assumed to be multi-tasking \cite{Doyle2006} in the sense of multiple constraints and concerns, but most often the orchestration is a \textit{sequence} of actions and decisions (put an example)
+\item From the definition of orchestration \cite{Dillenbourg2009}, we can see there are several \textit{process variables} that can affect the orchestration load at any point in time, but which may not be interesting for us when designing the technology: what is the current \textit{coordinating activity}, at which \textit{social plane} is the coordination happening, or what is the \textit{resource} on which the activity is focusing
+\item The load of each process variable may vary from teacher to teacher (experience, personality, training...). Hence, to have an idea of the load experienced by the teacher we have to take out somehow these influences
+\item Hence, as a first model of instantaneous orchestration load, we could pose the following linear equation:
+\begin{equation}
+OL = \beta_0 + \beta_1*A + \beta_2*S + \beta_3*F + \epsilon
+\end{equation}
+\item ...where A (coordination activity) can be Explanation, Monitoring, Questioning etc.; S (social plane) can be Individual, Small group, Class-wide; and F (focus of activity) can be the different classroom elements on which the teacher may focus, including students (similar to the schema proposed in \cite{Prieto2011recurrent}). 
+\item Hence, if we transform this categorical into binary variables, we are left with:
+\begin{multline}
+OL = \beta_0 + \beta_{11}*A_{expl} + \beta_{12}*A_{monit} + ... \\ + \beta_{21}*S_{indiv} + ... + \beta_{31}*F_{stud} + ... + \epsilon
+\end{multline}
+\end{itemize}
 
 
-\section{A Model of Factors in Real-time Classroom Orchestration}
+
+
+\section{Estimating Orchestration Load using Eye-tracking Measures}
+
 
 
 \section{Case Studies}
@@ -663,6 +695,7 @@ Orchestration load, Eye-tracking, Cognitive load, Classroom studies.
 \subsection{Methodology}
 
 \subsection{Study 1: Feasibility Pilot in an Open Doors Day}
+% ...or maybe put this one at the end, as a case of application??
 
 \subsubsection{Context}
 
@@ -694,6 +727,8 @@ Orchestration load, Eye-tracking, Cognitive load, Classroom studies.
 
 \subsection{Orchestration Load Patterns and Learning Technology Insights}
 
+
+... technology affecting the mix of activities and hence the OL, without technology being the focus per se
 
 \section{Conclusion}
 The conclusion goes here.
