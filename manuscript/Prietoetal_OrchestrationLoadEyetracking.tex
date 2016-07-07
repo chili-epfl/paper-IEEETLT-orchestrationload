@@ -713,11 +713,10 @@ TODO: Add the manipulated variables too (teacher experience, usual technology, e
 \end{enumerate}
 \end{itemize}
 
-TODO: add joining arrows into "Statistical models" in the figure!
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=2.5in]{img/AnalysisMethodBase}
+\includegraphics[width=\linewidth]{img/AnalysisMethodBase.png}
 \caption{Diagram representing the physiological-behavioral analysis of orchestration load}
 \label{fig:analysis}
 \end{figure}
@@ -744,7 +743,35 @@ first two sessions of case 2 \cite{Prieto2015ectel}. However, the application of
 
 
 
-(add table 1 from previous paper version, reordering the rows to put study 1 at the end)
+
+
+\begin{table*}[!t]
+%% increase table row spacing, adjust to taste
+%\renewcommand{\arraystretch}{1.3}
+% if using array.sty, it might be a good idea to tweak the value of
+% \extrarowheight as needed to properly center the text within the cells
+\caption{Summary of main case study characteristics}
+\label{tab:cases}
+\centering
+%% Some packages, such as MDW tools, offer better commands for making tables
+%% than the plain LaTeX2e tabular which is used here.
+\begin{tabular}{|c||p{1.5cm}|p{1.5cm}|p{2cm}|p{3.4cm}|p{2cm}|p{3.4cm}|}
+\hline
+Study & Setting & Teachers & Sessions (session length) & Technological support & Main goal & Target variable\\
+\hline
+\hline
+Case 1 & University & 1 expert, 1 novice & 2+1 (45-65') & Laptops, classroom projector & Validate measure/model & Teacher expertise (novice vs. expert) \\
+\hline
+Case 2 & Primary school & 1 expert & 2+2 (80') & Laptops, classroom projector // Tabletops, classroom projector & Validate measure/model & Familiarity with technology (usual vs. novel) \\
+\hline
+Case 3 & Open doors (primary) & 1 novice (researcher) & 4 (35-45') & Tabletops, classroom projector & Validate measure/model & External (human) help (without/with helper) \\
+\hline
+Case 4 & Open doors (primary) & 1 novice (researcher) & 3 (35-45') & Tabletops & Illustrate use & -- \\
+\hline
+\end{tabular}
+\end{table*}
+
+
 
 \subsection{Study 1: Exploring Teacher Expertise in an University Course}
 
