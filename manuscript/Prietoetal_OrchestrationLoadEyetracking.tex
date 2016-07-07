@@ -474,7 +474,7 @@ E-mail: see https://people.epfl.ch/luis.prieto
 %100-200 words
 %\boldmath
 %\blindtext[1]
-Orchestration load (the effort a teacher spends in coordinating the multiple activities and learning processes in an educational setting) has been proposed as a helpful construct in designing educational technologies that not only support learning, but also are usable at the classroom level. Until now, this notion has remained fuzzy, used solely in a high-level and abstract way. In order to ground orchestration load in empirical evidence and study it in a more systematic and detailed manner, we propose a model of factors that affect such load, and a measure for moment-to-moment orchestration load based on physiological data (concretely, mobile eye-tracking), along with other behavioral measures. This paper presents the results of applying this method to four exploratory case studies, where teachers orchestrated technology-enhanced face-to-face lessons with primary, secondary school and university students. The data from these studies provides a first validation of this method in different conditions, and illustrate how it can be used to understand the effect of different classroom factors on the orchestration load of a teacher, and to extract evidence-based insights about classroom orchestration with technology.
+Orchestration load (the effort a teacher spends in coordinating the multiple activities and learning processes in an educational setting) has been proposed as a helpful construct in designing educational technologies that not only support learning, but also are usable at the classroom level. However, so far this notion has remained fuzzy, used solely in a high-level and abstract way. In order to ground orchestration load in empirical evidence and study it in a more systematic and detailed manner, we propose a model of factors that affect such load, and a measure for moment-to-moment orchestration load based on physiological data (concretely, mobile eye-tracking measures), along with behavioral data. This paper presents the results of applying this method to four exploratory case studies, where teachers orchestrated technology-enhanced face-to-face lessons with primary, secondary school and university students. The data from these studies provides a first validation of this method in different conditions, and illustrate how it can be used to understand the effect of different classroom factors on the orchestration load of a teacher, and to extract evidence-based insights about classroom orchestration with technology.
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
@@ -546,8 +546,8 @@ Orchestration load, Eye-tracking, Cognitive load, Classroom studies.
 \item In this sense, LT researchers speak of `orchestration load' \cite{Dillenbourg2013,Cuendet2013,munoz2013sharing}, in analogy to cognitive load, a concept studied thoroughly in cognitive science, educational psychology and human-computer interaction \cite{sweller1994cognitive,oviatt2006human}
 \item However, in contrast with cognitive load (studied in controlled laboratory settings), orchestration load needs to be studied in authentic conditions. This has led to the term being used in high-level, abstract terms \cite{Dillenbourg2013,Cuendet2013}, seldom quantified except through ad-hoc proxies such as classroom workflow efficiency \cite{Alavi2012}
 \item In our previous work we have explored a mixed quanti/quali approach to studying orchestration load in authentic settings in a more concrete and detailed manner \cite{Prieto2015ectel}. However, we still lack models of orchestration load, and reliable measures to help us compare different classroom situations in terms of orchestration load
-\item This paper presents one such model and measure, and their initial validation through several case studies in a variety of authentic educational settings, from primary school students using tabletop technologies to university students
-\item The paper is structured as follows...
+\item This paper presents one such model and measure, and their initial validation through several case studies in a variety of authentic educational settings, from primary school students using tabletop technologies to university students with laptops
+\item The rest of the paper is structured as follows...
 \end{itemize}
 
 
@@ -659,31 +659,34 @@ Orchestration load, Eye-tracking, Cognitive load, Classroom studies.
 \item By testing LTs in authentic classrooms and observing what works, researchers are starting to come up with guidelines of orchestrable technology \cite{Cuendet2013,Dillenbourg2013,Kharrufa2013,Kreitmayer2013}
 \item This approach to classroom usability reminds of the beginnings of usability studies \cite{Webusability} (focus on a few users finishing the task -- ``teacher heroes'' \cite{Dillenbourg2009b})
 \item Another parallel with usability: the use of cognitive load \cite{Paas2004}, or in this case `orchestration load' (``the effort necessary for the teacher -- and other actors -- to conduct learning activities'' \cite{Cuendet2013}) \cite{Dillenbourg2013}
-\item o advance (classroom) usability beyond this artisanal/observational approach, usable (classroom) computer systems require 1) focus on users; 2) iterative design and testing; and 3) empirical measurement of usage \cite{Gould1985}
+\item To advance (classroom) usability beyond this artisanal/observational approach, usable (classroom) computer systems require 1) focus on users; 2) iterative design and testing; and 3) empirical measurement of usage \cite{Gould1985}
 \item The first two are already a part of much of LT research. But the third one is made difficult by the simultaneity and immediacy of face-to-face classroom activities. We need empirical evidence of how the orchestration process unfolds!
-\item To do this, we can use the wealth of methods in psychology and HCI to measure cognitive load \cite{Brunken2003} -- as long as we stay within \textit{authentic} educational settings (inherent to classroom orchestration \cite{Roschelle2013})
-\item No single method is accepted as valid for every task, and measures are often taken in controlled lab conditions, with simple tasks. Given this lack of control, the triangulation of different methods might be needed. An example is \cite{Buettner2013}, used four different eye-tracking measurements.
-\item We also need a model of orchestration load to help us start disentangling this multi-tasking, multi-target activity in order to be able to measure it empirically
+\item To do this, we could use the wealth of methods in psychology and HCI to measure cognitive load \cite{Brunken2003} -- as long as we stay within \textit{authentic} educational settings (inherent to classroom orchestration \cite{Roschelle2013})
+\item No single method is accepted as valid for every task, and measures are often taken in controlled lab conditions, with simple tasks. Given this lack of control, the triangulation of different methods might be needed. An example is \cite{Buettner2013}, which used four different eye-tracking measurements to track cognitive load in a learning task.
+\item In order to be able to measure orchestration empirically, we also need a model of orchestration load that help us start disentangling this multi-tasking, multi-target activity 
 \end{itemize}
 
 \section{A Model of Factors in Run-time Classroom Orchestration}
-
+\label{sec:model}
 \begin{itemize}
 \item Classroom management/orchestration is assumed to be multi-tasking \cite{Doyle2006} in the sense of multiple constraints and concerns, but most often the orchestration is a \textit{sequence} of actions and decisions (put an example)
 \item From the definition of orchestration \cite{Dillenbourg2009}, we can see there are several \textit{process variables} that can affect the orchestration load at any point in time, but which may not be interesting for us when designing the technology: what is the current \textit{coordinating activity}, at which \textit{social plane} is the coordination happening, or what is the \textit{resource} on which the activity is focusing
 \item The load of each process variable may vary from teacher to teacher (experience, personality, training...). Hence, to have an idea of the load experienced by the teacher we have to take out somehow these influences
-\item Hence, as a first model of instantaneous orchestration load, we could pose the following linear equation:
+\item Hence, as a first approximation to the instantaneous orchestration load, we could pose the following linear model:
 \begin{equation}
 OL = \beta_0 + \beta_1*A + \beta_2*S + \beta_3*F + \epsilon
+\label{formOLScat}
 \end{equation}
-\item ...where A (coordination activity) can be Explanation, Monitoring, Questioning etc.; S (social plane) can be Individual, Small group, Class-wide; and F (focus of activity) can be the different classroom elements on which the teacher may focus, including students (similar to the schema proposed in \cite{Prieto2011recurrent}). 
-\item Hence, if we transform this categorical into binary variables, we are left with:
+\item ...where A (current coordination activity) can be Explanation, Monitoring, Questioning etc. (i.e., for an individual teacher, different activities may represent different amounts of load); similarly, S (social plane) can be Individual, Small group, Class-wide; and F (focus of activity) can be the different classroom elements on which the teacher may focus, including students (could be represented graphically as an orchestration graph, see \cite{Prieto2011recurrent}). 
+\item If we transform the categorical variables in Formula \ref{formOLScat} into binary variables, we are left with:
 \begin{multline}
 \label{formOLS}
 OL = \beta_0 + \beta_{11}*A_{expl} + \beta_{12}*A_{monit} + ... \\ + \beta_{21}*S_{indiv} + ... + \beta_{31}*F_{stud} + ... + \epsilon
 \end{multline}
-\item In this model, as designers of technology, we are interested on mostly on measuring the value of $\epsilon$ (the load once we take away the effect of the process variables), which is the one that our technology might affect (the other being mostly due to the teacher peculiarities and the classroom occurrences out of our control)
+\item In this model, as designers of technology, we are interested on mostly on measuring the value of $\epsilon$ (the orchestration load of the situation once we take away the effect of the known process variables), which is the one that our technology might affect (the other being mostly due to the teacher peculiarities and the classroom occurrences out of our control)
 \end{itemize}
+
+TODO: Add the manipulated variables too (teacher experience, usual technology, external help) as possibilities in the black bubble!?
 
 \begin{figure}[!t]
 \centering
@@ -694,21 +697,23 @@ OL = \beta_0 + \beta_{11}*A_{expl} + \beta_{12}*A_{monit} + ... \\ + \beta_{21}*
 
 
 \section{Estimating Orchestration Load Using Physiological (Eye-tracking) and Behavioral Measures}
-
+\label{sec:measures}
 \begin{itemize}
-\item We want to be able to track orchestration load in a moment-to-moment manner, taking away the influence of process variables to know if two situations had distinctly lower/higher load
-\item Since direct measurement of load (e.g., dual-task) is problematic in complex multi-tasking activities \cite{Paas2003}, we have to resort to indirect measures (e.g., physiological)
-\item To estimate the influence of the process variables (teaching activity, social plane, focus of gaze) on load, we can resort to observation of the classroom occurrences (behavioral measures) -- e.g., manual video coding
-\item Mobile eye-tracking can be used to obtain both relevant physiological data about cognitive load \cite{Buettner2013} and audiovisual feed for teacher behavior analysis without additional equipment (crucial when investigating in authentic settings). Indeed, we have used it in explorations of orchestration load in the past \cite{Prieto2014,Prieto2015cscl,Prieto2015ectel}
-\item We propose the following method for analysis combining behavioral and physiological measures:
+\item At the most basic level, we want to track orchestration load (OL) in a moment-to-moment manner, in order to later take away the influence of process variables and find out if two situations had distinctly lower/higher load
+\item Since direct measurement of load (e.g., with dual-task) is problematic in complex multi-tasking activities \cite{Paas2003}, we have to resort to indirect measures (e.g., physiological)
+\item To estimate the influence of the process variables (teaching activity, social plane, focus of gaze) on load, we can resort to behavioral measures (i.e., observation of the classroom occurrences) -- e.g., through manual video coding
+\item Mobile eye-tracking can be used to obtain both relevant physiological data about cognitive load \cite{Buettner2013} and audiovisual feed for teacher behavior analysis without additional equipment (crucial when investigating in authentic settings). Indeed, we have shown the feasibility of this approach in explorations of orchestration load in the past \cite{Prieto2014,Prieto2015cscl,Prieto2015ectel}
+\item We propose the following method for analysis combining behavioral and physiological measures (see Figure \ref{fig:analysis}):
 \begin{enumerate}
 \item Record eye-tracking of the session
 \item Aggregate the four eye-tracking measures related to cognitive load, in 10s episodes\footnote{10s was chosen because it is short enough to capture variations in eye-tracking measures, but long enough so that can be coded by a researcher in terms of behavior (what the teacher is doing) in a meaningful manner}
 \item Calculate the first Principal Component (in PCA) of the four eye-tracking signals. The score of each 10s episode along this dimension, we will call Orchestration Load Score (OLS, our best approximation to the OLS in formula \ref{formOLS}) %TODO: insert here the Lukasz transform, if applied
-\item Select the "extreme load episodes" of the session (the episodes where all four measures agree on being higher or lower than the session median), and code them manually in terms of the process variables (Activity, Social plane, Focus of gaze)
+\item Select the "extreme load episodes"\footnote{This is done to keep the manual researcher effort under control, but the whole session videos could be video coded too.} of the session (the episodes where all four measures agree on being higher or lower than the session median), and code them manually in terms of the process variables (Activity, Social plane, Focus of gaze)
 \item Build statistical models of the orchestration load, e.g.,  similar to the linear one in formula \ref{formOLS} (see section \ref{sec:study4} to see an example)
 \end{enumerate}
 \end{itemize}
+
+TODO: add joining arrows into "Statistical models" in the figure!
 
 \begin{figure}[!t]
 \centering
@@ -721,6 +726,25 @@ OL = \beta_0 + \beta_{11}*A_{expl} + \beta_{12}*A_{monit} + ... \\ + \beta_{21}*
 
 \subsection{Methodology}
 
+\begin{itemize}
+\item The goals (research questions) of this paper are twofold:
+\begin{enumerate}
+\item Is the aforementioned PCA-based orchestration load score (OLS), and the proposed statistical models, able to discriminate the load of  substantially different situations in terms of orchestration load?
+\item Can the application of this measures and models provide us with insights about the orchestration load of a certain classroom situation?
+\end{enumerate}
+\item We have used the aforementioned approach and models for orchestration load in four case studies, spanning a total of 14 sessions
+orchestrated by four different teachers with actual students at different educational levels, from 11yrs old to university students (see Table \ref{tab:cases})
+\item The first three case studies aimed at validating the aforementioned model and physiological-behavioral measures (RQ1). In each of these validation studies we compared two orchestration situations which were similar in most aspects, but varied significantly in one aspect which we can assume is directly related to the teacher orchestration load (teacher expertise, familiarity with the classroom technology, having additional help from a fellow orchestrator). 
+\item While it is debatable that the situations had different inherent loads \textit{at all moments}, it is as much as we can manipulate and make comparations between inherently unique situations, while maintaining authenticity
+\item Finally, the fourth case study was not manipulated, and is provided rather as an illustrative example of how the models and methods can be used to extract insights about the orchestration load of a certain classroom/situation (hence, addressing RQ2)
+\item Initial explorations of the datasets from these cases have been published before for cases 1 and 4 \cite{Prieto2015cscl}, and for the
+first two sessions of case 2 \cite{Prieto2015ectel}. However, the application of the statistical models and methods depicted in sections \ref{sec:model} and \ref{sec:measures} in completely new
+\item Below, we describe only the main results of the case studies. The datasets generated, full analytical code and detailed results are available online\footnote{(add github link)}
+\end{itemize}
+
+
+
+(add table 1 from previous paper version, reordering the rows to put study 1 at the end)
 
 \subsection{Study 1: Exploring Teacher Expertise in an University Course}
 
@@ -754,12 +778,13 @@ OL = \beta_0 + \beta_{11}*A_{expl} + \beta_{12}*A_{monit} + ... \\ + \beta_{21}*
 
 \subsection{Eye-tracking Measures to Estimate Orchestration Load}
 
+... the method still requires manual work, but that is about to change \cite{prieto2016teaching}
+... the eyetracker is too conspicuous, but this is about to change too as eyetrackers become amost undistinguishable from normal glasses
+
 
 \subsection{Orchestration Load Patterns and Learning Technology Insights}
 
 
-... the method still requires manual work, but that is about to change \cite{prieto2016teaching}
-... the eyetracker is too conspicuous, but this is about to change too as eyetrackers become amost undistinguishable from normal glasses
 ... technology affecting the mix of activities and hence the OL, without technology being the focus per se
 
 \section{Conclusion}
