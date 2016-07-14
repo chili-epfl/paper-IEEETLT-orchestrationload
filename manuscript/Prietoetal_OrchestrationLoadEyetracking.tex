@@ -83,6 +83,7 @@
 % have to be run twice to clear warning/error messages.
 
 
+\usepackage{hyperref}
 
 
 
@@ -686,11 +687,10 @@ OL = \beta_0 + \beta_{11}*A_{expl} + \beta_{12}*A_{monit} + ... \\ + \beta_{21}*
 \item In this model, as designers of technology, we are interested on mostly on measuring the value of $\epsilon$ (the orchestration load of the situation once we take away the effect of the known process variables), which is the one that our technology might affect (the other being mostly due to the teacher peculiarities and the classroom occurrences out of our control)
 \end{itemize}
 
-TODO: Add the manipulated variables too (teacher experience, usual technology, external help) as possibilities in the black bubble!?
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=2.5in]{img/ModelFactorsOL}
+\includegraphics[width=\linewidth]{img/ModelFactorsOL}
 \caption{A model of factors influencing orchestration load}
 \label{fig:model}
 \end{figure}
@@ -729,18 +729,25 @@ TODO: Add the manipulated variables too (teacher experience, usual technology, e
 \item The goals (research questions) of this paper are twofold:
 \begin{enumerate}
 \item Is the aforementioned PCA-based orchestration load score (OLS), and the proposed statistical models, able to discriminate the load of  substantially different situations in terms of orchestration load?
-\item Can the application of this measures and models provide us with insights about the orchestration load of a certain classroom situation?
+\item Can the application of these measures and models provide us with insights about the orchestration load of a certain classroom situation?
 \end{enumerate}
 \item We have used the aforementioned approach and models for orchestration load in four case studies, spanning a total of 14 sessions
 orchestrated by four different teachers with actual students at different educational levels, from 11yrs old to university students (see Table \ref{tab:cases})
 \item The first three case studies aimed at validating the aforementioned model and physiological-behavioral measures (RQ1). In each of these validation studies we compared two orchestration situations which were similar in most aspects, but varied significantly in one aspect which we can assume is directly related to the teacher orchestration load (teacher expertise, familiarity with the classroom technology, having additional help from a fellow orchestrator). 
 \item While it is debatable that the situations had different inherent loads \textit{at all moments}, it is as much as we can manipulate and make comparations between inherently unique situations, while maintaining authenticity
-\item Finally, the fourth case study was not manipulated, and is provided rather as an illustrative example of how the models and methods can be used to extract insights about the orchestration load of a certain classroom/situation (hence, addressing RQ2)
+\item Finally, the fourth case study was not manipulated, and is provided as an illustrative example of how the models and methods can be used to extract insights about the orchestration load of a certain classroom/situation (RQ2)
 \item Initial explorations of the datasets from these cases have been published before for cases 1 and 4 \cite{Prieto2015cscl}, and for the
-first two sessions of case 2 \cite{Prieto2015ectel}. However, the application of the statistical models and methods depicted in sections \ref{sec:model} and \ref{sec:measures} in completely new
-\item Below, we describe only the main results of the case studies. The datasets generated, full analytical code and detailed results are available online\footnote{(add github link)}
+first two sessions of case 2 \cite{Prieto2015ectel}. However, the application of the statistical models and methods depicted in sections \ref{sec:model} and \ref{sec:measures} is completely new
+\item Below, we describe the context and main results of the case studies. The datasets generated, full analytical code and detailed results are available online\footnote{\href{https://github.com/chili-epfl/paper-IEEETLT-orchestrationload}{https://github.com/chili-epfl/paper-IEEETLT-orchestrationload}.}
+\item In all 4 studies the data gathering and analysis method of section \ref{sec:measures} was followed: a) eyetracking data was recorded and cognitive load-related metrics were aggregated for 10s episodes; b) Principal Component Analysis was performed on the data from the four cases (see Figure \ref{fig:pca}) to obtain the OLS (1st component score); c) "Extreme load episodes" were video coded by a single researcher, to extract the process variables (activity, social plane, focus of gaze) 
 \end{itemize}
 
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{img/PCA.png}
+\caption{Projection of the four eye-tracking measures recorded throughout the four case studies, on the space defined by the first two PCA components. The Orchestration Load Score (OLS) is represented by the horizontal axis of the figure}
+\label{fig:pca}
+\end{figure}
 
 
 
@@ -775,17 +782,74 @@ Case 4 & Open doors (primary) & 1 novice (researcher) & 3 (35-45') & Tabletops &
 
 \subsection{Study 1: Exploring Teacher Expertise in an University Course}
 
+\begin{itemize}
+\item One of the most obvious factors in orchestration load is teacher expertise: more expert teachers have internalized/automated many aspects of their teaching \cite{prieto2011recurrent,feldon2007cognitive} will manage the classroom with more ease (less load) than novice ones
+\item Case study question: \textit{Will our model and OL score be able to discriminate similar learning situations, orchestrated by a novel and an experienced teacher?}
+\end{itemize}
+
+\subsubsection{Context}
+
+\begin{itemize}
+\item Face-to-face master-level course on ``Digital education and learning analytics'' at EPFL. Classes had 10-12 students, working with laptops and teacher using laptop, projector and whiteboard \ref{fig:case1picture}. The lessons were a fluid combination of lecture, questioning student and exercises
+\item Two lessons with the same student cohort were recorded for the expert teacher, and one for the novice teacher, 45-65min each (in reality, two sessions were recorded for each, but one of the novice sessions had to be thrown out due to technical problems during data gathering)
+\end{itemize}
+
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{img/Case1Picture}
+\caption{Classroom setup during Case study 1 (master-level course)}
+\label{fig:case1picture}
+\end{figure}
+
+\subsubsection{Results}
+
+\begin{itemize}
+\item To validate whether the OLS is a good predictor for orchestration load in this context, we assume as a ground truth that the lessons orchestrated by the novice teacher represented a higher load (Load=1) than the ones orchestrated by the expert (Load=0). 
+\item We then train a logistic regression model to try to predict the aforementioned ``ground truth'' using the known process variables (activity, social, focus -- coded from the video by a researcher) and the OLS
+\item As we can see in table \ref{tab:case1results}, once we take away the influence of the process variables, the OLS still remains a significant predictor of the assumed (binary) orchestration load ($p=0.0002$, see table \ref{tab:case1results}). Furthermore, this model including the OLS explains a considerable amount of the variance in the data (McFadden's pseudo-$R^2=0.88$) 
+\item An analysis of variance of the different variables in the model confirms this, with the OLS explaining most of the deviance in the data ($p<0.0001$). 
+\end{itemize}
+
+\begin{table}[!t]
+%% increase table row spacing, adjust to taste
+%\renewcommand{\arraystretch}{1.3}
+% if using array.sty, it might be a good idea to tweak the value of
+% \extrarowheight as needed to properly center the text within the cells
+\caption{Logistic regression model to predict assumed orchestration load (1--Novice, 0--Expert teacher)}
+\label{tab:case1results}
+\centering
+%% Some packages, such as MDW tools, offer better commands for making tables
+%% than the plain LaTeX2e tabular which is used here.
+\begin{tabular}{|p{3cm}||r|r|r|r|}
+\hline
+Coefficient & Estimate & Std. error & z & p-value\\
+\hline
+\hline
+Intercept (Explanation, Class-level, Focus on student faces) & -2.93 & 1.52 & -1.93 & 0.05 \\
+Activity: Monitoring & 0.28 & 1.46 & 0.19 & 0.84 \\
+Activity: Questioning & -1.66 & 1.73 & -0.96 & 0.33 \\
+Activity: Repairs & 2.80 & 3.54 & 0.79 & 0.43 \\
+Activity: Task distribution & -16.22 & 2765 & -0.01 & 1.00 \\
+Social: Individual & 5.76 & 3.23 & 1.78 & 0.07 \\
+Focus: Projector & -3.49 & 2.90 & -1.21 & 0.23 \\
+Focus: Student computer & 1.00 & 1.72 & 0.58 & 0.56 \\
+Focus: Table & 1.77 & 5.96 & 0.30 & 0.77 \\
+Focus: Teacher computer & -2.04 & 1.40 & -1.45 & 0.15 \\
+Focus: Whiteboard & -2.91 & 2.78 & -1.05 & 0.29 \\
+\textbf{OLS} & \textbf{8.42} & \textbf{2.30} & \textbf{3.67} & \textbf{0.0002***} \\
+\hline
+\end{tabular}
+\end{table}
+
+
+\subsection{Study 2: Exploring Familiarity with Technology in a Primary School Classroom}
+
 \subsubsection{Context}
 
 \subsubsection{Results}
 
-\subsection{Study 2: Exploring Technology Novelty in a Primary School Classroom}
-
-\subsubsection{Context}
-
-\subsubsection{Results}
-
-\subsection{Study 3: Exploring Additional Support in an Open Doors Day}
+\subsection{Study 3: Exploring External Help in an Open Doors Day}
 
 \subsubsection{Context}
 

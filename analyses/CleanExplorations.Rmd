@@ -105,6 +105,8 @@ write.csv(loaddata,file="./data/loaddata-clean.csv")
 
 ## Using 1st PCA component
 
+### Global data
+
 ```{r, message=FALSE, warning=FALSE}
 # We calculate the PCA load index (score in the 1st PCA component)
 library(FactoMineR)
@@ -113,10 +115,6 @@ plot.PCA(pca.global, axes=c(1, 2), choix="var", title="PCA All studies")
 # We add the PCA load index to our dataset
 loaddata$PCALoad1 = pca.global$ind$coord[,1]
 loaddata$PCALoad2 = pca.global$ind$coord[,2]
-
-# ADding study as quali variable
-pca.global2 = PCA(loaddata[, c(3:6,10)], scale.unit=TRUE, ncp=2, graph=F, quali.sup = 5)
-plot.PCA(pca.global2, axes=c(1, 2), choix="var", title="PCA All studies+study")
 
 
 
@@ -129,23 +127,32 @@ summary(lr1)
 anova(lr1, test="Chisq") # PCA Load is a very significant predictor
 1 - (lr1$deviance / lr1$null.deviance) # Pseudo-rsquared
 
+```
+
+### Study 2 (Study 1 in the new order)
+```{r, message=FALSE, warning=FALSE}
+
 # We train and evaluate for each study separately
 # Study 2
 behdata2 <- behdata[behdata$Study==2,]
 # ... and we remove the samples with categorical variables that appear only very seldom
-#behdata2 <- behdata[behdata$value.Activity!="EXP",]
-# behdata <- behdata[behdata$value.Activity!="OFF",]
-# behdata <- behdata[behdata$value.Activity!="TEC",]
-# behdata2$Activity <- factor(behdata2$Activity)
-# behdata2 <- behdata2[behdata2$Social!="GRP",]
-# behdata2$Social <- factor(behdata2$Social)
-# behdata2 <- behdata2[behdata2$Focus!="TEA",]
-# behdata2 <- behdata2[behdata2$Focus!="BAK",]
-# behdata2$Focus <- factor(behdata2$Focus)
+behdata2 <- behdata2[behdata2$Social!="GRP",]
+behdata2$Social <- factor(behdata2$Social)
+behdata2 <- behdata2[behdata2$Focus!="TEA",]
+behdata2 <- behdata2[behdata2$Focus!="BAK",]
+behdata2$Focus <- factor(behdata2$Focus)
 lr2 <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata2) # The PCA load coefficient goes in the wrong direction!!!!???
 summary(lr2)
 anova(lr2, test="Chisq") # PCA Load is a very significant predictor
 1 - (lr2$deviance / lr2$null.deviance) # Pseudo-rsquared
+
+```
+
+
+
+### Study 3 (Study 2 in the new order)
+
+```{r, message=FALSE, warning=FALSE}
 
 # Study 3
 behdata3 <- behdata[behdata$Study==3,]
@@ -163,6 +170,15 @@ lr3 <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(l
 summary(lr3)
 anova(lr3, test="Chisq") # PCA Load is a very significant predictor
 1 - (lr3$deviance / lr3$null.deviance) # Pseudo-rsquared
+
+```
+
+
+
+### Study 4 (Study 3 in the new order)
+
+```{r, message=FALSE, warning=FALSE}
+
 
 # Study 4
 behdata4 <- behdata[behdata$Study==4,]
