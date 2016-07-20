@@ -678,6 +678,9 @@ Orchestration load, Eye-tracking, Cognitive load, Classroom studies.
 OL = \beta_0 + \beta_1*A + \beta_2*S + \beta_3*F + \epsilon
 \label{formOLScat}
 \end{equation}
+
+TODO: Did we finally use a linear model or a GAM?
+
 \item ...where A (current coordination activity) can be Explanation, Monitoring, Questioning etc. (i.e., for an individual teacher, different activities may represent different amounts of load); similarly, S (social plane) can be Individual, Small group, Class-wide; and F (focus of activity) can be the different classroom elements on which the teacher may focus, including students (could be represented graphically as an orchestration graph, see \cite{prieto2011recurrent}). 
 \item If we transform the categorical variables in Formula \ref{formOLScat} into binary variables, we are left with:
 \begin{multline}
@@ -712,6 +715,8 @@ OL = \beta_0 + \beta_{11}*A_{expl} + \beta_{12}*A_{monit} + ... \\ + \beta_{21}*
 \item Build statistical models of the orchestration load, e.g.,  similar to the linear one in formula \ref{formOLS} (see section \ref{sec:study4} to see an example)
 \end{enumerate}
 \end{itemize}
+
+TODO: add footnote about the sign issue, and how we solve it by positive signs or similarity with our PCA loadings (internal product)
 
 
 \begin{figure}[!t]
