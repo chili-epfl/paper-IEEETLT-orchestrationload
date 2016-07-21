@@ -146,6 +146,17 @@ summary(lr2)
 anova(lr2, test="Chisq") # PCA Load is a very significant predictor
 1 - (lr2$deviance / lr2$null.deviance) # Pseudo-rsquared
 
+
+# Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
+lm2 <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdata2)
+summary(lm2)
+# Some trends/differences among teachers (not quite significant, tho)
+lm2exp <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata2[behdata2$GroundTruth==0,])
+summary(lm2exp)
+anova(lm2exp)
+lm2nov <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata2[behdata2$GroundTruth==1,])
+summary(lm2nov)
+anova(lm2nov)
 ```
 
 
@@ -157,20 +168,28 @@ anova(lr2, test="Chisq") # PCA Load is a very significant predictor
 # Study 3
 behdata3 <- behdata[behdata$Study==3,]
 # ... and we remove the samples with categorical variables that appear only very seldom
-#behdata2 <- behdata[behdata$value.Activity!="EXP",]
-# behdata <- behdata[behdata$value.Activity!="OFF",]
-# behdata <- behdata[behdata$value.Activity!="TEC",]
-# behdata2$Activity <- factor(behdata2$Activity)
-# behdata2 <- behdata2[behdata2$Social!="GRP",]
-# behdata2$Social <- factor(behdata2$Social)
-# behdata2 <- behdata2[behdata2$Focus!="TEA",]
-# behdata2 <- behdata2[behdata2$Focus!="BAK",]
-# behdata2$Focus <- factor(behdata2$Focus)
+behdata3 <- behdata3[behdata3$Activity!="DISC",]
+behdata3$Activity <- factor(behdata3$Activity)
+behdata3$Social <- factor(behdata3$Social)
+behdata3 <- behdata3[behdata3$Focus!="TNG",]
+behdata3 <- behdata3[behdata3$Focus!="RES",]
+behdata3 <- behdata3[behdata3$Focus!="BAK",]
+behdata3$Focus <- factor(behdata3$Focus)
 lr3 <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata3) # The PCA load coefficient goes in the wrong direction!!!!???
 summary(lr3)
 anova(lr3, test="Chisq") # PCA Load is a very significant predictor
 1 - (lr3$deviance / lr3$null.deviance) # Pseudo-rsquared
 
+# Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
+lm3 <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdata3)
+summary(lm3)
+# Some trends/differences among technologies
+lm3usu <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata3[behdata3$GroundTruth==0,])
+summary(lm3usu)
+anova(lm3usu)
+lm3nov <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata3[behdata3$GroundTruth==1,])
+summary(lm3nov)
+anova(lm3nov)
 ```
 
 
@@ -181,22 +200,22 @@ anova(lr3, test="Chisq") # PCA Load is a very significant predictor
 
 
 # Study 4
+# Considering all episodes (not only extreme load ones)
 behdata4 <- behdata[behdata$Study==4,]
 # ... and we remove the samples with categorical variables that appear only very seldom
-#behdata2 <- behdata[behdata$value.Activity!="EXP",]
-# behdata <- behdata[behdata$value.Activity!="OFF",]
-# behdata <- behdata[behdata$value.Activity!="TEC",]
-# behdata2$Activity <- factor(behdata2$Activity)
-# behdata2 <- behdata2[behdata2$Social!="GRP",]
-# behdata2$Social <- factor(behdata2$Social)
-# behdata2 <- behdata2[behdata2$Focus!="TEA",]
-# behdata2 <- behdata2[behdata2$Focus!="BAK",]
-# behdata2$Focus <- factor(behdata2$Focus)
-lr4 <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata4) # The PCA load coefficient goes in the wrong direction!!!!???
+behdata4 <- behdata4[behdata4$Activity!="OFF",]
+behdata4$Activity <- factor(behdata4$Activity)
+behdata4 <- behdata4[behdata4$Social!="IND",]
+behdata4$Social <- factor(behdata4$Social)
+behdata4 <- behdata4[behdata4$Focus!="TCOMP",]
+behdata4 <- behdata4[behdata4$Focus!="TD",]
+behdata4$Focus <- factor(behdata4$Focus)
+lr4 <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata4) # The PCA load coefficient goes in the right direction, but is not significant
 summary(lr4)
 anova(lr4, test="Chisq") # PCA Load is a very significant predictor
-1 - (lr4$deviance / lr4$null.deviance) # Pseudo-rsquared
+1 - (lr4$deviance / lr4$null.deviance) # Pseudo-rsquared=0.08
 
+# Considering extreme load episodes only -- only 163 samples after cleaning!
 behdata4b <- behdata[behdata$Study==4 & behdata$CoarseLoad %in% c(0,4),]
 behdata4b <- behdata4b[behdata4b$Activity!="OFF",]
 behdata4b$Activity <- factor(behdata4b$Activity)
@@ -207,13 +226,34 @@ behdata4b <- behdata4b[behdata4b$Focus!="TD",]
 behdata4b <- behdata4b[behdata4b$Focus!="TEA",]
 behdata4b <- behdata4b[behdata4b$Focus!="TPAP",]
 behdata4b$Focus <- factor(behdata4b$Focus)
-lr4b <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata4b) # The PCA load coefficient goes in the wrong direction!!!!???
+lr4b <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata4b) # The PCA load coefficient goes in the right direction, but is not significant
 summary(lr4b)
 anova(lr4b, test="Chisq") # PCA Load is a very significant predictor
-1 - (lr4b$deviance / lr4b$null.deviance) # Pseudo-rsquared
+1 - (lr4b$deviance / lr4b$null.deviance) # Pseudo-rsquared=0.05
 
 
-
-
+# Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
+# With all the coded episodes
+lm4 <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdata4)
+summary(lm4)
+anova(lm4)
+# Some trends/differences among with/without assistance
+lm4ass <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata4[behdata4$GroundTruth==0,])
+summary(lm4ass)
+anova(lm4ass)
+lm4noass <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata4[behdata4$GroundTruth==1,])
+summary(lm4noass)
+anova(lm4noass)
+# With only extreme episodes --- Better predictive power
+lm4b <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdata4b)
+summary(lm4b)
+# Some trends/differences among with/without assistance
+lm4bass <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata4b[behdata4b$GroundTruth==0,])
+summary(lm4bass)
+anova(lm4bass)
+lm4bnoass <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata4b[behdata4b$GroundTruth==1,])
+summary(lm4bnoass)
+anova(lm4bnoass)
 ```
 
+TODO: maybe at the end try several lm models, contrasting expert teachers vs. novice teachers, tabletop tech vs. laptop tech...?

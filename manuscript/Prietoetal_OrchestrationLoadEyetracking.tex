@@ -678,9 +678,7 @@ Orchestration load, Eye-tracking, Cognitive load, Classroom studies.
 OL = \beta_0 + \beta_1*A + \beta_2*S + \beta_3*F + \epsilon
 \label{formOLScat}
 \end{equation}
-
-TODO: Did we finally use a linear model or a GAM?
-
+%TODO: Did we finally use a linear model or a GAM?
 \item ...where A (current coordination activity) can be Explanation, Monitoring, Questioning etc. (i.e., for an individual teacher, different activities may represent different amounts of load); similarly, S (social plane) can be Individual, Small group, Class-wide; and F (focus of activity) can be the different classroom elements on which the teacher may focus, including students (could be represented graphically as an orchestration graph, see \cite{prieto2011recurrent}). 
 \item If we transform the categorical variables in Formula \ref{formOLScat} into binary variables, we are left with:
 \begin{multline}
@@ -715,8 +713,7 @@ OL = \beta_0 + \beta_{11}*A_{expl} + \beta_{12}*A_{monit} + ... \\ + \beta_{21}*
 \item Build statistical models of the orchestration load, e.g.,  similar to the linear one in formula \ref{formOLS} (see section \ref{sec:study4} to see an example)
 \end{enumerate}
 \end{itemize}
-
-TODO: add footnote about the sign issue, and how we solve it by positive signs or similarity with our PCA loadings (internal product)
+%TODO: add footnote about the sign issue, and how we solve it by positive signs and/or similarity with our PCA loadings (internal product)
 
 
 \begin{figure}[!t]
@@ -812,8 +809,8 @@ Case 4 & Open doors (primary) & 1 novice (researcher) & 3 (35-45' each) & Tablet
 \begin{itemize}
 \item To validate whether the OLS is a good predictor for orchestration load in this context, we assume as a ground truth that the lessons orchestrated by the novice teacher represented a higher load (Load=1) than the ones orchestrated by the expert (Load=0). 
 \item We then train a logistic regression model to try to predict the aforementioned ``ground truth'' using the known process variables (activity, social, focus -- coded from the video by a researcher) and the OLS
-\item As we can see in table \ref{tab:case1results}, once we take away the influence of the process variables, the OLS still remains a significant predictor of the assumed (binary) orchestration load ($p=0.0002$, see table \ref{tab:case1results}). Furthermore, this model including the OLS explains a considerable amount of the variance in the data (McFadden's pseudo-$R^2=0.88$) 
-\item An analysis of variance of the different variables in the model confirms this, with the OLS explaining most of the deviance in the data ($p<0.0001$). 
+\item As we can see in table \ref{tab:case1results}, once we take away the influence of the process variables, the OLS still remains a significant predictor of the assumed (binary) orchestration load ($p<0.001$, see table \ref{tab:case1results}). Furthermore, this model including the OLS explains a considerable amount of the variance in the data (McFadden's pseudo-$R^2=0.88$) 
+\item An analysis of variance of the different variables in the model confirms this, with the OLS explaining most of the deviance in the data ($p<0.001$). 
 \end{itemize}
 
 \begin{table}[!t]
@@ -821,12 +818,12 @@ Case 4 & Open doors (primary) & 1 novice (researcher) & 3 (35-45' each) & Tablet
 %\renewcommand{\arraystretch}{1.3}
 % if using array.sty, it might be a good idea to tweak the value of
 % \extrarowheight as needed to properly center the text within the cells
-\caption{Logistic regression model to predict assumed orchestration load (1--Novice, 0--Expert teacher)}
+\caption{Logistic regression model to predict assumed orchestration load (1--Novice, 0--Expert teacher) in case study 1}
 \label{tab:case1results}
 \centering
 %% Some packages, such as MDW tools, offer better commands for making tables
 %% than the plain LaTeX2e tabular which is used here.
-\begin{tabular}{|p{3cm}||r|r|r|r|}
+\begin{tabular}{|p{2.8cm}||r|r|r|r|}
 \hline
 Coefficient & Estimate & Std. error & z & p-value\\
 \hline
@@ -858,20 +855,107 @@ Focus: Whiteboard & -2.91 & 2.78 & -1.05 & 0.29 \\
 \subsubsection{Context}
 
 \begin{itemize}
-\item Face-to-face beginning of secondary school (11-12 yrs old), private international Swiss school, experienced teacher (more than 20 yrs experience), maths, two different cohorts of students (18-22 students each)
+\item Face-to-face beginning of secondary school (11-12 yrs old), private international Swiss school, experienced teacher (more than 20 yrs experience), maths, two different cohorts of students (18-22 students each) %TODO: Add photos of the usual and novel classrooms
 \item Two sessions recorded while teacher orchestrated student work using laptops and a geometry software (Geometer's Sketchpad) as well as a classroom management software; two sessions recorded while teacher orchestrated student groupwork using a novel technology (augmented paper tabletop interfaces, based on Tinkerlamp \cite{do2012tinkerlamp} and public display/projector)
 \end{itemize}
 
 \subsubsection{Results}
 
+\begin{itemize}
+\item To validate whether the OLS is a good predictor for orchestration load in this context, we assume as a ground truth that the lessons orchestrated using novel technology represented a higher load (Load=1) than the ones orchestrated with the usual technology (Load=0). 
+\item We then train a logistic regression model to try to predict the aforementioned ``ground truth'' using the known process variables (activity, social, focus -- coded from the video by a researcher) and the OLS
+\item As we can see in table \ref{tab:case2results}, once we take away the influence of the process variables, the OLS still remains a significant predictor of the assumed (binary) orchestration load ($p=0.002$). Furthermore, this model including the OLS explains a considerable amount of the variance in the data (McFadden's pseudo-$R^2=0.75$) 
+\item An analysis of variance of the different variables in the model confirms this, with the OLS explaining an appreciable part of the deviance in the data ($p<0.001$). 
+\end{itemize}
 
+\begin{table}[!t]
+%% increase table row spacing, adjust to taste
+%\renewcommand{\arraystretch}{1.3}
+% if using array.sty, it might be a good idea to tweak the value of
+% \extrarowheight as needed to properly center the text within the cells
+\caption{Logistic regression model to predict assumed orchestration load (1--New classroom technology, 0--Usual technology) in case study 2}
+\label{tab:case2results}
+\centering
+%% Some packages, such as MDW tools, offer better commands for making tables
+%% than the plain LaTeX2e tabular which is used here.
+\begin{tabular}{|p{2.8cm}||r|r|r|r|}
+\hline
+Coefficient & Estimate & Std. error & z & p-value\\
+\hline
+\hline
+Intercept (Explanation, Class-level, Focus on student faces) & -1.21 & 0.45 & -2.67 & 0.008** \\
+Activity: Monitoring & 2.92 & 0.71 & 4.08 & 0.00004*** \\
+Activity: Questioning & -1.54 & 0.78 & -1.98 & 0.05* \\
+Activity: Repairs & 0.37 & 0.93 & 0.40 & 0.69 \\
+Activity: Task distribution & 3.22 & 0.92 & 3.52 & 0.0004*** \\
+Social: Small group & 3.93 & 1.11 & 3.53 & 0.0004*** \\
+Social: Individual & -0.25 & 0.91 & -0.28 & 0.78 \\
+Focus: Student laptop & -20.45 & 1577 & -0.01 & 0.99 \\
+Focus: Paper elements & -2.31 & 0.74 & -3.14 & 0.002** \\
+Focus: Projector & 20.92 & 2921 & 0.01 & 0.99 \\
+Focus: Tabletop computer & 17.39 & 1758 & 0.01 & 0.99 \\
+Focus: Teacher computer & -2.68 & 0.92 & -2.93 & 0.003** \\
+\textbf{OLS} & \textbf{0.76} & \textbf{0.25} & \textbf{3.04} & \textbf{0.002**} \\
+\hline
+\end{tabular}
+\end{table}
 
 
 \subsection{Study 3: Exploring External Help in an Open Doors Day}
 
+\begin{itemize}
+\item Finally, we can also manipulate orchestration load of a classroom situation by having the teacher have an assistant\footnote{With clear pre-defined roles and task distribution among both facilitators, so that managing the assistant does not generate additional load.}: a teacher with an assistant will experience a lower orchestration load than one that has assistance
+\item Case study question: \textit{Will our model and OL score be able to discriminate similar learning situations, orchestrated by a same teacher, with and without an assistant orchestrator?}
+\end{itemize}
+
 \subsubsection{Context}
 
+\begin{itemize}
+\item Face-to-face math lessons enacted during an open-doors day in the lab with local school children (10-12 yrs old), public Swiss schools, novice teacher that was not the usual teacher (usual teachers present as passive observers), maths lesson combining mini-lecture, groupwork with tabletops and whole-class activity on projector (game), four different cohorts of students (19-21 students each) %TODO: Add photo of the classroom
+\item Four sessions recorded while teacher orchestrated the multi-tabletop classroom (augmented paper tabletop interfaces, based on Tinkerlamp \cite{do2012tinkerlamp} and public display/projector); in two of the sessions the assistant helped during the groupwork, dealing with half of the groups (in the rest of the lesson the assistant played no role)
+\item To answer the question about OLS as discriminator, only the relevant moments of the lesson (the groupwork) have been taken into account
+\end{itemize}
+
 \subsubsection{Results}
+
+
+\begin{itemize}
+\item To validate whether the OLS is a good predictor for orchestration load in this context, we assume as a ground truth that the lessons orchestrated without an assistant represented a higher load (Load=1) than the ones orchestrated with the assistant (Load=0) -- at least, for the parts of the lesson where the assistant had a role 
+\item We then train a logistic regression model to try to predict the aforementioned ``ground truth'' using the known process variables (activity, social, focus -- coded from the video by a researcher) and the OLS
+\item As we can see in table \ref{tab:case3results}, once we take away the influence of the process variables, the OLS shows clear, adequate trends (positive coefficient), but is no longer a significant predictor of the assumed (binary) orchestration load ($p=0.13$). Furthermore, this model including the OLS explains little variance in the data (McFadden's pseudo-$R^2=0.05$) 
+\item This may be due to the fact that we take only (the model is trained with 163 samples, versus $~400$ samples in the previous studies). We probably would have needed more data to see trends more clearly 
+\end{itemize}
+
+\begin{table}[!t]
+%% increase table row spacing, adjust to taste
+%\renewcommand{\arraystretch}{1.3}
+% if using array.sty, it might be a good idea to tweak the value of
+% \extrarowheight as needed to properly center the text within the cells
+\caption{Logistic regression model to predict assumed orchestration load (1--Without assistant, 0--With assistant) in case study 3}
+\label{tab:case3results}
+\centering
+%% Some packages, such as MDW tools, offer better commands for making tables
+%% than the plain LaTeX2e tabular which is used here.
+\begin{tabular}{|p{2.8cm}||r|r|r|r|}
+\hline
+Coefficient & Estimate & Std. error & z & p-value\\
+\hline
+\hline
+Intercept (Monitoring, Class-level, Focus on student backs) & 1.55 & 1.13 & 1.37 & 0.16 \\
+Activity: Questioning & 0.67 & 0.58 & 1.16 & 0.25 \\
+Activity: Repairs & 0.95 & 0.41 & 2.30 & 0.02* \\
+Activity: Task distribution & -0.37 & 0.64 & -0.58 & 0.56 \\
+Social: Small group & -0.18 & 0.66 & 0.27 & 0.79 \\
+Focus: Student faces & -1.65 & 1.27 & -1.30 & 0.19 \\
+Focus: Projector & -1.54 & 1.24 & -1.24 & 0.21 \\
+Focus: Tabletop computer & -0.77 & 1.24 & -0.62 & 0.54 \\
+\textbf{OLS} & \textbf{0.86} & \textbf{0.57} & \textbf{1.51} & \textbf{0.13} \\
+\hline
+\end{tabular}
+\end{table}
+
+
+
 
 \subsection{Study 4: Applying the Measure to an Unmanipulated Setting}
 \label{sec:study4}
@@ -893,6 +977,7 @@ Focus: Whiteboard & -2.91 & 2.78 & -1.05 & 0.29 \\
 
 \subsection{Orchestration Load Patterns and Learning Technology Insights}
 
+Talk about the insights from the linear models of the 4 case studies (do not show full tables, refer to the additional materials) -- maybe just a table with the different teachers and situations, and significant trends?
 
 ... technology affecting the mix of activities and hence the OL, without technology being the focus per se
 
