@@ -1,6 +1,9 @@
 ---
 title: "Towards a New PCA/FA Method"
-output: html_document
+output:
+  html_document: default
+  pdf_document:
+    keep_tex: yes
 ---
 
 # Load clean/preprocessed data
@@ -266,4 +269,31 @@ anova(lm4bnoass)
 
 ```
 
-TODO: maybe at the end try several lm models, contrasting expert teachers vs. novice teachers, tabletop tech vs. laptop tech...?
+### Study 1 (Study 4 in the new order)
+```{r, message=FALSE, warning=FALSE}
+
+# We train and evaluate for each study separately
+# Study 2
+behdata1 <- behdata <- loaddata[!is.na(loaddata$Activity) & !is.na(loaddata$Social) & !is.na(loaddata$Focus) & loaddata$Study==1,]
+# ... and we remove the samples with categorical variables that appear only very seldom
+behdata1$Activity <- factor(behdata1$Activity)
+behdata1$Social <- factor(behdata1$Social)
+behdata1 <- behdata1[behdata1$Focus!="W",]
+behdata1 <- behdata1[behdata1$Focus!="M",]
+behdata1 <- behdata1[behdata1$Focus!="RES",]
+behdata1$Focus <- factor(behdata1$Focus)
+
+# Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
+lm1 <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdata1)
+summary(lm1)
+anova(lm1)
+
+behdata1$session <- factor(behdata1$session)
+lm1sess <- lm(PCALoad1 ~ Activity + Social + Focus + session, data=behdata1)
+summary(lm1sess)
+anova(lm1sess)
+
+knitr::kable(
+  summary(lm1sess)$coefficients, caption = 'Some caption.'
+)
+```
