@@ -117,7 +117,6 @@ loaddata$PCALoad1 = pca.global$ind$coord[,1]
 loaddata$PCALoad2 = pca.global$ind$coord[,2]
 
 
-
 # clean up further the dataset, to keep only those samples for which we have process variables
 behdata <- loaddata[!is.na(loaddata$Activity) & !is.na(loaddata$Social) & !is.na(loaddata$Focus) & !is.na(loaddata$GroundTruth),]
 
@@ -126,13 +125,6 @@ lr1 <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(l
 summary(lr1)
 anova(lr1, test="Chisq") # PCA Load is a very significant predictor
 1 - (lr1$deviance / lr1$null.deviance) # Pseudo-rsquared
-
-
-# We train the logistic regression model using GAM
-lr1gam <- gam(GroundTruth ~ factor(Activity) + factor(Social) + factor(Focus) + s(PCALoad1), family=binomial(link='logit'), data=behdata)
-summary(lr1gam)
-anova(lr1gam, test="Chisq") # PCA Load is a very significant predictor
-1 - (lr1gam$deviance / lr1gam$null.deviance) # Pseudo-rsquared
 
 
 ```
@@ -153,13 +145,6 @@ lr2 <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(l
 summary(lr2)
 anova(lr2, test="Chisq") # PCA Load is a very significant predictor
 1 - (lr2$deviance / lr2$null.deviance) # Pseudo-rsquared
-
-
-lr2gam <- gam(GroundTruth ~ factor(Activity) + factor(Social) + factor(Focus) + s(PCALoad1), family=binomial(link='logit'), data=behdata2) # The PCA load coefficient goes in the wrong direction!!!!???
-summary(lr2gam)
-anova(lr2gam, test="Chisq") # PCA Load is a very significant predictor
-1 - (lr2gam$deviance / lr2gam$null.deviance) # Pseudo-rsquared
-
 
 
 
@@ -197,12 +182,6 @@ summary(lr3)
 anova(lr3, test="Chisq") # PCA Load is a very significant predictor
 1 - (lr3$deviance / lr3$null.deviance) # Pseudo-rsquared
 
-
-
-lr3gam <- gam(GroundTruth ~ factor(Activity) + factor(Social) + factor(Focus) + s(PCALoad1), family=binomial(link='logit'), data=behdata3) # The PCA load coefficient goes in the wrong direction!!!!???
-summary(lr3gam)
-anova(lr3gam, test="Chisq") # PCA Load is a very significant predictor
-1 - (lr3gam$deviance / lr3gam$null.deviance) # Pseudo-rsquared
 
 
 # Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
@@ -243,16 +222,6 @@ anova(lr4, test="Chisq") # PCA Load is a very significant predictor
 
 
 # Considering extreme load episodes only -- only 163 samples after cleaning!
-
-lr4gam <- gam(GroundTruth ~ factor(Activity) + factor(Social) + factor(Focus) + s(PCALoad1), family=binomial(link='logit'), data=behdata4) # The PCA load coefficient goes in the wrong direction!!!!???
-summary(lr4gam)
-anova(lr4gam, test="Chisq") # PCA Load is a very significant predictor
-1 - (lr4gam$deviance / lr4gam$null.deviance) # Pseudo-rsquared
-
-
-
-# Considering extreme load episodes only -- only 163 samples after cleaning!
-
 behdata4b <- behdata[behdata$Study==4 & behdata$CoarseLoad %in% c(0,4),]
 behdata4b <- behdata4b[behdata4b$Activity!="OFF",]
 behdata4b$Activity <- factor(behdata4b$Activity)
@@ -268,14 +237,6 @@ summary(lr4b)
 anova(lr4b, test="Chisq") # PCA Load is a very significant predictor
 
 1 - (lr4b$deviance / lr4b$null.deviance) # Pseudo-rsquared=0.05
-
-
-lr4bgam <- gam(GroundTruth ~ factor(Activity) + factor(Social) + factor(Focus) + s(PCALoad1), family=binomial(link='logit'), data=behdata4b) # The PCA load coefficient goes in the wrong direction!!!!???
-summary(lr4bgam)
-anova(lr4bgam, test="Chisq") # PCA Load is a very significant predictor
-1 - (lr4bgam$deviance / lr4bgam$null.deviance) # Pseudo-rsquared
-
-
 
 
 
