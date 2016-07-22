@@ -274,7 +274,7 @@ anova(lm4bnoass)
 
 # We train and evaluate for each study separately
 # Study 2
-behdata1 <- behdata <- loaddata[!is.na(loaddata$Activity) & !is.na(loaddata$Social) & !is.na(loaddata$Focus) & loaddata$Study==1,]
+behdata1 <- loaddata[!is.na(loaddata$Activity) & !is.na(loaddata$Social) & !is.na(loaddata$Focus) & loaddata$Study==1,]
 # ... and we remove the samples with categorical variables that appear only very seldom
 behdata1$Activity <- factor(behdata1$Activity)
 behdata1$Social <- factor(behdata1$Social)
@@ -297,3 +297,8 @@ knitr::kable(
   summary(lm1sess)$coefficients, caption = 'Some caption.'
 )
 ```
+
+
+## Big table of linear models and significant effect sizes
+
+(l$coefficients[l$coefficients[,4]<0.05,1])/s
