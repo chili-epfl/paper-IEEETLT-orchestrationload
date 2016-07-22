@@ -123,7 +123,7 @@ loaddata$PCALoad2 = pca.global$ind$coord[,2]
 # clean up further the dataset, to keep only those samples for which we have process variables
 behdata <- loaddata[!is.na(loaddata$Activity) & !is.na(loaddata$Social) & !is.na(loaddata$Focus) & !is.na(loaddata$GroundTruth),]
 
-# We train the logistic regression model
+# We train an overall logistic regression model
 lr1 <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata)
 summary(lr1)
 anova(lr1, test="Chisq") # PCA Load is a very significant predictor
@@ -151,17 +151,6 @@ anova(lr2, test="Chisq") # PCA Load is a very significant predictor
 
 
 
-# Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
-lm2 <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdata2)
-summary(lm2)
-# Some trends/differences among teachers (not quite significant, tho)
-lm2exp <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata2[behdata2$GroundTruth==0,])
-summary(lm2exp)
-anova(lm2exp)
-lm2nov <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata2[behdata2$GroundTruth==1,])
-summary(lm2nov)
-anova(lm2nov)
-
 ```
 
 
@@ -187,17 +176,6 @@ anova(lr3, test="Chisq") # PCA Load is a very significant predictor
 
 
 
-# Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
-lm3 <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdata3)
-summary(lm3)
-# Some trends/differences among technologies
-lm3usu <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata3[behdata3$GroundTruth==0,])
-summary(lm3usu)
-anova(lm3usu)
-lm3nov <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata3[behdata3$GroundTruth==1,])
-summary(lm3nov)
-anova(lm3nov)
-
 ```
 
 
@@ -205,7 +183,6 @@ anova(lm3nov)
 ### Study 4 (Study 3 in the new order)
 
 ```{r, message=FALSE, warning=FALSE}
-
 
 # Study 4
 # Considering all episodes (not only extreme load ones)
@@ -218,6 +195,10 @@ behdata4$Social <- factor(behdata4$Social)
 behdata4 <- behdata4[behdata4$Focus!="TCOMP",]
 behdata4 <- behdata4[behdata4$Focus!="TD",]
 behdata4$Focus <- factor(behdata4$Focus)
+
+behdata4 <- within(behdata4, Focus <- relevel(Focus, ref = 2))
+
+
 lr4 <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata4) # The PCA load coefficient goes in the right direction, but is not significant
 summary(lr4)
 anova(lr4, test="Chisq") # PCA Load is a very significant predictor
@@ -244,34 +225,10 @@ anova(lr4b, test="Chisq") # PCA Load is a very significant predictor
 
 
 
-# Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
-# With all the coded episodes
-lm4 <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdata4)
-summary(lm4)
-anova(lm4)
-# Some trends/differences among with/without assistance
-lm4ass <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata4[behdata4$GroundTruth==0,])
-summary(lm4ass)
-anova(lm4ass)
-lm4noass <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata4[behdata4$GroundTruth==1,])
-summary(lm4noass)
-anova(lm4noass)
-# With only extreme episodes --- Better predictive power
-lm4b <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdata4b)
-summary(lm4b)
-# Some trends/differences among with/without assistance
-lm4bass <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata4b[behdata4b$GroundTruth==0,])
-summary(lm4bass)
-anova(lm4bass)
-lm4bnoass <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata4b[behdata4b$GroundTruth==1,])
-summary(lm4bnoass)
-anova(lm4bnoass)
-
 ```
 
 ### Study 1 (Study 4 in the new order)
 ```{r, message=FALSE, warning=FALSE}
-
 # We train and evaluate for each study separately
 # Study 2
 behdata1 <- loaddata[!is.na(loaddata$Activity) & !is.na(loaddata$Social) & !is.na(loaddata$Focus) & loaddata$Study==1,]
@@ -282,6 +239,9 @@ behdata1 <- behdata1[behdata1$Focus!="W",]
 behdata1 <- behdata1[behdata1$Focus!="M",]
 behdata1 <- behdata1[behdata1$Focus!="RES",]
 behdata1$Focus <- factor(behdata1$Focus)
+
+behdata1 <- within(behdata1, Focus <- relevel(Focus, ref = 2))
+
 
 # Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
 lm1 <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdata1)
@@ -301,4 +261,138 @@ knitr::kable(
 
 ## Big table of linear models and significant effect sizes
 
-(l$coefficients[l$coefficients[,4]<0.05,1])/s
+
+
+### Study 2 (Study 1 in the new numbering)
+
+```{r message=F, warning=F}
+
+
+# Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
+lm2 <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdata2)
+summary(lm2)
+anova(lm2)
+# Significant trends in the linear model
+s <- sd(behdata2$PCALoad1)
+# Effect sizes of the significant coefficients
+(summary(lm2)$coefficients[summary(lm2)$coefficients[,4]<0.05,1])/s
+
+
+# Some trends/differences among teachers (not quite significant, tho)
+lm2exp <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata2[behdata2$GroundTruth==0,])
+summary(lm2exp)
+anova(lm2exp)
+# Effect sizes of the significant coefficients
+(summary(lm2exp)$coefficients[summary(lm2exp)$coefficients[,4]<0.05,1])/s
+
+
+lm2nov <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata2[behdata2$GroundTruth==1,])
+summary(lm2nov)
+anova(lm2nov)
+# Effect sizes of the significant coefficients
+(summary(lm2nov)$coefficients[summary(lm2nov)$coefficients[,4]<0.05,1])/s
+
+
+```
+
+### Study 3 (Study 2 in the new numbering)
+
+```{r message=F, warning=F}
+
+
+# Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
+lm3 <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdata3)
+summary(lm3)
+anova(lm3)
+# Significant trends in the linear model
+s <- sd(behdata3$PCALoad1)
+# Effect sizes of the significant coefficients
+(summary(lm3)$coefficients[summary(lm3)$coefficients[,4]<0.05,1])/s
+
+
+# Some trends/differences among technologies
+lm3usu <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata3[behdata3$GroundTruth==0,])
+summary(lm3usu)
+anova(lm3usu)
+# Effect sizes of the significant coefficients
+(summary(lm3usu)$coefficients[summary(lm3usu)$coefficients[,4]<0.05,1])/s
+
+
+lm3nov <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata3[behdata3$GroundTruth==1,])
+summary(lm3nov)
+anova(lm3nov)
+# Effect sizes of the significant coefficients
+(summary(lm3nov)$coefficients[summary(lm3nov)$coefficients[,4]<0.05,1])/s
+
+```
+
+
+
+### Study 4 (Study 3 in the new numbering)
+
+```{r message=F, warning=F}
+
+# We take the whole behavioral data, not only the comparable parts
+bdata4 <- loaddata[!is.na(loaddata$Activity) & !is.na(loaddata$Social) & !is.na(loaddata$Focus) & loaddata$Study==4,]
+# ... and we remove the samples with categorical variables that appear only very seldom
+bdata4 <- bdata4[bdata4$Activity!="OFF",]
+bdata4$Activity <- factor(bdata4$Activity)
+bdata4 <- bdata4[bdata4$Social!="IND",]
+bdata4$Social <- factor(bdata4$Social)
+bdata4 <- bdata4[bdata4$Focus!="TD",]
+bdata4$Focus <- factor(bdata4$Focus)
+
+bdata4 <- within(bdata4, Focus <- relevel(Focus, ref = 2))
+
+# Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
+# With all the coded episodes
+lm4 <- lm(PCALoad1 ~ Activity + Social + Focus, data=bdata4)
+summary(lm4)
+anova(lm4)
+# Significant trends in the linear model
+s <- sd(bdata4$PCALoad1)
+# Effect sizes of the significant coefficients
+(summary(lm4)$coefficients[summary(lm4)$coefficients[,4]<0.05,1])/s
+
+```
+
+### Study 1 (Study 4 in the new numbering)
+
+```{r message=F, warning=F}
+# We change the reference so that it is always student faces
+behdata1 <- within(behdata1, Focus <- relevel(Focus, ref = 2))
+
+# Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
+lm1 <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdata1)
+summary(lm1)
+anova(lm1)
+# Significant trends in the linear model
+s <- sd(behdata1$PCALoad1)
+# Effect sizes of the significant coefficients
+(summary(lm1)$coefficients[summary(lm1)$coefficients[,4]<0.05,1])/s
+
+```
+
+### Summary table
+
+
+| Case study | 1 | 1 | 2 | 2 | 3 | 4 |
+|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
+| Teacher | A | B | C | C | D | D |
+| Teacher expertise | Expert | Novice | Expert | Expert | Novice | Novice |
+| Tech setup | Laptops+Projector | Laptops+Projector | Laptops+Projector | Tabletops+Projector | Tabletops | Tabletops+Projector |
+| Student age | Young adults | Young adults | 11-12yrs | 11-12yrs | 10-12yrs | 10-12yrs |
+| No. sessions | 2 | 1 | 2 | 2 | 4 | 3 |
+| No. episodes to model | 142 | 49 | 236 | 166 | 667 | 332 |
+| (Intercept) | -0.64 | +1.55 | +0.39 | +1.45 | +0.95 | |
+| Activity: Monitoring | | | | -1.08 | | |
+| Activity: Repairs | | | | -1.07 |-0.38 | |
+| Activity: Task distribution | | | | -0.75 | | |
+| Social: Individual | | | -0.77 | | | |
+| Social: Small group | | | | | -0.70 | |
+| Focus: Student backs | | | | | -0.51 | -0.68 |
+| Focus: Papers | | | -0.51 | -0.98 | | |
+| Focus: Projector | | | | -1.13 | -0.49 | |
+| Focus: Tabletop | | | | | -0.92 | -1.80 |
+| Focus: Teacher computer | | | -0.88 | | -0.40 | |
+
