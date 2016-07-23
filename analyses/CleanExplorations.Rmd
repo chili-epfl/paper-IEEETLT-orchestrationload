@@ -123,6 +123,20 @@ loaddata$PCALoad2 = pca.global$ind$coord[,2]
 # clean up further the dataset, to keep only those samples for which we have process variables
 behdata <- loaddata[!is.na(loaddata$Activity) & !is.na(loaddata$Social) & !is.na(loaddata$Focus) & !is.na(loaddata$GroundTruth),]
 
+behdata$Activity <- factor(behdata$Activity)
+behdata$Social <- factor(behdata$Social)
+behdata$Focus <- factor(behdata$Focus)
+
+# We relevel the factors so that the intercept is a combination that exists in all case studies: MON/CLS/FAC
+behdata <- within(behdata, Activity <- relevel(Activity, ref = 3))
+behdata <- within(behdata, Focus <- relevel(Focus, ref = 2))
+
+
+# See the order of factor levels
+table(behdata$Activity)
+table(behdata$Social)
+table(behdata$Focus)
+
 # We train an overall logistic regression model
 lr1 <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata)
 summary(lr1)
@@ -144,6 +158,13 @@ behdata2$Social <- factor(behdata2$Social)
 behdata2 <- behdata2[behdata2$Focus!="TEA",]
 behdata2 <- behdata2[behdata2$Focus!="BAK",]
 behdata2$Focus <- factor(behdata2$Focus)
+
+# See the order of factor levels
+table(behdata2$Activity)
+table(behdata2$Social)
+table(behdata2$Focus)
+
+
 lr2 <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata2) # The PCA load coefficient goes in the wrong direction!!!!???
 summary(lr2)
 anova(lr2, test="Chisq") # PCA Load is a very significant predictor
@@ -169,6 +190,12 @@ behdata3 <- behdata3[behdata3$Focus!="TNG",]
 behdata3 <- behdata3[behdata3$Focus!="RES",]
 behdata3 <- behdata3[behdata3$Focus!="BAK",]
 behdata3$Focus <- factor(behdata3$Focus)
+
+# See the order of factor levels
+table(behdata3$Activity)
+table(behdata3$Social)
+table(behdata3$Focus)
+
 lr3 <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata3) # The PCA load coefficient goes in the wrong direction!!!!???
 summary(lr3)
 anova(lr3, test="Chisq") # PCA Load is a very significant predictor
@@ -196,7 +223,10 @@ behdata4 <- behdata4[behdata4$Focus!="TCOMP",]
 behdata4 <- behdata4[behdata4$Focus!="TD",]
 behdata4$Focus <- factor(behdata4$Focus)
 
-behdata4 <- within(behdata4, Focus <- relevel(Focus, ref = 2))
+# See the order of factor levels
+table(behdata4$Activity)
+table(behdata4$Social)
+table(behdata4$Focus)
 
 
 lr4 <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata4) # The PCA load coefficient goes in the right direction, but is not significant
@@ -216,6 +246,13 @@ behdata4b <- behdata4b[behdata4b$Focus!="TD",]
 behdata4b <- behdata4b[behdata4b$Focus!="TEA",]
 behdata4b <- behdata4b[behdata4b$Focus!="TPAP",]
 behdata4b$Focus <- factor(behdata4b$Focus)
+
+# See the order of factor levels
+table(behdata4b$Activity)
+table(behdata4b$Social)
+table(behdata4b$Focus)
+
+
 lr4b <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata4b) # The PCA load coefficient goes in the right direction, but is not significant
 summary(lr4b)
 anova(lr4b, test="Chisq") # PCA Load is a very significant predictor
@@ -240,7 +277,13 @@ behdata1 <- behdata1[behdata1$Focus!="M",]
 behdata1 <- behdata1[behdata1$Focus!="RES",]
 behdata1$Focus <- factor(behdata1$Focus)
 
+behdata1 <- within(behdata1, Activity <- relevel(Activity, ref = 2))
 behdata1 <- within(behdata1, Focus <- relevel(Focus, ref = 2))
+
+# See the order of factor levels
+table(behdata1$Activity)
+table(behdata1$Social)
+table(behdata1$Focus)
 
 
 # Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
@@ -342,6 +385,7 @@ bdata4$Social <- factor(bdata4$Social)
 bdata4 <- bdata4[bdata4$Focus!="TD",]
 bdata4$Focus <- factor(bdata4$Focus)
 
+bdata4 <- within(bdata4, Activity <- relevel(Activity, ref = 2))
 bdata4 <- within(bdata4, Focus <- relevel(Focus, ref = 2))
 
 # Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
@@ -360,7 +404,6 @@ s <- sd(bdata4$PCALoad1)
 
 ```{r message=F, warning=F}
 # We change the reference so that it is always student faces
-behdata1 <- within(behdata1, Focus <- relevel(Focus, ref = 2))
 
 # Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
 lm1 <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdata1)
@@ -373,6 +416,167 @@ s <- sd(behdata1$PCALoad1)
 
 ```
 
+### Expert teachers vs. novice teachers
+
+
+```{r message=F, warning=F}
+################################################################
+# Experts: data2exp+data3
+behdata2$Activity <- as.character(behdata2$Activity)
+behdata2$Social <- as.character(behdata2$Social)
+behdata2$Focus <- as.character(behdata2$Focus)
+behdata2exp <- behdata2[behdata2$GroundTruth==0,]
+
+behdata3$Activity <- as.character(behdata3$Activity)
+behdata3$Social <- as.character(behdata3$Social)
+behdata3$Focus <- as.character(behdata3$Focus)
+
+behdataexp <- rbind(behdata2exp,behdata3)
+behdataexp$Activity <- factor(behdataexp$Activity)
+behdataexp$Social <- factor(behdataexp$Social)
+behdataexp$Focus <- factor(behdataexp$Focus)
+
+# Relevel?
+behdataexp <- within(behdataexp, Activity <- relevel(Activity, ref = 2))
+
+table(behdataexp$Activity)
+table(behdataexp$Social)
+table(behdataexp$Focus)
+
+# Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
+lmexp <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdataexp)
+summary(lmexp)
+anova(lmexp)
+# Significant trends in the linear model
+s <- sd(behdataexp$PCALoad1)
+# Effect sizes of the significant coefficients
+(summary(lmexp)$coefficients[summary(lmexp)$coefficients[,4]<0.05,1])/s
+
+########################################################
+# Novices: data2nov+data1+data4
+behdata2nov <- behdata2[behdata2$GroundTruth==1,]
+
+behdata1$Activity <- as.character(behdata1$Activity)
+behdata1$Social <- as.character(behdata1$Social)
+behdata1$Focus <- as.character(behdata1$Focus)
+
+bdata4$Activity <- as.character(bdata4$Activity)
+bdata4$Social <- as.character(bdata4$Social)
+bdata4$Focus <- as.character(bdata4$Focus)
+
+behdatanov <- rbind(behdata1,behdata2nov,bdata4)
+behdatanov$Activity <- factor(behdatanov$Activity)
+behdatanov$Social <- factor(behdatanov$Social)
+behdatanov$Focus <- factor(behdatanov$Focus)
+
+# Relevel?
+behdatanov <- within(behdatanov, Activity <- relevel(Activity, ref = 2))
+behdatanov <- within(behdatanov, Focus <- relevel(Focus, ref = 2))
+
+table(behdatanov$Activity)
+table(behdatanov$Social)
+table(behdatanov$Focus)
+
+# Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
+lmnov <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdatanov)
+summary(lmnov)
+anova(lmnov)
+# Significant trends in the linear model
+s <- sd(behdatanov$PCALoad1)
+# Effect sizes of the significant coefficients
+(summary(lmnov)$coefficients[summary(lmnov)$coefficients[,4]<0.05,1])/s
+
+
+```
+
+
+### Laptops vs. Tabletops
+
+```{r message=F, warning=F}
+################################################################
+# Laptops: data2+data3usu
+behdata3lap <- behdata3[behdata3$GroundTruth==0,]
+
+behdatatab <- rbind(behdata2,behdata3lap)
+behdatatab$Activity <- factor(behdatatab$Activity)
+behdatatab$Social <- factor(behdatatab$Social)
+behdatatab$Focus <- factor(behdatatab$Focus)
+
+table(behdatatab$Activity)
+table(behdatatab$Social)
+table(behdatatab$Focus)
+# Relevel?
+behdatatab <- within(behdatatab, Activity <- relevel(Activity, ref = 2))
+
+# Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
+lmlap <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdatatab)
+summary(lmlap)
+anova(lmlap)
+# Significant trends in the linear model
+s <- sd(behdatatab$PCALoad1)
+# Effect sizes of the significant coefficients
+(summary(lmlap)$coefficients[summary(lmlap)$coefficients[,4]<0.05,1])/s
+
+
+
+################################################################
+# Tabletops: data1+data3nov+data4
+behdata3tab <- behdata3[behdata3$GroundTruth==1,]
+
+behdatatab <- rbind(behdata1,behdata3tab,bdata4)
+behdatatab$Activity <- factor(behdatatab$Activity)
+behdatatab$Social <- factor(behdatatab$Social)
+behdatatab$Focus <- factor(behdatatab$Focus)
+
+# Relevel?
+behdatatab <- within(behdatatab, Activity <- relevel(Activity, ref = 2))
+behdatatab <- within(behdatatab, Focus <- relevel(Focus, ref = 2))
+
+table(behdatatab$Activity)
+table(behdatatab$Social)
+table(behdatatab$Focus)
+
+# Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
+lmtab <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdatatab)
+summary(lmtab)
+anova(lmtab)
+# Significant trends in the linear model
+s <- sd(behdatatab$PCALoad1)
+# Effect sizes of the significant coefficients
+(summary(lmtab)$coefficients[summary(lmtab)$coefficients[,4]<0.05,1])/s
+
+```
+
+### Overall dataset!?
+
+```{r message=F, warning=F}
+
+behdataall <- rbind(behdata1,behdata2,behdata3,bdata4)
+behdataall$Activity <- factor(behdataall$Activity)
+behdataall$Social <- factor(behdataall$Social)
+behdataall$Focus <- factor(behdataall$Focus)
+
+# Relevel?
+behdataall <- within(behdataall, Activity <- relevel(Activity, ref = 2))
+behdataall <- within(behdataall, Focus <- relevel(Focus, ref = 2))
+
+table(behdataall$Activity)
+table(behdataall$Social)
+table(behdataall$Focus)
+
+# Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
+lmall <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdataall)
+summary(lmall)
+anova(lmall)
+# Significant trends in the linear model
+s <- sd(behdataall$PCALoad1)
+# Effect sizes of the significant coefficients
+(summary(lmall)$coefficients[summary(lmall)$coefficients[,4]<0.05,1])/s
+
+
+```
+
+
 ### Summary table
 
 
@@ -384,15 +588,16 @@ s <- sd(behdata1$PCALoad1)
 | Student age | Young adults | Young adults | 11-12yrs | 11-12yrs | 10-12yrs | 10-12yrs |
 | No. sessions | 2 | 1 | 2 | 2 | 4 | 3 |
 | No. episodes to model | 142 | 49 | 236 | 166 | 667 | 332 |
-| (Intercept) | -0.64 | +1.55 | +0.39 | +1.45 | +0.95 | |
-| Activity: Monitoring | | | | -1.08 | | |
-| Activity: Repairs | | | | -1.07 |-0.38 | |
+| Model fit (Adj. Rsquared) | 0.11 | 0.30 | 0.39 | 0.29 | 0.48 | 0.44 |
+| (Intercept: MON,CLS,FAC) | -0.72 | +1.14 | | +1.45 | +0.70 | |
+| Activity: Explanation | | | | +1.08 | | |
+| Activity: Questioning | | | | +0.97 | | |
 | Activity: Task distribution | | | | -0.75 | | |
 | Social: Individual | | | -0.77 | | | |
 | Social: Small group | | | | | -0.70 | |
 | Focus: Student backs | | | | | -0.51 | -0.68 |
 | Focus: Papers | | | -0.51 | -0.98 | | |
 | Focus: Projector | | | | -1.13 | -0.49 | |
-| Focus: Tabletop | | | | | -0.92 | -1.80 |
+| Focus: Tabletop | | | | -1.09 | -0.92 | -1.80 |
 | Focus: Teacher computer | | | -0.88 | | -0.40 | |
 
