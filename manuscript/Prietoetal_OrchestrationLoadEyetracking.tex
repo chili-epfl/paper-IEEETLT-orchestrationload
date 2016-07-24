@@ -771,7 +771,7 @@ Study & Setting & Teachers & Sessions (session length) & Technological support &
 \hline
 Case 1 & University & 1 expert, 1 novice & 2+1 (45-65' each) & Laptops, classroom projector & Validate measure/model & Teacher expertise (novice vs. expert) \\
 \hline
-Case 2 & Primary school & 1 expert & 2+2 (80' each) & Laptops, classroom projector // Tabletops, classroom projector & Validate measure/model & Familiarity with technology (usual vs. novel) \\
+Case 2 & Primary school & 1 expert & 2+2 (80' each) & Laptops, classroom projector vs. Tabletops, classroom projector & Validate measure/model & Familiarity with technology (usual vs. novel) \\
 \hline
 Case 3 & Open doors (primary) & 1 novice (researcher) & 4 (35-45' each) & Tabletops, classroom projector & Validate measure/model & External (human) help (without/with helper) \\
 \hline
@@ -1050,12 +1050,14 @@ Focus: Teacher desk & 0.06 & 0.14 & 0.43 & 0.67\\
 
 \begin{itemize}
 \item Case study 4 illustrates how the OLS, behavioral variables and statistical models can be used to extract insights about the orchestration load of a classroom situation
-\item Applying the same kind of modelling to the data of all our studies, we can begin to get insights into the kind of influence that these process variables have on orchestration load (Table \ref{tab:trends}, the complete data analysis and results is available online\footnote{TODO: Add github repo}) 
-
-
-... (some common, some teacher- or techsetup- specific) ...
-
-\item Additional aspects are noteworthy... focus on technology does not seem to be especially high load ... technology affecting the mix of activities and hence the OL, without technology being the focus per se -- one reason we need to measure this in authentic settings, not just in the lab (where focus is often forced on the technology)
+\item Applying the same kind of modelling to the data of all our studies, we can begin to get insights into the kind of influence that these process variables have on orchestration load (Table \ref{tab:trends}, the complete data analysis and results is available online\footnote{\href{https://github.com/chili-epfl/paper-IEEETLT-orchestrationload}{https://github.com/chili-epfl/paper-IEEETLT-orchestrationload}.}) 
+\item For example, in case study 1, the reference episodes (monitoring, class-level, looking at student faces), was appreciably lower load for the expert teacher (while for the novice it was higher)
+\item In case study 2, the same teacher had significantly higher loads while explaining or questioning to students when using the novel tabletop technology, even if looking at the tabletops themselves was appreciably less load than monitoring the class while looking at faces
+\item Joining the data from multiple case studies, we can make comparisons between laptop classrooms vs. tabletop ones: the reference monitoring at the class-level is higher load in the tabletop classroom,  questioning episodes or tabletop-related technical problems were higher load too, in the tabletops there were more moments of looking at student backs (even if they are lower load). Also commonalities in both kinds of classrooms: individual and group-level interaction was lower load, looking at the teacher computer was lower load
+\item Furthermore, joining the data from all the cases, we also can start extracting some general trends in how the different process variables seem to affect orchestration load: the reference (monitoring, class-level, faces) are higher load, other social levels and focuses were lower load than faces, technical problems were even higher load than monitoring
+\item Additional aspects are noteworthy: the influence of technology on load \textit{does not seem to be direct} (when looking at the UI), but rather it modifies the mix of teaching activities. \textit{Different classroom technologies} (and probably also new pedagogical designs) \textit{change what teachers do, and how difficult each teaching activity is} -- e.g., by increasing the uncertainty of the situation, so more effort is put into reading student faces
+\item This supports the idea of studying orchestration in realistic classroom conditions, not just in the lab (where focus is often forced on measuring direct technology usage). Also, it seems to support some of the existing "design for orchestration" guidelines, such as providing (learning analytics-powered) support for teacher awareness of the learning process \cite{dillenbourg2013design}.
+\item But, again, these results are extracted from a very limited dataset and are not guaranteed to be generalizable. More studies needed!
 \end{itemize}
 
 \begin{table*}[!t]
@@ -1063,23 +1065,62 @@ Focus: Teacher desk & 0.06 & 0.14 & 0.43 & 0.67\\
 %\renewcommand{\arraystretch}{1.3}
 % if using array.sty, it might be a good idea to tweak the value of
 % \extrarowheight as needed to properly center the text within the cells
-\caption{Summary of the statistically-significant process variable factors and their effect sizes (in terms of Cohen's d)}
+\caption{Summary of the statistically-significant process variable factors and their effect sizes (in terms of Cohen's $d$ \cite{cohen1977statistical})}
 \label{tab:trends}
 \centering
 %% Some packages, such as MDW tools, offer better commands for making tables
 %% than the plain LaTeX2e tabular which is used here.
-\begin{tabular}{|c||p{1.5cm}|p{1.5cm}|p{2cm}|p{3.4cm}|p{2cm}|p{3.4cm}|}
-\hline
-Study & Setting & Teachers & Sessions (session length) & Technological support & Main goal & Target variable\\
-\hline
-\hline
-Case 1 & University & 1 expert, 1 novice & 2+1 (45-65' each) & Laptops, classroom projector & Validate measure/model & Teacher expertise (novice vs. expert) \\
-\hline
+\begin{tabular}{|p{3cm}||p{1.2cm}|p{1.2cm}|p{1.2cm}|p{1.2cm}|p{1.2cm}|p{1.2cm}|p{1.2cm}|p{1.2cm}|p{1.2cm}|}
+  \hline
+Case & 1       & 1       & 2       & 2       & 3       & 4       & 1+2     & 2+3+4   & 1+2+3+4 \\ 
+  \hline
+  Teacher & A       & B       & C       & C       & D       & D       & A+B+C   & C+D     & A+B+C+D \\ 
+  \hline
+  Expertise & Expert & Novice & Expert & Expert & Novice & Novice & Varied & Varied & Varied \\ 
+  \hline
+  Technology & Laptops + Projector   & Laptops + Projector   & Laptops + Projector   & Tabletops + Projector & Tabletops + Projector & Tabletops only      & Laptops + Projector   & Tabletops           & Varied              \\ 
+  \hline
+  Students & Young adults & Young adults & 11-12yrs     & 11-12yrs     & 10-12yrs     & 10-12yrs     & Varied       & 10-12yrs     & Varied       \\ 
+  \hline
+  No.sessions &  2 &  1 &  2 &  2 &  4 &  3 &  5 &  9 & 14 \\ 
+  \hline
+  No.episodes &  142 &   49 &  236 &  166 &  667 &  332 &  427 & 1165 & 1592 \\ 
+  \hline
+  Adjusted $R^2$ of model & 0.11 & 0.30 & 0.39 & 0.29 & 0.48 & 0.44 & 0.16 & 0.45 & 0.35 \\ 
+  \hline
+   \hline
+  Reference (Monitoring, Class-level, Focus on student faces) & -0.72 &  +1.15 &     &     &  +0.70 &     &     &  +0.66 &  +0.45 \\ 
+   \hline
+  Activity: Explanation (lecturing) &   &   &   & +1.1 &   &   &   &   &   \\ 
+   \hline
+  Activity: Solve technical problems &    &    &    &    &    &    &    & +0.47 & +0.48 \\ 
+   \hline
+  Activity: Questioning &    &    &    & +0.97 &    &    &    & +0.30 &    \\ 
+   \hline
+  Activity: Task distribution &    &    &    &    &    &    & -0.5 &    &    \\ 
+   \hline
+  Social: Small-group &     &     &     &     & -0.70 &     &     & -0.63 & -0.51 \\ 
+   \hline
+  Social: Individual &     &     & -0.77 &     &     &     & -0.50 & -0.78 & -0.69 \\ 
+   \hline
+  Focus: Student backs &     &     &     &     & -0.51 & -0.68 &     & -0.68 & -0.50 \\ 
+   \hline
+  Focus: Table or desk &     &     &     &     &     &     &     &     & -0.77 \\ 
+   \hline
+  Focus: Pieces of paper &     &     & -0.51 & -0.98 &     &     & -0.55 & -0.58 & -0.63 \\ 
+   \hline
+  Focus: Projector &     &     &     & -1.13 & -0.49 &     &     & -0.54 & -0.41 \\ 
+   \hline
+  Focus: Student laptops &    &    &    &    &    &    &    &    & -0.3 \\ 
+   \hline
+  Focus: Tabletop computers &     &     &     & -1.09 & -0.92 & -1.80 &     & -1.07 & -0.98 \\ 
+   \hline
+  Focus: Teacher's computer &     &     & -0.88 &     & -0.40 &     & -0.51 & -0.32 & -0.61 \\ 
+   \hline
+  Focus: Whiteboard &     &     &     &     &     &     & -0.61 &     & -0.65 \\ 
+   \hline
 \end{tabular}
 \end{table*}
-
-
-TODO: Translate the table from R markdown!
 
 
 \section{Conclusion}
@@ -1087,7 +1128,7 @@ TODO: Translate the table from R markdown!
 \begin{itemize}
 \item This paper presented the notion of orchestration load, a model to try to quantify it, and a method to measure it using with mobile eyetrackers complemented with behavioral analysis (video coding)
 \item Our results in 4 case studies, 14 sessions, 4 teachers support OLS (a linear combination of 4 ET measures related to cognitive load) as a discriminant measure of orchestration load (comparing teacher expertise, novel/usual technology and --partially-- having an assistant)
-\item The statistical models built accepting OLS as a reliable measure of load, provide a first glimpse of how different activities, , influence the load of teachers in different situations
+\item The statistical models built accepting OLS as a reliable measure of load, provide a first glimpse of how different kinds of classroom episodes influence the load of teachers in different kinds of technological setups
 \item Future work: different process variables and coding schemes, different non-linear models of orchestration load, other sensors of load (accelerometers for physical load, e.g., skin conductance? heart rate? EEG?)
 \item Need to share datasets (but with privacy) so that we can get reliable methods, measures and models for classroom usability that can be used in real settings (and maybe at scale!)
 \item Could even be extended to study other professions and activities that are complex, social, ... in their natural setting

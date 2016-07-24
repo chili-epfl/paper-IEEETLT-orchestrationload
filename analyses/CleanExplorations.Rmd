@@ -1,9 +1,9 @@
 ---
 title: "Towards a New PCA/FA Method"
 output:
-  html_document: default
   pdf_document:
     keep_tex: yes
+  html_document: default
 ---
 
 # Load clean/preprocessed data
@@ -22,10 +22,15 @@ data1$Study <- 1
 # Data for study 2
 data2 <- get(load("./data/study2/study2ProcessedData.Rda"))
 data2$Study <- 2
+levels(data2$Focus)[levels(data2$Focus)=="TAB"] <- "DSK"
+levels(data2$Focus)[levels(data2$Focus)=="WHIT"] <- "WHI"
+levels(data2$Activity)[levels(data2$Activity)=="QUEST"] <- "QUE"
 
 # Data for study 3
 data3 <- get(load("./data/study3/study3ProcessedData.Rda"))
 data3$Study <- 3
+levels(data3$Focus)[levels(data3$Focus)=="LAP"] <- "SCOMP"
+levels(data3$Focus)[levels(data3$Focus)=="PRJ"] <- "PROJ"
 
 # Data for study 4
 data4 <- get(load("./data/study4/study4ProcessedData.Rda"))
@@ -59,8 +64,6 @@ data3$value.Sac <- replaceOutliers(data3$value.Sac,valueNA = F,coef = 10, method
 data3$Social <- as.character(data3$Social)
 data3$Activity <- as.character(data3$Activity)
 data3$Focus <- as.character(data3$Focus)
-# Solve inconsistency with other studies labels
-data3[!is.na(data3$Focus) & data3$Focus=="PRJ","Focus"] <- "PROJ"
 data3$Subject <- "W"
 
 
@@ -76,10 +79,8 @@ data2$Social <- as.character(data2$Social)
 data2$Activity <- as.character(data2$Activity)
 data2$Focus <- as.character(data2$Focus)
 # Solve inconsistency with other studies labels
-data2[!is.na(data2$Activity) & data2$Activity=="QUEST","Activity"] <- "QUE"
-data2[!is.na(data2$Focus) & data2$Focus=="WHIT","Focus"] <- "WHI"
 data2[data2$GroundTruth==1,"Subject"] <- "K"
-data2[data2$GroundTruth==0,"Subject"] <- "K"
+data2[data2$GroundTruth==0,"Subject"] <- "P"
 
 # Cleanup of study 1 data
 data1 <- data1[,-c(7:9)]
@@ -129,7 +130,7 @@ behdata$Focus <- factor(behdata$Focus)
 
 # We relevel the factors so that the intercept is a combination that exists in all case studies: MON/CLS/FAC
 behdata <- within(behdata, Activity <- relevel(Activity, ref = 3))
-behdata <- within(behdata, Focus <- relevel(Focus, ref = 2))
+behdata <- within(behdata, Focus <- relevel(Focus, ref = 3))
 
 
 # See the order of factor levels
@@ -153,6 +154,7 @@ anova(lr1, test="Chisq") # PCA Load is a very significant predictor
 # Study 2
 behdata2 <- behdata[behdata$Study==2,]
 # ... and we remove the samples with categorical variables that appear only very seldom
+behdata2$Activity <- factor(behdata2$Activity)
 behdata2 <- behdata2[behdata2$Social!="GRP",]
 behdata2$Social <- factor(behdata2$Social)
 behdata2 <- behdata2[behdata2$Focus!="TEA",]
@@ -170,11 +172,14 @@ summary(lr2)
 anova(lr2, test="Chisq") # PCA Load is a very significant predictor
 1 - (lr2$deviance / lr2$null.deviance) # Pseudo-rsquared
 
-
-
 ```
 
+```{r, results="asis"}
 
+library(xtable)
+xtable(summary(lr2)$coefficients, digits = c(0,2,2,2,3))
+
+```
 
 ### Study 3 (Study 2 in the new order)
 
@@ -205,6 +210,11 @@ anova(lr3, test="Chisq") # PCA Load is a very significant predictor
 
 ```
 
+```{r, results="asis"}
+
+xtable(summary(lr3)$coefficients, digits = c(0,2,2,2,3))
+
+```
 
 
 ### Study 4 (Study 3 in the new order)
@@ -212,29 +222,6 @@ anova(lr3, test="Chisq") # PCA Load is a very significant predictor
 ```{r, message=FALSE, warning=FALSE}
 
 # Study 4
-# Considering all episodes (not only extreme load ones)
-behdata4 <- behdata[behdata$Study==4,]
-# ... and we remove the samples with categorical variables that appear only very seldom
-behdata4 <- behdata4[behdata4$Activity!="OFF",]
-behdata4$Activity <- factor(behdata4$Activity)
-behdata4 <- behdata4[behdata4$Social!="IND",]
-behdata4$Social <- factor(behdata4$Social)
-behdata4 <- behdata4[behdata4$Focus!="TCOMP",]
-behdata4 <- behdata4[behdata4$Focus!="TD",]
-behdata4$Focus <- factor(behdata4$Focus)
-
-# See the order of factor levels
-table(behdata4$Activity)
-table(behdata4$Social)
-table(behdata4$Focus)
-
-
-lr4 <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata4) # The PCA load coefficient goes in the right direction, but is not significant
-summary(lr4)
-anova(lr4, test="Chisq") # PCA Load is a very significant predictor
-1 - (lr4$deviance / lr4$null.deviance) # Pseudo-rsquared=0.08
-
-
 # Considering extreme load episodes only -- only 163 samples after cleaning!
 behdata4b <- behdata[behdata$Study==4 & behdata$CoarseLoad %in% c(0,4),]
 behdata4b <- behdata4b[behdata4b$Activity!="OFF",]
@@ -260,7 +247,11 @@ anova(lr4b, test="Chisq") # PCA Load is a very significant predictor
 1 - (lr4b$deviance / lr4b$null.deviance) # Pseudo-rsquared=0.05
 
 
+```
 
+```{r, results="asis"}
+
+xtable(summary(lr4b)$coefficients, digits = c(0,2,2,2,3))
 
 ```
 
@@ -287,23 +278,21 @@ table(behdata1$Focus)
 
 
 # Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
-lm1 <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdata1)
-summary(lm1)
-anova(lm1)
-
 behdata1$session <- factor(behdata1$session)
 lm1sess <- lm(PCALoad1 ~ Activity + Social + Focus + session, data=behdata1)
 summary(lm1sess)
 anova(lm1sess)
 
-knitr::kable(
-  summary(lm1sess)$coefficients, caption = 'Some caption.'
-)
 ```
 
 
-## Big table of linear models and significant effect sizes
+```{r, results="asis"}
 
+xtable(summary(lm1sess)$coefficients, digits = c(0,2,2,2,3))
+
+```
+
+## Big table of linear models and significant effect sizes
 
 
 ### Study 2 (Study 1 in the new numbering)
@@ -318,25 +307,46 @@ anova(lm2)
 # Significant trends in the linear model
 s <- sd(behdata2$PCALoad1)
 # Effect sizes of the significant coefficients
-(summary(lm2)$coefficients[summary(lm2)$coefficients[,4]<0.05,1])/s
-
+sizes <- (summary(lm2)$coefficients[summary(lm2)$coefficients[,4]<0.05,1])/s
 
 # Some trends/differences among teachers (not quite significant, tho)
 lm2exp <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata2[behdata2$GroundTruth==0,])
 summary(lm2exp)
 anova(lm2exp)
 # Effect sizes of the significant coefficients
-(summary(lm2exp)$coefficients[summary(lm2exp)$coefficients[,4]<0.05,1])/s
+sizes <- (summary(lm2exp)$coefficients[summary(lm2exp)$coefficients[,4]<0.05,1])/s
+
+results2exp <- data.frame(Case="1",Teacher="A",Expertise="Expert",Technology="Laptops+Projector",Students="Young adults", stringsAsFactors = F)
+results2exp$No.sessions <- length(unique(behdata2[behdata2$GroundTruth==0,"session"]))
+results2exp$No.episodes <- sum(table(behdata2[behdata2$GroundTruth==0,"Activity"]))
+results2exp$Rsquared.adj <- summary(lm2exp)$adj.r.squared
+if(length(names(sizes))==0){
+  results2exp$Intercept <- sizes
+} else {
+  results2exp <- cbind(results2exp,as.data.frame(t(sizes)))
+  if(names(results2exp)[9]=="(Intercept)") names(results2exp)[9] <- "Intercept" 
+} 
+
 
 
 lm2nov <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata2[behdata2$GroundTruth==1,])
 summary(lm2nov)
 anova(lm2nov)
 # Effect sizes of the significant coefficients
-(summary(lm2nov)$coefficients[summary(lm2nov)$coefficients[,4]<0.05,1])/s
+sizes <- (summary(lm2nov)$coefficients[summary(lm2nov)$coefficients[,4]<0.05,1])/s
 
-
+results2nov <- data.frame(Case="1",Teacher="B",Expertise="Novice",Technology="Laptops+Projector",Students="Young adults", stringsAsFactors = F)
+results2nov$No.sessions <- length(unique(behdata2[behdata2$GroundTruth==1,"session"]))
+results2nov$No.episodes <- sum(table(behdata2[behdata2$GroundTruth==1,"Activity"]))
+results2nov$Rsquared.adj <- summary(lm2nov)$adj.r.squared
+if(length(names(sizes))==0){
+  results2nov$Intercept <- sizes
+} else {
+  results2nov <- cbind(results2nov,as.data.frame(t(sizes)))
+  if(names(results2nov)[9]=="(Intercept)") names(results2nov)[9] <- "Intercept" 
+} 
 ```
+
 
 ### Study 3 (Study 2 in the new numbering)
 
@@ -350,7 +360,7 @@ anova(lm3)
 # Significant trends in the linear model
 s <- sd(behdata3$PCALoad1)
 # Effect sizes of the significant coefficients
-(summary(lm3)$coefficients[summary(lm3)$coefficients[,4]<0.05,1])/s
+sizes <- (summary(lm3)$coefficients[summary(lm3)$coefficients[,4]<0.05,1])/s
 
 
 # Some trends/differences among technologies
@@ -358,15 +368,35 @@ lm3usu <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata3[behdata3$GroundT
 summary(lm3usu)
 anova(lm3usu)
 # Effect sizes of the significant coefficients
-(summary(lm3usu)$coefficients[summary(lm3usu)$coefficients[,4]<0.05,1])/s
+sizes <- (summary(lm3usu)$coefficients[summary(lm3usu)$coefficients[,4]<0.05,1])/s
+
+results3usu <- data.frame(Case="2",Teacher="C",Expertise="Expert",Technology="Laptops+Projector",Students="11-12yrs", stringsAsFactors = F)
+results3usu$No.sessions <- length(unique(behdata3[behdata3$GroundTruth==0,"session"]))
+results3usu$No.episodes <- sum(table(behdata3[behdata3$GroundTruth==0,"Activity"]))
+results3usu$Rsquared.adj <- summary(lm3usu)$adj.r.squared
+if(length(names(sizes))==0){
+  results3usu$Intercept <- sizes
+} else {
+  results3usu <- cbind(results3usu,as.data.frame(t(sizes)))
+  if(names(results3usu)[9]=="(Intercept)") names(results3usu)[9] <- "Intercept" 
+} 
 
 
 lm3nov <-lm(PCALoad1 ~ Activity + Social + Focus, data=behdata3[behdata3$GroundTruth==1,])
 summary(lm3nov)
 anova(lm3nov)
 # Effect sizes of the significant coefficients
-(summary(lm3nov)$coefficients[summary(lm3nov)$coefficients[,4]<0.05,1])/s
-
+sizes <- (summary(lm3nov)$coefficients[summary(lm3nov)$coefficients[,4]<0.05,1])/s
+results3nov <- data.frame(Case="2",Teacher="C",Expertise="Expert",Technology="Tabletops+Projector",Students="11-12yrs", stringsAsFactors = F)
+results3nov$No.sessions <- length(unique(behdata3[behdata3$GroundTruth==1,"session"]))
+results3nov$No.episodes <- sum(table(behdata3[behdata3$GroundTruth==1,"Activity"]))
+results3nov$Rsquared.adj <- summary(lm3nov)$adj.r.squared
+if(length(names(sizes))==0){
+  results3nov$Intercept <- sizes
+} else {
+  results3nov <- cbind(results3nov,as.data.frame(t(sizes)))
+  if(names(results3nov)[9]=="(Intercept)") names(results3nov)[9] <- "Intercept" 
+} 
 ```
 
 
@@ -396,9 +426,21 @@ anova(lm4)
 # Significant trends in the linear model
 s <- sd(bdata4$PCALoad1)
 # Effect sizes of the significant coefficients
-(summary(lm4)$coefficients[summary(lm4)$coefficients[,4]<0.05,1])/s
+sizes <- (summary(lm4)$coefficients[summary(lm4)$coefficients[,4]<0.05,1])/s
+results4 <- data.frame(Case="3",Teacher="D",Expertise="Novice",Technology="Tabletops+Projector",Students="10-12yrs", stringsAsFactors = F)
+results4$No.sessions <- length(unique(bdata4[,"session"]))
+results4$No.episodes <- sum(table(bdata4[,"Activity"]))
+results4$Rsquared.adj <- summary(lm4)$adj.r.squared
+if(length(names(sizes))==0){
+  results4$Intercept <- sizes
+} else {
+  results4 <- cbind(results4,as.data.frame(t(sizes)))
+  if(names(results4)[9]=="(Intercept)") names(results4)[9] <- "Intercept" 
+} 
 
 ```
+
+
 
 ### Study 1 (Study 4 in the new numbering)
 
@@ -412,82 +454,23 @@ anova(lm1)
 # Significant trends in the linear model
 s <- sd(behdata1$PCALoad1)
 # Effect sizes of the significant coefficients
-(summary(lm1)$coefficients[summary(lm1)$coefficients[,4]<0.05,1])/s
+sizes <- (summary(lm1)$coefficients[summary(lm1)$coefficients[,4]<0.05,1])/s
+results1 <- data.frame(Case="4",Teacher="D",Expertise="Novice",Technology="Tabletops only",Students="10-12yrs", stringsAsFactors = F)
+results1$No.sessions <- length(unique(behdata1[,"session"]))
+results1$No.episodes <- sum(table(behdata1[,"Activity"]))
+results1$Rsquared.adj <- summary(lm1)$adj.r.squared
+if(length(names(sizes))==0){
+  results1$Intercept <- sizes
+} else {
+  results1 <- cbind(results1,as.data.frame(t(sizes)))
+  if(names(results1)[9]=="(Intercept)") names(results1)[9] <- "Intercept" 
+} 
 
 ```
 
-### Expert teachers vs. novice teachers
 
 
-```{r message=F, warning=F}
-################################################################
-# Experts: data2exp+data3
-behdata2$Activity <- as.character(behdata2$Activity)
-behdata2$Social <- as.character(behdata2$Social)
-behdata2$Focus <- as.character(behdata2$Focus)
-behdata2exp <- behdata2[behdata2$GroundTruth==0,]
 
-behdata3$Activity <- as.character(behdata3$Activity)
-behdata3$Social <- as.character(behdata3$Social)
-behdata3$Focus <- as.character(behdata3$Focus)
-
-behdataexp <- rbind(behdata2exp,behdata3)
-behdataexp$Activity <- factor(behdataexp$Activity)
-behdataexp$Social <- factor(behdataexp$Social)
-behdataexp$Focus <- factor(behdataexp$Focus)
-
-# Relevel?
-behdataexp <- within(behdataexp, Activity <- relevel(Activity, ref = 2))
-
-table(behdataexp$Activity)
-table(behdataexp$Social)
-table(behdataexp$Focus)
-
-# Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
-lmexp <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdataexp)
-summary(lmexp)
-anova(lmexp)
-# Significant trends in the linear model
-s <- sd(behdataexp$PCALoad1)
-# Effect sizes of the significant coefficients
-(summary(lmexp)$coefficients[summary(lmexp)$coefficients[,4]<0.05,1])/s
-
-########################################################
-# Novices: data2nov+data1+data4
-behdata2nov <- behdata2[behdata2$GroundTruth==1,]
-
-behdata1$Activity <- as.character(behdata1$Activity)
-behdata1$Social <- as.character(behdata1$Social)
-behdata1$Focus <- as.character(behdata1$Focus)
-
-bdata4$Activity <- as.character(bdata4$Activity)
-bdata4$Social <- as.character(bdata4$Social)
-bdata4$Focus <- as.character(bdata4$Focus)
-
-behdatanov <- rbind(behdata1,behdata2nov,bdata4)
-behdatanov$Activity <- factor(behdatanov$Activity)
-behdatanov$Social <- factor(behdatanov$Social)
-behdatanov$Focus <- factor(behdatanov$Focus)
-
-# Relevel?
-behdatanov <- within(behdatanov, Activity <- relevel(Activity, ref = 2))
-behdatanov <- within(behdatanov, Focus <- relevel(Focus, ref = 2))
-
-table(behdatanov$Activity)
-table(behdatanov$Social)
-table(behdatanov$Focus)
-
-# Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
-lmnov <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdatanov)
-summary(lmnov)
-anova(lmnov)
-# Significant trends in the linear model
-s <- sd(behdatanov$PCALoad1)
-# Effect sizes of the significant coefficients
-(summary(lmnov)$coefficients[summary(lmnov)$coefficients[,4]<0.05,1])/s
-
-
-```
 
 
 ### Laptops vs. Tabletops
@@ -497,26 +480,34 @@ s <- sd(behdatanov$PCALoad1)
 # Laptops: data2+data3usu
 behdata3lap <- behdata3[behdata3$GroundTruth==0,]
 
-behdatatab <- rbind(behdata2,behdata3lap)
-behdatatab$Activity <- factor(behdatatab$Activity)
-behdatatab$Social <- factor(behdatatab$Social)
-behdatatab$Focus <- factor(behdatatab$Focus)
+behdatalap <- rbind(behdata2,behdata3lap)
+behdatalap$Activity <- factor(behdatalap$Activity)
+behdatalap$Social <- factor(behdatalap$Social)
+behdatalap$Focus <- factor(behdatalap$Focus)
 
-table(behdatatab$Activity)
-table(behdatatab$Social)
-table(behdatatab$Focus)
+table(behdatalap$Activity)
+table(behdatalap$Social)
+table(behdatalap$Focus)
 # Relevel?
-behdatatab <- within(behdatatab, Activity <- relevel(Activity, ref = 2))
 
 # Assuming the PCALoad is a good indicator, what can we say about the load of the situation?
-lmlap <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdatatab)
+lmlap <- lm(PCALoad1 ~ Activity + Social + Focus, data=behdatalap)
 summary(lmlap)
 anova(lmlap)
 # Significant trends in the linear model
-s <- sd(behdatatab$PCALoad1)
+s <- sd(behdatalap$PCALoad1)
 # Effect sizes of the significant coefficients
-(summary(lmlap)$coefficients[summary(lmlap)$coefficients[,4]<0.05,1])/s
-
+sizes <- (summary(lmlap)$coefficients[summary(lmlap)$coefficients[,4]<0.05,1])/s
+resultslap <- data.frame(Case="1+2",Teacher="A+B+C",Expertise="Varied",Technology="Laptops+Projector",Students="Varied", stringsAsFactors = F)
+resultslap$No.sessions <- length(unique(behdatalap[,"session"]))
+resultslap$No.episodes <- sum(table(behdatalap[,"Activity"]))
+resultslap$Rsquared.adj <- summary(lmlap)$adj.r.squared
+if(length(names(sizes))==0){
+  resultslap$Intercept <- sizes
+} else {
+  resultslap <- cbind(resultslap,as.data.frame(t(sizes)))
+  if(names(resultslap)[9]=="(Intercept)") names(resultslap)[9] <- "Intercept" 
+} 
 
 
 ################################################################
@@ -527,10 +518,6 @@ behdatatab <- rbind(behdata1,behdata3tab,bdata4)
 behdatatab$Activity <- factor(behdatatab$Activity)
 behdatatab$Social <- factor(behdatatab$Social)
 behdatatab$Focus <- factor(behdatatab$Focus)
-
-# Relevel?
-behdatatab <- within(behdatatab, Activity <- relevel(Activity, ref = 2))
-behdatatab <- within(behdatatab, Focus <- relevel(Focus, ref = 2))
 
 table(behdatatab$Activity)
 table(behdatatab$Social)
@@ -543,9 +530,23 @@ anova(lmtab)
 # Significant trends in the linear model
 s <- sd(behdatatab$PCALoad1)
 # Effect sizes of the significant coefficients
-(summary(lmtab)$coefficients[summary(lmtab)$coefficients[,4]<0.05,1])/s
+sizes <- (summary(lmtab)$coefficients[summary(lmtab)$coefficients[,4]<0.05,1])/s
+resultstab <- data.frame(Case="2+3+4",Teacher="C+D",Expertise="Varied",Technology="Tabletops",Students="10-12yrs", stringsAsFactors = F)
+resultstab$No.sessions <- length(unique(behdatatab[,"session"]))
+resultstab$No.episodes <- sum(table(behdatatab[,"Activity"]))
+resultstab$Rsquared.adj <- summary(lmtab)$adj.r.squared
+if(length(names(sizes))==0){
+  resultstab$Intercept <- sizes
+} else {
+  resultstab <- cbind(resultstab,as.data.frame(t(sizes)))
+  if(names(resultstab)[9]=="(Intercept)") names(resultstab)[9] <- "Intercept" 
+} 
 
 ```
+
+
+
+
 
 ### Overall dataset!?
 
@@ -555,10 +556,6 @@ behdataall <- rbind(behdata1,behdata2,behdata3,bdata4)
 behdataall$Activity <- factor(behdataall$Activity)
 behdataall$Social <- factor(behdataall$Social)
 behdataall$Focus <- factor(behdataall$Focus)
-
-# Relevel?
-behdataall <- within(behdataall, Activity <- relevel(Activity, ref = 2))
-behdataall <- within(behdataall, Focus <- relevel(Focus, ref = 2))
 
 table(behdataall$Activity)
 table(behdataall$Social)
@@ -571,8 +568,17 @@ anova(lmall)
 # Significant trends in the linear model
 s <- sd(behdataall$PCALoad1)
 # Effect sizes of the significant coefficients
-(summary(lmall)$coefficients[summary(lmall)$coefficients[,4]<0.05,1])/s
-
+sizes <- (summary(lmall)$coefficients[summary(lmall)$coefficients[,4]<0.05,1])/s
+resultsall <- data.frame(Case="1+2+3+4",Teacher="A+B+C+D",Expertise="Varied",Technology="Varied",Students="Varied", stringsAsFactors = F)
+resultsall$No.sessions <- length(unique(behdataall[,"session"]))
+resultsall$No.episodes <- sum(table(behdataall[,"Activity"]))
+resultsall$Rsquared.adj <- summary(lmall)$adj.r.squared
+if(length(names(sizes))==0){
+  resultsall$Intercept <- sizes
+} else {
+  resultsall <- cbind(resultsall,as.data.frame(t(sizes)))
+  if(names(resultsall)[9]=="(Intercept)") names(resultsall)[9] <- "Intercept" 
+} 
 
 ```
 
@@ -580,24 +586,21 @@ s <- sd(behdataall$PCALoad1)
 ### Summary table
 
 
-| Case study | 1 | 1 | 2 | 2 | 3 | 4 |
-|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
-| Teacher | A | B | C | C | D | D |
-| Teacher expertise | Expert | Novice | Expert | Expert | Novice | Novice |
-| Tech setup | Laptops+Projector | Laptops+Projector | Laptops+Projector | Tabletops+Projector | Tabletops | Tabletops+Projector |
-| Student age | Young adults | Young adults | 11-12yrs | 11-12yrs | 10-12yrs | 10-12yrs |
-| No. sessions | 2 | 1 | 2 | 2 | 4 | 3 |
-| No. episodes to model | 142 | 49 | 236 | 166 | 667 | 332 |
-| Model fit (Adj. Rsquared) | 0.11 | 0.30 | 0.39 | 0.29 | 0.48 | 0.44 |
-| (Intercept: MON,CLS,FAC) | -0.72 | +1.14 | | +1.45 | +0.70 | |
-| Activity: Explanation | | | | +1.08 | | |
-| Activity: Questioning | | | | +0.97 | | |
-| Activity: Task distribution | | | | -0.75 | | |
-| Social: Individual | | | -0.77 | | | |
-| Social: Small group | | | | | -0.70 | |
-| Focus: Student backs | | | | | -0.51 | -0.68 |
-| Focus: Papers | | | -0.51 | -0.98 | | |
-| Focus: Projector | | | | -1.13 | -0.49 | |
-| Focus: Tabletop | | | | -1.09 | -0.92 | -1.80 |
-| Focus: Teacher computer | | | -0.88 | | -0.40 | |
+```{r, results="asis"}
 
+
+results <- merge(rbind(results2exp,results2nov),results3usu,all = T)
+results <- merge(results,results3nov,all=T)
+results <- merge(results,results4, all=T)
+results <- merge(results,results1, all=T)
+results <- merge(results,resultslap, all=T)
+results <- merge(results,resultstab, all=T)
+results <- merge(results, resultsall, all=T)
+#Reorder the rows to get the desired table layout
+results <- results[c(1:2,5:6,8:9,3,7,4),]
+library(xtable)
+#tr <- xtable(results,digits=2)
+#print(xtable(t( mapply("format", results, digits=c(0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2)))), type="html")
+print(xtable(t( mapply("format", results, digits=c(0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2)))))
+
+```
