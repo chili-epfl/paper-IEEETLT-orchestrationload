@@ -121,6 +121,11 @@ loaddata$PCALoad1 = pca.global$ind$coord[,1]
 loaddata$PCALoad2 = pca.global$ind$coord[,2]
 
 
+v = pca.global$svd$V[,1]
+v[3] = 0
+loaddata$PCALoadPos = as.matrix(t(t(loaddata[, 3:6]) - colMeans(loaddata[, 3:6]))) %*% as.matrix ( v )
+
+
 # clean up further the dataset, to keep only those samples for which we have process variables
 behdata <- loaddata[!is.na(loaddata$Activity) & !is.na(loaddata$Social) & !is.na(loaddata$Focus) & !is.na(loaddata$GroundTruth),]
 
@@ -144,6 +149,11 @@ summary(lr1)
 anova(lr1, test="Chisq") # PCA Load is a very significant predictor
 1 - (lr1$deviance / lr1$null.deviance) # Pseudo-rsquared
 
+# Validation that PCA is good enough to capture the variance
+lr1b <- glm(GroundTruth ~ Activity + Social + Focus + value.Mean + value.SD + value.Sac + value.Fix, family=binomial(link='logit'), data=behdata)
+summary(lr1b)
+anova(lr1b, test="Chisq") # PCA Load is a very significant predictor
+1 - (lr1b$deviance / lr1b$null.deviance) # Pseudo-rsquared
 
 ```
 
@@ -240,7 +250,7 @@ table(behdata4b$Social)
 table(behdata4b$Focus)
 
 
-lr4b <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata4b) # The PCA load coefficient goes in the right direction, but is not significant
+lr4b <- glm(GroundTruth ~ Activity + Social + Focus + PCALoadPos, family=binomial(link='logit'), data=behdata4b) # The PCA load coefficient goes in the right direction, but is not significant
 summary(lr4b)
 anova(lr4b, test="Chisq") # PCA Load is a very significant predictor
 
