@@ -404,12 +404,12 @@
         Kshitij~Sharma,
         {\L}ukasz~Kidzinski,
         and~Pierre~Dillenbourg% <-this % stops a space
-\IEEEcompsocitemizethanks{\IEEEcompsocthanksitem All co-authors were with the Computer Human Interaction for Learning and Instruction Lab (CHILI), \'Ecole Polytechnique F\'ed\'erale de Lausanne, Switzerland.\protect\\
+\IEEEcompsocitemizethanks{\IEEEcompsocthanksitem All co-authors were with the Computer Human Interaction for Learning and Instruction (CHILI) Lab, \'Ecole Polytechnique F\'ed\'erale de Lausanne, Switzerland.\protect\\
 % note need leading \protect in front of \\ to get a newline within \thanks as
 % \\ is fragile and will error, could use \hfil\break instead.
-E-mail: see https://people.epfl.ch/luis.prieto
+%E-mail: lprisan@hotmail.com
 }% <-this % stops an unwanted space
-\thanks{Manuscript received April XX, XXXX; revised August XX, XXXX.}}
+\thanks{Manuscript received October XX, XXXX; revised December XX, XXXX.}}
 
 % note the % following the last \IEEEmembership and also \thanks - 
 % these prevent an unwanted space from occurring between the last author name
@@ -475,7 +475,7 @@ E-mail: see https://people.epfl.ch/luis.prieto
 %100-200 words
 %\boldmath
 %\blindtext[1]
-Orchestration load is the effort a teacher spends in coordinating the multiple activities and learning processes in an educational setting. It has been proposed as a construct to evaluate the usability of learning technologies at the classroom level, in the same way cognitive load is used as a measure of usability at the individual level. However, so far this notion has remained abstract. In order to ground orchestration load in empirical evidence and study it in a more systematic and detailed manner, we propose a model of factors that affect such load, and a measure based on physiological data (concretely, mobile eye-tracking measures), along with behavioral data. This paper presents the results of applying this method to four exploratory case studies, where teachers orchestrated technology-enhanced face-to-face lessons respectively with primary, secondary school and university students. The data from these studies provides a first validation of this method in different conditions, illustrate how it can be used to understand the effect of different classroom factors on the orchestration load, and to extract evidence-based insights about classroom orchestration with different technologies.
+Orchestration load is the effort a teacher spends in coordinating the multiple activities and learning processes in an educational setting. It has been proposed as a construct to evaluate the usability of learning technologies at the classroom level, in the same way cognitive load is used as a measure of usability at the individual level. However, so far this notion has remained abstract. In order to ground orchestration load in empirical evidence and study it in a more systematic and detailed manner, we propose a model of factors that affect such load, and a way of measuring orchestration load based on physiological data (concretely, mobile eye-tracking measures), along with behavioral data. This paper presents the results of applying this method to four exploratory case studies, where teachers orchestrated technology-enhanced face-to-face lessons respectively with primary, secondary school and university students. The data from these studies provides a first validation of this method in different conditions, and illustrate how it can be used to understand the effect of different classroom factors on the orchestration load. From these studies we also extract evidence-based insights about classroom orchestration with different technologies.
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
@@ -540,20 +540,32 @@ Orchestration load, Eye-tracking, Cognitive load, Classroom studies.
 
 %\IEEEPARstart{T}{his} demo file is intended to serve as a ``starter file'' ...
 
+\IEEEPARstart{F}{ar} from initial visions of a ``teacherless'' classroom, teacher facilitation has been shown to be a crucial factor for the effectiveness of technology-enhanced learning (TEL), especially in authentic, face-to-face settings \cite{Gomez2013,Onrubia2012}. Supporting this facilitation, however, has has also been declared one of the foremost challenges in the area of learning technologies, under the name `orchestrating learning' \cite{STELLARorch}. 
+
+Orchestration has been defined as ``the process of productively coordinating supportive interventions across multiple learning activities occurring at multiple social levels'' \cite{Dillenbourg2009}. Although different learning technology researchers use the term with a variety of meanings \cite{Prieto2011}, there is a certain consensus that orchestration specifically addresses the challenges of TEL practice under the multiple constraints of \textit{authentic educational settings} \cite{Roschelle2013}.
+
+From a learning technology designer perspective, orchestration-related research denotes a focus on ``usability at the \textit{classroom} level'' \cite{Dillenbourg2011}. In this sense, researchers sometimes use the term `orchestration load' \cite{Dillenbourg2013,Cuendet2013,munoz2013sharing}, in analogy to cognitive load: a useful construct related to \textit{individual} usability, which has been studied thoroughly in cognitive science, educational psychology and human-computer interaction \cite{sweller1994cognitive,oviatt2006human}.
+
+However, in contrast with cognitive load (which is often studied in controlled laboratory conditions), face-to-face classroom orchestration load is hard to simulate accurately in a lab. This has led most researchers to study it by observing authentic classroom conditions (e.g., a real course with dozens of students and a teacher). This difficulty, alas, has also led to the term being used in a rather high-level and abstract manner \cite{Dillenbourg2013,Cuendet2013}. Indeed, the few attempts made at quantifying orchestration load rely on ad-hoc proxy metrics such as classroom workflow efficiency (e.g., Alavi et al.'s studies on the use of distributed awareness displays to facilitate the orchestration of problem sessions \cite{Alavi2012}).
+
+In our previous work, we have explored the feasibility of mixing physiological, behavioral and subjective measures to study orchestration load in authentic settings, in a more concrete and detailed manner \cite{Prieto2015ectel}. However, we still lack models of the factors that affect orchestration load, and reliable measures to help us compare different classroom situations in terms of orchestration load. This paper presents one such model and a method for quantifying orchestration load. Our method combines observational and machine learning methods and attempts to disentangle the influence that different factors (e.g., the concrete teaching activity at hand, or the social plane of teacher-student interactions) have on such load.
+
+As an initial validation of the proposed model and measurements, we have applied them in several case studies set in a variety of technology-enhanced classrooms (including both commonplace technologies like laptops, and more novel ones such as augmented paper tabletops). These case studies included a total of 14 sessions led by four teachers with different levels of experience, and students ranging from primary school children to university students. In each of these cases, we used reasonable postulates (e.g., in the same situation, an experienced teacher will be less loaded than a novel one) as the ``ground truth'' for validating the models.
+
+In the following section, we describe the main related work on the measurement of cognitive load and orchestration load. Section \ref{sec:model} describes our proposed model of factors that affect orchestration load, and section \ref{sec:measures} describes a method for measuring orchestration load built on the basis of such model. Section \ref{sec:eval} describes the four case studies on which we have applied this model and measurements. The following section discusses the implications of these studies (both in terms of measuring orchestration load, and insights about classroom usability). We close the paper with several remarks about our current and future work on this line of research.
 
 % Pierre: in general, look out for long sentences!
-
-\begin{itemize}
-\item Teacher facilitation is a crucial factor in TEL in authentic, face-to-face settings \cite{Gomez2013,Onrubia2012}, often under the term `orchestration' (definition from \cite{Dillenbourg2009})
-\item The term is used in a variety of meanings  \cite{Prieto2011}, but in learning technologies (LT) research, it specifically addresses the challenges of TEL practice in \textit{authentic} settings \cite{Roschelle2013}
-\item From the educational technology designer perspective, orchestration-related research denotes a focus on `usability at the classroom level' \cite{Dillenbourg2011}
-\item In this sense, LT researchers speak of `orchestration load' \cite{Dillenbourg2013,Cuendet2013,munoz2013sharing}, in analogy to cognitive load, a concept studied thoroughly in cognitive science, educational psychology and human-computer interaction \cite{sweller1994cognitive,oviatt2006human}
-\item However, in contrast with cognitive load (studied in controlled laboratory settings), face-to-face classroom orchestration load is hard to simulate accurately (i.e., may need to be studied in authentic conditions). This has led to the term being used in high-level, abstract terms \cite{Dillenbourg2013,Cuendet2013}, seldom quantified except through ad-hoc proxies such as classroom workflow efficiency \cite{Alavi2012}
-\item In our previous work we have explored a mixed quanti/quali approach to studying orchestration load in authentic settings in a more concrete and detailed manner \cite{Prieto2015ectel}. However, we still lack models of orchestration load, and reliable measures to help us compare different classroom situations in terms of orchestration load
-\item This paper presents one such model and measure, and their initial validation through several case studies in a variety of authentic educational settings, from primary school students using tabletop technologies to university students with laptops. (highlight we use postulates --about the independent variable-- as ground truth)
-\item Our method combines experimental and machine learning methods...
-\item The rest of the paper is structured as follows...
-\end{itemize}
+%\begin{itemize}
+%\item Teacher facilitation is a crucial factor in TEL in authentic, face-to-face settings \cite{Gomez2013,Onrubia2012}, often under the term `orchestration' (definition from \cite{Dillenbourg2009})
+%\item The term is used in a variety of meanings  \cite{Prieto2011}, but in learning technologies (LT) research, it specifically addresses the challenges of TEL practice in \textit{authentic} settings \cite{Roschelle2013}
+%\item From the educational technology designer perspective, orchestration-related research denotes a focus on `usability at the classroom level' \cite{Dillenbourg2011}
+%\item In this sense, LT researchers speak of `orchestration load' \cite{Dillenbourg2013,Cuendet2013,munoz2013sharing}, in analogy to cognitive load, a concept studied thoroughly in cognitive science, educational psychology and human-computer interaction \cite{sweller1994cognitive,oviatt2006human}
+%\item However, in contrast with cognitive load (studied in controlled laboratory settings), face-to-face classroom orchestration load is hard to simulate accurately (i.e., may need to be studied in authentic conditions). This has led to the term being used in high-level, abstract terms \cite{Dillenbourg2013,Cuendet2013}, seldom quantified except through ad-hoc proxies such as classroom workflow efficiency \cite{Alavi2012}
+%\item In our previous work we have explored a mixed quanti/quali approach to studying orchestration load in authentic settings in a more concrete and detailed manner \cite{Prieto2015ectel}. However, we still lack models of orchestration load, and reliable measures to help us compare different classroom situations in terms of orchestration load
+%\item This paper presents one such model and measure, and their initial validation through several case studies in a variety of authentic educational settings, from primary school students using tabletop technologies to university students with laptops. (highlight we use postulates --about the independent variable-- as ground truth)
+%\item Our method combines experimental and machine learning methods...
+%\item The rest of the paper is structured as follows...
+%\end{itemize}
 
 
 % needed in second column of first page if using \IEEEpubid
@@ -731,6 +743,7 @@ OL = \beta_0 + \beta_{A1}*A_{expl} + \beta_{A2}*A_{monit} + ... \\ + \beta_{S1}*
 \end{figure}
 
 \section{Case Studies}
+\label{sec:eval}
 
 \subsection{Methodology}
 
@@ -1040,6 +1053,7 @@ Focus: Teacher desk & 0.06 & 0.14 & 0.43 & 0.67\\
 
 
 \section{Discussion}
+\label{sec:discussion}
 
 \subsection{Eye-tracking Measures to Estimate Orchestration Load}
 
@@ -1133,7 +1147,7 @@ Case & 1       & 1       & 2       & 2       & 3       & 4       & 1+2     & 2+3
 
 
 \section{Conclusion}
-
+\label{sec:conclusion}
 \begin{itemize}
 \item This paper presented the notion of orchestration load, a model to try to quantify it, and a method to measure it using with mobile eyetrackers complemented with behavioral analysis (video coding)
 \item Our results in 4 case studies, 14 sessions, 4 teachers support OLS (a linear combination of 4 ET measures related to cognitive load) as a discriminant measure of orchestration load (comparing teacher expertise, novel/usual technology and --partially-- having an assistant)
