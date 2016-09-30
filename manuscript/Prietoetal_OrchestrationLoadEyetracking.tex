@@ -782,8 +782,6 @@ The fact that mobile eye-trackers also provide a first-person audiovisual record
 
 \end{enumerate}
 
-%TODO: change also "extreme load episodes" in the figure!
-
 %\begin{itemize}
 %\item At the most basic level, we want to track orchestration load (OL) in a moment-to-moment manner, in order to later take away the influence of process variables and find out if two situations had distinctly lower/higher load
 %\item Since direct measurement of load (e.g., with dual-task) is problematic in complex multi-tasking activities \cite{Paas2003}, we have to resort to indirect measures (e.g., physiological)
@@ -799,22 +797,44 @@ The fact that mobile eye-trackers also provide a first-person audiovisual record
 
 \subsection{Methodology}
 
-\begin{itemize}
-\item The goals (research questions) of this paper are twofold:
+In order to provide initial evidence of the validity of the models and measures of orchestration outlined above, we have applied them in authentic classroom conditions, in several case studies spanning a total of 14 sessions. The sessions were orchestrated by four different teachers, with actual students at different educational levels (from 11 year old learners to university students, see Table \ref{tab:cases}). The research questions that these case studies pursued, can be summarized as follows:
+
+\begin{description}
+\item[RQ1] Are the aforementioned orchestration load score (OLS) and the proposed linear statistical models able to discriminate the load of substantially different classroom situations?
+\item[RQ2] Can the application of these measures and models provide us with insights about the orchestration load of different classroom situations?
+\end{description}
+
+Among these four case studies, Study 1, 2 and 3 aimed at \textit{validating} the aforementioned model and physiological-behavioral measures (RQ1). In each of these validation studies we compared two orchestration situations which were similar in most aspects, but varied significantly in one of the additional factors mentioned in section \ref{sec:model} (namely, teacher expertise, familiarity with the classroom technology, and having additional help from a fellow orchestrator). In these studies, we make the assumption that one of the situations imposed a substantially higher orchestration load on the teacher than the other (e.g., having a helper would entail \textit{less} orchestration load than not having it). While it is debatable that the orchestration load was significantly higher \textit{at all moments} due to these factors, it is reasonable to suppose so for the aggregation of the whole session. Furthermore, this kind of ``weak experimental control'' is as much as we dared to manipulate otherwise realistic classroom situations, so as to maintain the authentic conditions that are the hallmark of orchestration-related research \cite{Roschelle2013}.
+
+On the other hand, Study 4 was \textit{not} manipulated, and is rather provided as an illustrative example of how the models and methods can be used to extract insights about the orchestration load of a certain classroom situation (RQ2), in a unmanipulated, non-comparative manner.
+
+Initial explorations of the datasets from Studies 1 and 4 have been published before \cite{Prieto2015cscl}, as is the case for part of the eyetracking data in Study 2 \cite{Prieto2015ectel}. However, the application of the statistical models and methods depicted in sections \ref{sec:model} and \ref{sec:measures}, the focus of this paper, is completely novel. Below, we describe the context and main results of the case studies. The anonymised datasets generated, full analytical code and detailed results are available online\footnote{\href{https://github.com/chili-epfl/paper-IEEETLT-orchestrationload}{https://github.com/chili-epfl/paper-IEEETLT-orchestrationload}.}
+
+In all four studies, we followed the data gathering and analysis methods described in section \ref{sec:measures}:
+
 \begin{enumerate}
-\item Are the aforementioned PCA-based orchestration load score (OLS), and the proposed statistical models, able to discriminate the load of substantially different situations?
-\item Can the application of these measures and models provide us with insights about the orchestration load of different classroom situations?
+\item Eye-tracking data (including also subjective audiovisual feed) was recorded during classroom situations
+\item Cognitive load-related metrics were calculated and aggregated for 10-second episodes
+\item Principal Component Analysis was performed on the data from the four cases (see Figure \ref{fig:pca}) to obtain the orchestration load score (from the 1$^{st}$ principal component score of each episode)
+\item We sampled "agreement episodes" the subjective audiovisual feed from the eye-tracker, and manually coding them by a single researcher, to extract the process variables of interest (teaching activity, social plane, and main focus of teacher's gaze)
+\item Machine learning models were built using the OLS and video-coded variables (see each subsection below for descriptions of the concrete modelling)
 \end{enumerate}
-\item We have used the aforementioned approach and models for orchestration load in four case studies, spanning a total of 14 sessions
-orchestrated by four different teachers with actual students at different educational levels, from 11yrs old to university students (see Table \ref{tab:cases})
-\item The first three case studies aimed at validating the aforementioned model and physiological-behavioral measures (RQ1). In each of these validation studies we compared two orchestration situations which were similar in most aspects, but varied significantly in one aspect which we can assume is directly related to the teacher orchestration load (teacher expertise, familiarity with the classroom technology, having additional help from a fellow orchestrator). 
-\item While it is debatable that the situations had different inherent loads \textit{at all moments}, it is as much as we can manipulate and make comparations between inherently unique situations, while maintaining authenticity
-\item Finally, the fourth case study was not manipulated, and is provided as an illustrative example of how the models and methods can be used to extract insights about the orchestration load of a certain classroom/situation (RQ2)
-\item Initial explorations of the datasets from these cases have been published before for cases 1 and 4 \cite{Prieto2015cscl}, and for the
-first two sessions of case 2 \cite{Prieto2015ectel}. However, the application of the statistical models and methods depicted in sections \ref{sec:model} and \ref{sec:measures} is unpublished
-\item Below, we describe the context and main results of the case studies. The datasets generated, full analytical code and detailed results are available online\footnote{\href{https://github.com/chili-epfl/paper-IEEETLT-orchestrationload}{https://github.com/chili-epfl/paper-IEEETLT-orchestrationload}.}
-\item In all 4 studies the data gathering and analysis method of section \ref{sec:measures} was followed: a) eyetracking data was recorded and cognitive load-related metrics were aggregated for 10s episodes; b) Principal Component Analysis was performed on the data from the four cases (see Figure \ref{fig:pca}) to obtain the OLS (1st component score); c) "Extreme load episodes" were video coded by a single researcher, to extract the process variables (activity, social plane, focus of gaze) 
-\end{itemize}
+
+
+%\begin{itemize}
+%\item The goals (research questions) of this paper are twofold:
+%\begin{enumerate}
+%\item Are the aforementioned PCA-based orchestration load score (OLS), and the proposed statistical models, able to discriminate the load of substantially different situations?
+%\item Can the application of these measures and models provide us with insights about the orchestration load of different classroom situations?
+%\end{enumerate}
+%\item We have used the aforementioned approach and models for orchestration load in four case studies, spanning a total of 14 sessions orchestrated by four different teachers with actual students at different educational levels, from 11yrs old to university students (see Table \ref{tab:cases})
+%\item The first three case studies aimed at validating the aforementioned model and physiological-behavioral measures (RQ1). In each of these validation studies we compared two orchestration situations which were similar in most aspects, but varied significantly in one aspect which we can assume is directly related to the teacher orchestration load (teacher expertise, familiarity with the classroom technology, having additional help from a fellow orchestrator). 
+%\item While it is debatable that the situations had different inherent loads \textit{at all moments}, it is as much as we can manipulate and make comparations between inherently unique situations, while maintaining authenticity
+%\item Finally, the fourth case study was not manipulated, and is provided as an illustrative example of how the models and methods can be used to extract insights about the orchestration load of a certain classroom/situation (RQ2)
+%\item Initial explorations of the datasets from these cases have been published before for cases 1 and 4 \cite{Prieto2015cscl}, and for the first two sessions of case 2 \cite{Prieto2015ectel}. However, the application of the statistical models and methods depicted in sections \ref{sec:model} and \ref{sec:measures} is unpublished
+%\item Below, we describe the context and main results of the case studies. The datasets generated, full analytical code and detailed results are available online\footnote{\href{https://github.com/chili-epfl/paper-IEEETLT-orchestrationload}{https://github.com/chili-epfl/paper-IEEETLT-orchestrationload}.}
+%\item In all 4 studies the data gathering and analysis method of section \ref{sec:measures} was followed: a) eyetracking data was recorded and cognitive load-related metrics were aggregated for 10s episodes; b) Principal Component Analysis was performed on the data from the four cases (see Figure \ref{fig:pca}) to obtain the OLS (1st component score); c) "Extreme load episodes" were video coded by a single researcher, to extract the process variables (activity, social plane, focus of gaze) 
+%\end{itemize}
 
 \begin{figure}[!t]
 \centering
@@ -822,8 +842,6 @@ first two sessions of case 2 \cite{Prieto2015ectel}. However, the application of
 \caption{Projection of the four eye-tracking measures recorded throughout the four case studies, on the space defined by the first two PCA components. The Orchestration Load Score (OLS) is the linear combination of the four measures, with loadings represented by the projection of the four measures on the horizontal axis}
 \label{fig:pca}
 \end{figure}
-
-Pierre: Explain better the difference between st 1,2,3 and st 4?
 
 
 \begin{table*}[!t]
@@ -1322,7 +1340,7 @@ Case & 1       & 1       & 2       & 2       & 3       & 4       & 1+2     & 2+3
 \end{IEEEbiography}
 
 
-\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{img/Dillenbourg.jpg}}]{Pierre Dillenbourg} A former teacher in elementary school, Pierre Dillenbourg graduated in educational science (University of Mons, Belgium). He started his research on learning technologies in 1984. He obtained a PhD in computer science from the University of Lancaster (UK), in the domain of artificial intelligence applications for educational software. He has been assistant professor at the University of Geneva. He joined EPFL in 2002. He is currently full professor in learning technologies in the School of Computer \& Communication Sciences, where he is the head of the CHILI Lab (Computer-Human Interaction for Learning \& Instruction). He is also the academic director of Center for Digital Education, which implements the MOOC strategy of EPFL.
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{img/Dillenbourg.jpg}}]{Pierre Dillenbourg} is a former school teacher and graduated in educational science (University of Mons, Belgium). He then obtained a PhD in computer science from the University of Lancaster (UK), in the domain of AI for educational software. After being assistant professor at the University of Geneva, he joined EPFL in 2002. He is currently full professor in learning technologies in the School of Computer \& Communication Sciences, where he is the head of the Computer-Human Interaction for Learning \& Instruction Lab. He is also the academic director at the Center for Digital Education, which implements the MOOC strategy of EPFL.
 \end{IEEEbiography}
 
 % You can push biographies down or up by placing
