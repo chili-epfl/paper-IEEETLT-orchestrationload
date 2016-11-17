@@ -875,7 +875,7 @@ Case 4 & Open doors (primary) & 1 novice (researcher) & 3 (35-45' each) & Tablet
 \subsection{Study 1: Exploring Teacher Expertise in an University Course}
 \label{sec:study1}
 
-One of the main factors that may affect orchestration load of a classroom situation is the amount of teacher experience, as more expert teachers have internalized and automatized many of the small tasks involved in classroom management \cite{feldon2007cognitive}, which have been observed as ``routines'' in teachers of different levels of experience integrating new technologies in the classroom \cite{prieto2011recurrent}. Hence, more expert teachers will manage the classroom with more ease (i.e., with less orchestration load) than novice ones. In this first study, we explore the following particularization of RQ1 above: \textit{Is our modelling and OL score able to discriminate between similar learning situations, orchestrated by a novice and an experienced teacher?}.
+One of the main factors that may affect orchestration load of a classroom situation is the amount of teacher experience, as more expert teachers have internalized and automatized many of the small tasks involved in classroom management \cite{feldon2007cognitive}, which have also been observed as ``routines'' in teachers of different levels of experience integrating new technologies in the classroom \cite{prieto2011recurrent}. Hence, more expert teachers will manage a classroom with more ease (i.e., with less orchestration load) than novice ones. In this first study, we explore the following particularization of RQ1 above: \textit{Is our modelling and OL score able to discriminate between similar learning situations, orchestrated by a novice and an experienced teacher?}.
 
 %\begin{itemize}
 %\item One of the factors that can affect orchestration load is teacher expertise (EXPERIENCE?): more expert teachers have internalized/automated many aspects of their teaching \cite{feldon2007cognitive,prieto2011recurrent} will manage the classroom with more ease (less load) than novice ones
@@ -884,7 +884,7 @@ One of the main factors that may affect orchestration load of a classroom situat
 
 \subsubsection{Context}
 
-The study took place during a real master-level course on ``Digital education and learning analytics'', held at EPFL (Switzerland). The lessons took place face-to-face, with students (10-12, depending on the day) using their own laptops, and the teacher using laptop, projector and whiteboard (see Figure \ref{fig:case1picture}). The lesson plans combined fluidly lecturing, questioning of students and exercises. Two sessions were recorded for the experienced teacher (more than 10 years of teaching experience), and one for the novice teacher\footnote{Actually, two sessions were recorded for the novice teacher, but technical problems during the recording of one of them forced us to discard the data, as the situation would have been no longer similar to the ones recorded with the expert teacher.} (1 year of teaching experience). Session durations ranged from 45--65 minutes.
+The study took place during a real master-level course on ``Digital education and learning analytics'', held at EPFL (Switzerland). The lessons took place face-to-face, with students (10-12 of them, depending on the day) using their own laptops, and the teacher using laptop, projector and whiteboard (see Figure \ref{fig:case1picture}). The lesson plans combined fluidly lecturing, questioning of students and exercises. Two sessions were recorded for the experienced teacher (more than 10 years of teaching experience), and one for the novice teacher\footnote{Actually, two sessions were recorded for the novice teacher, but technical problems during the recording of one of them forced us to discard the data, as the situation would have been no longer similar to the ones recorded with the expert teacher.} (1 year of teaching experience). Session durations ranged from 45--65 minutes.
 
 
 %\begin{itemize}
@@ -904,9 +904,9 @@ The study took place during a real master-level course on ``Digital education an
 
 To validate whether the model of factors and the proposed physiological measures (i.e., the orchestration load score -- OLS) represent a good predictor for orchestration load in this context, we assumed as a ``ground truth'' that the lessons orchestrated by the novice teacher represented a higher load (Load=1) than the ones orchestrated by the expert (Load=0). We trained a logistic regression model trying to predict this binary outcome (i.e., distinguish an episode orchestrated by the experienced teacher, vs. the novice one), using the three process variables coded by a human (teaching activity, social level of interaction, main focus of the gaze) and the OLS. 
 
-As we can see in Table \ref{tab:case1results}, once we take away the influence of the process variables, the OLS still remains a significant predictor of the assumed (binary) orchestration load ($p<0.001$). Furthermore, this model including the OLS explains a considerable amount of the variance in the data (McFadden's pseudo-$R^2=0.88$). An analysis of variance of the different variables in the model confirms this, with the (eye-tracking-derived) OLS explaining most of the deviance in the data ($p<0.001$).
+As we can see in Table \ref{tab:case1results}, once we take away the influence of the process variables, the OLS still remains a significant predictor of the assumed (binary) orchestration load ($p<0.001$). Furthermore, this model including the OLS explains a considerable amount of the variance in the data (McFadden's pseudo-$R^2=0.88$). An analysis of variance of the different variables in the model confirms this, with the (eye-tracking-derived) OLS explaining most of the deviance in the data ($p<0.001$). %TODO: Check and put here what statistical test was done... ANOVA?
 
-It is important to note that the two teachers in our study may differ in many other variables affecting orchestration load (aside from the amount of teaching experience). Hence, this study provides only preliminary evidence that the proposed modelling (and the OLS as an approximation to moment-to-moment orchestration load) can distinguish high- vs. low-load situations in this kind of classroom context. In the following study, we test them in a context in which such personal differences are controlled.
+It is important to note that the two teachers in our study may differ in many other aspects affecting orchestration load, aside from the amount of teaching experience. Hence, this study provides only preliminary evidence that the proposed modelling (and the OLS as an approximation to moment-to-moment orchestration load) can distinguish high- vs. low-load situations in this kind of classroom context. In the following study, we test them in a context in which such personal differences are controlled.
 
 %\begin{itemize}
 %\item To validate whether the OLS is a good predictor for orchestration load in this context, we assume as a ground truth that the lessons orchestrated by the novice teacher represented a higher load (Load=1) than the ones orchestrated by the expert (Load=0). 
@@ -950,17 +950,23 @@ Focus: Whiteboard & -2.91 & 2.78 & -1.05 & 0.29 \\
 
 \subsection{Study 2: Exploring Familiarity with Technology in a Primary School Classroom}
 \label{sec:study2}
-\begin{itemize}
-\item Another factor that can affect orchestration load in a predictable manner is familiarity with the technology: a teacher using a new tool will not have developed the necessary automatisms to effortlessly use it in the classroom \cite{feldon2007cognitive}, and hence will experience a higher orchestration load
-\item Case study question: \textit{Will our model and OL score be able to discriminate learning situations, orchestrated by a same teacher, but using her usual and novel classroom tools?}
-\end{itemize}
+
+As mentioned in section \ref{sec:model}, another factor that is bound to affect the orchestration load experienced by a teacher in a lesson using technology, is the teacher's familiarity with the technology in use: a person trying out a tool for the first few times will not have yet developed automatisms to effortlessly use it in a classroom context, and hence will experience a higher orchestration load than during the usage of her usual set of tools. Hence, in this study we try to answer the question: \textit{Are our linear model and OLS able to discriminate learning situations orchestrated by a same teacher, using her usual and novel classroom technologies?}
+
+%\begin{itemize}
+%\item Another factor that can affect orchestration load in a predictable manner is familiarity with the technology: a teacher using a new tool will not have developed the necessary automatisms to effortlessly use it in the classroom \cite{feldon2007cognitive}, and hence will experience a higher orchestration load
+%\item Case study question: \textit{Will our model and OL score be able to discriminate learning situations, orchestrated by a same teacher, but using her usual and novel classroom tools?}
+%\end{itemize}
 
 \subsubsection{Context}
 
-\begin{itemize}
-\item Face-to-face beginning of secondary school (11-12 yrs old), private international Swiss school, experienced teacher (more than 20 yrs experience), maths, two different cohorts of students (18-22 students each)
-\item Two sessions recorded while teacher orchestrated student work using laptops and a geometry software (Geometer's Sketchpad) as well as a classroom management software; two sessions recorded while teacher orchestrated student groupwork using a novel technology (augmented paper tabletop interfaces, based on Tinkerlamp \cite{do2012tinkerlamp} and public display/projector). See Figure \ref{fig:case2picture}
-\end{itemize}
+In order to answer the aforementioned question, we conducted another study in the context of face-to-face lessons in an international Swiss secondary school. We recorded two sets of two math lessons, in which an experienced teacher (more than 20 years of teaching experience) taught to two different cohorts of students (18--22 students, aged 11--12) about geometry. In the first set of sessions, the teacher orchestrated students' work using a set of technologies she had used in previous courses (laptops with a geometry software\footnote{Geometer's Sketchpad, \href{http://www.dynamicgeometry.com/}{http://www.dynamicgeometry.com/}.}, a projector and a classroom management software\footnote{NetSupport School, \href{http://www.netsupportschool.com/}{http://www.netsupportschool.com/}}) with each of the cohorts. In the second set, the teacher orchestrated a collaborative groupwork game using a novel set of technologies (augmented paper tabletop interfaces based on Tinkerlamp \cite{do2012tinkerlamp}, and a projector as public display), with the same cohorts. Both classroom setups are portrayed in Figure \ref{fig:case2picture}.
+
+
+%\begin{itemize}
+%\item Face-to-face beginning of secondary school (11-12 yrs old), private international Swiss school, experienced teacher (more than 20 yrs experience), maths, two different cohorts of students (18-22 students each)
+%\item Two sessions recorded while teacher orchestrated student work using laptops and a geometry software (Geometer's Sketchpad) as well as a classroom management software; two sessions recorded while teacher orchestrated student groupwork using a novel technology (augmented paper tabletop interfaces, based on Tinkerlamp \cite{do2012tinkerlamp} and public display/projector). See Figure \ref{fig:case2picture}
+%\end{itemize}
 
 \begin{figure*}[!t]
 \centering
@@ -971,12 +977,19 @@ Focus: Whiteboard & -2.91 & 2.78 & -1.05 & 0.29 \\
 
 \subsubsection{Results}
 
-\begin{itemize}
-\item To validate whether the OLS is a good predictor for orchestration load in this context, we assume as a ground truth that the lessons orchestrated using novel technology represented a higher load (Load=1) than the ones orchestrated with the usual technology (Load=0). 
-\item We then train a logistic regression model to try to predict the aforementioned ``ground truth'' using the known process variables (activity, social, focus -- coded from the video by a researcher) and the OLS
-\item As we can see in table \ref{tab:case2results}, once we take away the influence of the process variables, the OLS still remains a significant predictor of the assumed (binary) orchestration load ($p=0.002$). Furthermore, this model including the OLS explains a considerable amount of the variance in the data (McFadden's pseudo-$R^2=0.75$) 
-\item An analysis of variance of the different variables in the model confirms this, with the OLS explaining an appreciable part of the deviance in the data ($p<0.001$). 
-\end{itemize}
+In a similar way as we did in the first study, to validate whether the OLS is a good predictor for orchestration load in this context, we assumed as the ground truth that the lessons orchestrated using novel technologies (for the teacher) represented a higher load (Load=1) than those using the usual classroom technology setup (Load=0). After extracting the OLS from the recorded eye-tracking metrics of every 10-second episode, and manually video-coding the teacher activity, social plane and focus of the gaze of the ``agreement episodes'' (as mentioned in section \ref{sec:measures}), we trained a logistic regression model to predict the ground truth from these variables.
+
+As we can see in the coefficients of the logistic regression model (Table \ref{tab:case2results}), once we take away the influence of the process variables, the OLS still remains a significant predictor of the (binary) orchestration load ground truth ($p=0.002$). Furthermore, this model including the OLS explains a considerable amount of the variance in the data (McFadden's pseudo-$R^2=0.75$). An analysis of variance of the different variables in the model confirms this, with the OLS explaining an appreciable part of the deviance in the data ($p<0.001$). 
+
+%TODO: This paragraph could be left out if we are in need of space
+To interpret these results, we can assume that the personal characteristics of the teacher did not vary across conditions (since this was a within-subject study). Nevertheless, as usual in this kind of authentic setting studies, other factors (aside from familiarity with the technology) may have played a role in the respective orchestration load of both sets of sessions. Most important among these is the fact that lesson design (e.g., the teaching and learning activities performed) were not the same in both sets of sessions: the novel technology ones implied a less habitual way of managing the classroom (alternance between small-group collaboration and class-wide competition) than the usual technology ones (based on individual/pair linear work over a worksheet). However, this would only exaggerate the differences in orchestration load between usual and novel sessions, thus making the ground truth an ever more reasonable assumption. Therefore, this second study provides additional (albeit not definitive) evidence that the proposed model and measures of orchestration load might be applicable to a variety of authentic classroom settings.
+
+%\begin{itemize}
+%\item To validate whether the OLS is a good predictor for orchestration load in this context, we assume as a ground truth that the lessons orchestrated using novel technology represented a higher load (Load=1) than the ones orchestrated with the usual technology (Load=0). 
+%\item We then train a logistic regression model to try to predict the aforementioned ``ground truth'' using the known process variables (activity, social, focus -- coded from the video by a researcher) and the OLS
+%\item As we can see in table \ref{tab:case2results}, once we take away the influence of the process variables, the OLS still remains a significant predictor of the assumed (binary) orchestration load ($p=0.002$). Furthermore, this model including the OLS explains a considerable amount of the variance in the data (McFadden's pseudo-$R^2=0.75$) 
+%\item An analysis of variance of the different variables in the model confirms this, with the OLS explaining an appreciable part of the deviance in the data ($p<0.001$). 
+%\end{itemize}
 
 \begin{table}[!t]
 %% increase table row spacing, adjust to taste
@@ -1013,10 +1026,13 @@ Focus: Teacher computer & -2.68 & 0.92 & -2.93 & 0.003** \\
 
 \subsection{Study 3: Exploring External Help in an Open Doors Day}
 \label{sec:study3}
-\begin{itemize}
-\item Finally, we can also manipulate orchestration load of a classroom situation by having the teacher have an assistant\footnote{With clear pre-defined roles and task distribution among both facilitators, so that managing the assistant does not generate additional load.}: we postulate that a teacher with an assistant will experience a lower orchestration load than one that has assistance
-\item Case study question: \textit{Will our model and OL score be able to discriminate similar learning situations, orchestrated by a same teacher, with and without an assistant orchestrator?}
-\end{itemize}
+
+Following the (non-exhaustive) list of factors mentioned in our model of factors affecting orchestration load, we can also conceive a third way of manipulating the orchestration load of a classroom situation. By providing the main teacher/orchestrator with an assistant, we postulate that her orchestration load during the lesson will be lowered\footnote{As long as clear, pre-defined roles and task distribution are performed beforehand among both facilitators, so that managing the assistant does not generate additional cognitive load.}. Hence, we performed a third study to validate the model and measures of orchestration load, looking at the following variant of our RQ1 question: \textit{Are our linear model and OLS able to discriminate between similar learning situations, orchestrated by a same teacher, but with/without an assistant orchestrator?}
+
+%\begin{itemize}
+%\item Finally, we can also manipulate orchestration load of a classroom situation by having the teacher have an assistant\footnote{With clear pre-defined roles and task distribution among both facilitators, so that managing the assistant does not generate additional load.}: we postulate that a teacher with an assistant will experience a lower orchestration load than one that has assistance
+%\item Case study question: \textit{Will our model and OL score be able to discriminate similar learning situations, orchestrated by a same teacher, with and without an assistant orchestrator?}
+%\end{itemize}
 
 \subsubsection{Context}
 
@@ -1234,6 +1250,7 @@ Case & 1       & 1       & 2       & 2       & 3       & 4       & 1+2     & 2+3
 \item This paper presented the notion of orchestration load, a model to try to quantify it, and a method to measure it using with mobile eyetrackers complemented with behavioral analysis (video coding)
 \item Our results in 4 case studies, 14 sessions, 4 teachers support OLS (a linear combination of 4 ET measures related to cognitive load) as a discriminant measure of orchestration load (comparing teacher expertise, novel/usual technology and --partially-- having an assistant)
 \item The statistical models built accepting OLS as a reliable measure of load, provide a first glimpse of how different kinds of classroom episodes influence the load of teachers in different kinds of technological setups
+%\item Problem: Still very costly?? setting up access to classrooms, sensors, risk of discard data, manual coding... maybe mention in passing
 \item Future work: different process variables and coding schemes, different non-linear models of orchestration load, other sensors of load (accelerometers for physical load, e.g., skin conductance? heart rate? EEG?)
 \item Need to share datasets (but with privacy) so that we can get reliable methods, measures and models for classroom usability that can be used in real settings (and maybe at scale!)
 \item Could even be extended to study other professions and activities that are complex, social, ... in their natural setting
