@@ -1027,7 +1027,7 @@ Focus: Teacher computer & -2.68 & 0.92 & -2.93 & 0.003** \\
 \subsection{Study 3: Exploring External Help in an Open Doors Day}
 \label{sec:study3}
 
-Following the (non-exhaustive) list of factors mentioned in our model of factors affecting orchestration load, we can also conceive a third way of manipulating the orchestration load of a classroom situation. By providing the main teacher/orchestrator with an assistant, we postulate that her orchestration load during the lesson will be lowered\footnote{As long as clear, pre-defined roles and task distribution are performed beforehand among both facilitators, so that managing the assistant does not generate additional cognitive load.}. Hence, we performed a third study to validate the model and measures of orchestration load, looking at the following variant of our RQ1 question: \textit{Are our linear model and OLS able to discriminate between similar learning situations, orchestrated by a same teacher, but with/without an assistant orchestrator?}
+Following the (non-exhaustive) list of factors affecting orchestration load mentioned in section \ref{sec:model}, we can also conceive a third way of manipulating the orchestration load of a classroom situation. By providing the main teacher/orchestrator with an assistant, we postulate that her orchestration load during the lesson will be lowered\footnote{As long as clear, pre-defined roles and task distribution are performed beforehand among both facilitators, so that managing the assistant does not generate additional cognitive load.}. Hence, we performed a third study to validate the model and measures of orchestration load, looking at the following variant of our RQ1 question: \textit{Are our linear model and OLS measures able to discriminate between similar learning situations, orchestrated by a same teacher, but with/without an assistant orchestrator?}
 
 %\begin{itemize}
 %\item Finally, we can also manipulate orchestration load of a classroom situation by having the teacher have an assistant\footnote{With clear pre-defined roles and task distribution among both facilitators, so that managing the assistant does not generate additional load.}: we postulate that a teacher with an assistant will experience a lower orchestration load than one that has assistance
@@ -1036,11 +1036,13 @@ Following the (non-exhaustive) list of factors mentioned in our model of factors
 
 \subsubsection{Context}
 
-\begin{itemize}
-\item Face-to-face math lessons enacted during an open-doors day in the lab with local school children (10-12 yrs old), public Swiss schools, novice teacher that was not the usual teacher (usual teachers present as passive observers), maths lesson combining mini-lecture, groupwork with tabletops and whole-class activity on projector (game), four different cohorts of students (19-21 students each)
-\item Four sessions recorded while teacher orchestrated the multi-tabletop classroom (augmented paper tabletop interfaces, based on Tinkerlamp \cite{do2012tinkerlamp} and public display/projector); in two of the sessions the assistant helped during the groupwork, dealing with half of the groups (in the rest of the lesson the assistant played no role). See Figure \ref{fig:case3picture}
-\item To answer the question about OLS as discriminator, only the relevant moments of the lesson (the groupwork) have been taken into account
-\end{itemize}
+To answer this question, we set up a semi-authentic study in the context of an open-doors day in our lab, in which cohorts of local school children (10--12 yrs old) from nearby public schools visit university labs. We transformed one of our rooms into a multi-tabletop classroom (Figure \ref{fig:case3picture}), and one member of the research team acted as the main facilitator of four math lessons, with different cohorts of visiting students (19--21 students each). The four sessions made use of augmented paper tabletops (based on Tinkerlamp \cite{do2012tinkerlamp}) and a public display/projector, and they alternated mini-lectures, small-group and whole-class exercises and games about geometry and coordinate systems. To manipulate the orchestration load, in two of the sessions the main orchestrator was aided by an assistant (but only in those moments where multiple groups were working independently, to ensure that the help was meaningful in terms of orchestration load -- something hard to achieve in moments of whole-class lecturing, for example). The groups of students that each orchestrator would monitor/help were decided beforehand, to avoid further coordination load during the session.
+
+%\begin{itemize}
+%\item Face-to-face math lessons enacted during an open-doors day in the lab with local school children (10-12 yrs old), public Swiss schools, novice teacher that was not the usual teacher (usual teachers present as passive observers), maths lesson combining mini-lecture, groupwork with tabletops and whole-class activity on projector (game), four different cohorts of students (19-21 students each)
+%\item Four sessions recorded while teacher orchestrated the multi-tabletop classroom (augmented paper tabletop interfaces, based on Tinkerlamp \cite{do2012tinkerlamp} and public display/projector); in two of the sessions the assistant helped during the groupwork, dealing with half of the groups (in the rest of the lesson the assistant played no role). See Figure \ref{fig:case3picture}
+%\item To answer the question about OLS as discriminator, only the relevant moments of the lesson (the groupwork) have been taken into account
+%\end{itemize}
 
 \begin{figure}[!t]
 \centering
@@ -1052,12 +1054,17 @@ Following the (non-exhaustive) list of factors mentioned in our model of factors
 
 \subsubsection{Results}
 
-\begin{itemize}
-\item To validate whether the OLS is a good predictor for orchestration load in this context, we assume as a ground truth that the lessons orchestrated without an assistant represented a higher load (Load=1) than the ones orchestrated with the assistant (Load=0) -- at least, for the parts of the lesson where the assistant had a role 
-\item We then train a logistic regression model to try to predict the aforementioned ``ground truth'' using the known process variables (activity, social, focus -- coded from the video by a researcher) and the OLS
-\item As we can see in table \ref{tab:case3results}, once we take away the influence of the process variables, the OLS shows clear, adequate trends (positive coefficient), but is no longer a significant predictor of the assumed (binary) orchestration load ($p=0.13$). Furthermore, this model including the OLS explains little variance in the data (McFadden's pseudo-$R^2=0.05$) 
-\item This may be due to the fact that we take only \textit{a portion} of the session, instead of whole sessions (the model is trained with 163 samples, versus $~400$ samples in the previous studies). We probably would have needed more data for OLS to detect the difference
-\end{itemize}
+To validate whether the OLS is a good predictor for orchestration load in this study, taking into account our linear model of orchestration load, we assume as a ground truth that the lessons orchestrated without an assistant represented a higher load (Load=1) than the ones orchestrated with the assistant (Load=0). This is assumed to be true at least for the parts of the lesson where the assistant had a meaningful role. Hence, after following the same steps as in our previous studies (calculating OLS from eye-tracking measures, manual coding of agreement episodes), we selected \textit{only} the episodes falling in parts of the lesson plan where students were working independently (i.e., in which the assistant orchestrator, if present, had a meaningful role). Using these selected data, we trained a similar logistic regression model to predict the aforementioned ground truth using the known process variables (activity, social plane, focus -- from the video coding) and the OLS.
+
+As we can see in Table \ref{tab:case3results}, once we take away the influence of the process variables, the OLS shows positive correlation (i.e., coefficient) with the ground truth. However, we found that in this model the OLS is no longer a \textit{significant} predictor of the binary orchestration load we assumed as ground truth ($p=0.13$). Furthermore, this model that includes the OLS explains relatively little variance in the data (McFadden's pseudo-$R^2=0.05$). One potential explanation for this lies in the fact that, by taking only a portion of the (rather short) lessons instead of multiple longer sessions, we are training our data in significantly less data (the model was trained on 163 agreement episodes, versus $~400$ episodes in each of the previous studies). Hence, the results of this study lead us to think that, either the load of monitoring half of the independently working student groups was not so high (as there were only 4 groups in total), or that we would have needed to record more sessions in order to detect such differences, when pinpointing this kind of sub-lesson timespan.
+
+%\begin{itemize}
+%\item To validate whether the OLS is a good predictor for orchestration load in this context, we assume as a ground truth that the lessons orchestrated without an assistant represented a higher load (Load=1) than the ones orchestrated with the assistant (Load=0) -- at least, for the parts of the lesson where the assistant had a role 
+%\item To answer the question about OLS as discriminator, only the relevant moments of the lesson (the groupwork) have been taken into account
+%\item We then train a logistic regression model to try to predict the aforementioned ``ground truth'' using the known process variables (activity, social, focus -- coded from the video by a researcher) and the OLS
+%\item As we can see in table \ref{tab:case3results}, once we take away the influence of the process variables, the OLS shows clear, adequate trends (positive coefficient), but is no longer a significant predictor of the assumed (binary) orchestration load ($p=0.13$). Furthermore, this model including the OLS explains little variance in the data (McFadden's pseudo-$R^2=0.05$) 
+%\item This may be due to the fact that we take only \textit{a portion} of the session, instead of whole sessions (the model is trained with 163 samples, versus $~400$ samples in the previous studies). We probably would have needed more data for OLS to detect the difference
+%\end{itemize}
 
 \begin{table}[!t]
 %% increase table row spacing, adjust to taste
@@ -1088,20 +1095,24 @@ Focus: Tabletop computer & 0.88 & 0.72 & 1.23 & 0.22 \\
 \end{table}
 
 
-\subsection{Study 4: Applying the Measure to an Unmanipulated Setting}
+\subsection{Study 4: Modelling Orchestration Load in an Unmanipulated Setting}
 \label{sec:study4}
 
-\begin{itemize}
-\item Once we have validated that the OLS is a good tool to discriminate situations with different orchestration load, we can use it as a measure of orchestration load, build models like that of Section \ref{sec:model} to understand how the different process variables affect load, extract patterns of higher or lower load, and compare different situations
-\item Below we illustrate how this measure can be used in an un-manipulated setting, an open doors day situation similar to that of case study 3
-\end{itemize}
+Once we have initial validation that the OLS measure is a good tool to discriminate situations with different orchestration load (with the caveats found in study 3 about the amount of that used to build the statistical model), we can use it as a proxy measure of moment-to-moment orchestration load, in order to build models statistical models such as the one presented in section \ref{sec:model}. This will help us understand how the different process variables affect orchestration load in a certain classroom situation, and will enable us to extract patterns of higher or lower load, and compare different kinds of classroom situations. Below, we illustrate the usage of this measure in an unmanipulated setting, to answer a version of RQ2: \textit{What insights can we extract about the orchestration load in a multi-tabletop classroom, using a collaborative augmented paper game?}
+
+%\begin{itemize}
+%\item Once we have validated that the OLS is a good tool to discriminate situations with different orchestration load, we can use it as a measure of orchestration load, build models like that of Section \ref{sec:model} to understand how the different process variables affect load, extract patterns of higher or lower load, and compare different situations
+%\item Below we illustrate how this measure can be used in an un-manipulated setting, an open doors day situation similar to that of case study 3
+%\end{itemize}
 
 \subsubsection{Context}
 
-\begin{itemize}
-\item Face-to-face math (SIMULATED) lessons enacted during an open-doors day in the lab with local school children (10-12 yrs old), public Swiss schools, novice teacher that was not the usual teacher (usual teachers present as passive observers), maths lesson about fractions combining mini-lecture and groupwork game with augmented paper tabletops, three different cohorts of students (14-25 students each)
-\item Three sessions recorded while teacher orchestrated the multi-tabletop classroom (augmented paper tabletop interfaces, based on Tinkerlamp \cite{do2012tinkerlamp} and public display/projector). See Figure \ref{fig:case4picture}
-\end{itemize}
+Similarly to the previous one, this study took place in a semi-authentic classroom situation in the context of another open-doors day in our lab, with three cohorts of students (aged 10--12) from local schools (14--25 students per cohort). Again, a member of the researcher team (a novice teacher) played the role of main orchestrator, with the usual teachers acting as passive observers (Figure \ref{fig:case4picture}). The three recorded sessions had an identical lesson plan, in which the orchestrator combined mini-lectures with collaborative exercises around augmented paper tabletops \cite{caballero2014single}. In this kind of classroom context, we wanted to undestand which were the main orchestration load trends and patterns (i.e., what kind of episodes represented higher or lower loads).
+
+%\begin{itemize}
+%\item Face-to-face math (SIMULATED) lessons enacted during an open-doors day in the lab with local school children (10-12 yrs old), public Swiss schools, novice teacher that was not the usual teacher (usual teachers present as passive observers), maths lesson about fractions combining mini-lecture and groupwork game with augmented paper tabletops, three different cohorts of students (14-25 students each)
+%\item Three sessions recorded while teacher orchestrated the multi-tabletop classroom (augmented paper tabletop interfaces, based on Tinkerlamp \cite{do2012tinkerlamp} and public display/projector). See Figure \ref{fig:case4picture}
+%\end{itemize}
 
 \begin{figure}[!t]
 \centering
@@ -1112,13 +1123,19 @@ Focus: Tabletop computer & 0.88 & 0.72 & 1.23 & 0.22 \\
 
 \subsubsection{Results}
 
-\begin{itemize}
-\item To get the main orchestration load trends and patterns, we train a linear regression model to try to predict OLS using the known process variables (activity, social, focus -- coded from the video by a researcher), plus (e.g., if we want to know which session was more difficult)
-\item As we can see in table \ref{tab:case4results}, the linear model built with the process variables and the session predicts approximately 50\% of the variance in OLS
-\item An analysis of variance of the linear model shows that the social plane of interaction, the focus of the gaze and the session number were significant predictors in this model of OLS ($F=157; p-value<0.001$, $F=46; p-value<0.001$ and $F=22; p-value<0.001$), while the teaching activity itself was not ($F=2.59; p-value=0.05$)
-\item As we can see in Table \ref{tab:case4results}, the main significant trends are that the small-group of interaction was lower load than the reference (class-level) one; that looking at student backs was lower load than looking at their faces; so was looking at the tabletop itself; and that sessions 2 and 3 were higher load than session 1
-\item The reasons behind these trends cannot be directly deduced from the model, and need contextual or qualitative analysis of the video to develop conjectures: backs have no info to read the situation (EXPLAIN), while faces do; the facilitator was the designer of the tabletop app, so the UI was easy to read for him; maybe tiredness in sessions 2 and 3?
-\end{itemize}
+To get these orchestration load trends, after calculating the OLS and video-coding the agreement episodes, we trained a linear regression model to try to predict OLS using the known process variables observed from the subjective video (teaching activity, social plane, focus of the gaze), plus the session (i.e., we also wanted to know if one session had been noticeably more load than the others). The resulting model explains approximately 50\% of the variance in OLS, and an analysis of the variance of the model shows that the social plane of interaction, the focus of the gaze and the session were all significant predictors ($F=157$ with $p<0.001$; $F=46$ with $p<0.001$; and $F=22$ with $p<0.001$, respectively), while the teaching activity was only marginally significant ($F=2.59$ with $p=0.05$).
+
+As we can see in Table \ref{tab:case4results}, the main significant trends (i.e., those coefficients that are significant predictors) are: a) that small-group interactions were lower load than the reference level (class-level interactions); b) that looking at students' backs was lower load than looking at their faces; or c) that looking at the tabletop itself tended to be lower load. Finally, we also see that d) the second and third sessions were on average higher load than the first session.
+
+We can also speculate about the reasons behind these trends, not directly from the model, but from our contextual knowledge of the classroom situation (or observation of the videos). Class-level interactions may represent higher load than small-group ones due to the teacher needing to track and model the understanding of more students simultaneously (aside from keeping in mind the content of the lesson); the fact that student backs have no meaningful information to read about the progress of the students (as opposed to their faces, which do) may explain the second trend. The other two trends initially seem counter-intuitive: the fact that the orchestrator was one of the designers of the tabletop application, and hence knew really well the user interface, might have lead to lower loads when looking at the tabletop; the expectation that session 1 would be more load than the others (due to the novelty of the situation) might have been offset by the fact that the three sessions occurred almost back-to-back (and hence the fatigue might have had a greater role than the relative novelty of the first session). However, this kind of post-hoc rationalizations of the evidence should be taken rather cautiously, as usual in many studies on cognitive load.
+
+%\begin{itemize}
+%\item To get the main orchestration load trends and patterns, we train a linear regression model to try to predict OLS using the known process variables (activity, social, focus -- coded from the video by a researcher), plus (e.g., if we want to know which session was more difficult)
+%\item As we can see in table \ref{tab:case4results}, the linear model built with the process variables and the session predicts approximately 50\% of the variance in OLS
+%\item An analysis of variance of the linear model shows that the social plane of interaction, the focus of the gaze and the session number were significant predictors in this model of OLS ($F=157; p-value<0.001$, $F=46; p-value<0.001$ and $F=22; p-value<0.001$), while the teaching activity itself was not ($F=2.59; p-value=0.05$)
+%\item As we can see in Table \ref{tab:case4results}, the main significant trends are that the small-group of interaction was lower load than the reference (class-level) one; that looking at student backs was lower load than looking at their faces; so was looking at the tabletop itself; and that sessions 2 and 3 were higher load than session 1
+%\item The reasons behind these trends cannot be directly deduced from the model, and need contextual or qualitative analysis of the video to develop conjectures: backs have no info to read the situation (EXPLAIN), while faces do; the facilitator was the designer of the tabletop app, so the UI was easy to read for him; maybe tiredness in sessions 2 and 3?
+%\end{itemize}
 
 \begin{table}[!t]
 %% increase table row spacing, adjust to taste
