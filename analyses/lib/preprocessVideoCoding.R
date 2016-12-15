@@ -5,7 +5,7 @@ preprocessVideoCoding <- function(datadir, sessions){
     annotationsData <- data.frame()
     cleandatafile <- "cleanAnnotationData.Rda"
     
-    if(!file.exists(paste(datadir,cleandatafile,sep=.Platform$file.sep))){
+    #if(!file.exists(paste(datadir,cleandatafile,sep=.Platform$file.sep))){
         
         for (session in sessions){
             
@@ -112,9 +112,9 @@ preprocessVideoCoding <- function(datadir, sessions){
         save(annotationsData, file = paste(datadir,cleandatafile,sep=.Platform$file.sep))
         
         
-    }else{
-        annotationsData <- get(load(paste(datadir,cleandatafile,sep=.Platform$file.sep)))
-    }
+    #}else{
+    #    annotationsData <- get(load(paste(datadir,cleandatafile,sep=.Platform$file.sep)))
+    #}
     # annotationsData now has the clean video coding data
     
     annotationsData
