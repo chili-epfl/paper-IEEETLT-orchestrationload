@@ -295,6 +295,44 @@ xtable(summary(lr3)$coefficients, digits = c(0,2,2,2,3))
 
 ```
 
+#### Study 3 (addendum): Video-coding of all episodes (not just agreement episodes)
+
+```{r, message=FALSE, warning=FALSE}
+
+# Study 3
+behdata3 <- behdata[behdata$Study==3,]
+behdata3 <- behdata3[behdata3$Activity!="OFF",]
+behdata3$Activity <- factor(behdata3$Activity)
+behdata3 <- behdata3[behdata3$Social!="IND",]
+behdata3$Social <- factor(behdata3$Social)
+#behdata3 <- behdata3[behdata3$Focus!="TCOMP",] # Now we have more than a few of these, no need to delete them to make the model
+behdata3 <- behdata3[behdata3$Focus!="TD",]
+#behdata3 <- behdata3[behdata3$Focus!="TEA",]
+#behdata3 <- behdata3[behdata3$Focus!="TPAP",]
+behdata3$Focus <- factor(behdata3$Focus) # -- 610 samples left after cleaning!
+
+# See the order of factor levels
+table(behdata3$Activity)
+table(behdata3$Social)
+table(behdata3$Focus)
+
+
+lr3 <- glm(GroundTruth ~ Activity + Social + Focus + PCALoad1, family=binomial(link='logit'), data=behdata3) # OLS coefficient goes in the right direction, and now it IS significant
+summary(lr3)
+anova(lr3, test="Chisq") # OLS IS a significant predictor (p=0.01)
+1 - (lr3$deviance / lr3$null.deviance) # Pseudo-rsquared=0.07
+
+
+```
+
+
+```{r, results="asis"}
+# Generate the Latex table for the manuscript
+xtable(summary(lr3)$coefficients, digits = c(0,2,2,2,3))
+
+```
+
+
 ### Study 4: Seeing orchestration load trends in unmanipulated setting
 
 ```{r, message=FALSE, warning=FALSE}
@@ -487,7 +525,6 @@ if(length(names(sizes))==0){
 } 
 
 ```
-
 
 
 ### Study 4 trends

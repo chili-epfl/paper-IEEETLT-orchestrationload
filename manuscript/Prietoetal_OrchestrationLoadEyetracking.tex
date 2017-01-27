@@ -1056,7 +1056,9 @@ To answer this question, we set up a semi-authentic study in the context of an o
 
 To validate whether the OLS is a good predictor for orchestration load in this study, taking into account our linear model of orchestration load, we assume as a ground truth that the lessons orchestrated without an assistant represented a higher load (Load=1) than the ones orchestrated with the assistant (Load=0). This is assumed to be true at least for the parts of the lesson where the assistant had a meaningful role. Hence, after following the same steps as in our previous studies (calculating OLS from eye-tracking measures, manual coding of agreement episodes), we selected \textit{only} the episodes falling in parts of the lesson plan where students were working independently (i.e., in which the assistant orchestrator, if present, had a meaningful role). Using these selected data, we trained a similar logistic regression model to predict the aforementioned ground truth using the known process variables (activity, social plane, focus -- from the video coding) and the OLS.
 
-As we can see in Table \ref{tab:case3results}, once we take away the influence of the process variables, the OLS shows positive correlation (i.e., coefficient) with the ground truth. However, we found that in this model the OLS is no longer a \textit{significant} predictor of the binary orchestration load we assumed as ground truth ($p=0.13$). Furthermore, this model that includes the OLS explains relatively little variance in the data (McFadden's pseudo-$R^2=0.05$). One potential explanation for this lies in the fact that, by taking only a portion of the (rather short) lessons instead of multiple longer sessions, we are training our model on significantly less data (the model was trained on 163 agreement episodes, versus $\sim$400 episodes in each of the previous studies). Hence, the results of this study lead us to think that, either the load of monitoring half of the independently working student groups was not so high (as there were only 4 groups in total), or that we would have needed to record more sessions in order to detect such differences on sub-lesson timespans.
+In the data of this study, once we take away the influence of the process variables, the OLS shows positive correlation (i.e., coefficient) with the ground truth. When building a logistic regression model using the `agreement episodes' as in previous studies ($n=163$ episodes), the OLS was no longer a significant predictor of the binary orchestration load we assumed as ground truth ($p=0.13$). In order to test the conjecture that this lack of significance was tied to the low volume of data used to build the model, we videocoded the full extent of the sessions in this study. As we can see in Table \ref{tab:case3results}, the new model built with additional videocoded data ($n=610$ episodes) finds the \textit{OLS as a significant predictor} of the assumed ground truth ($p=0.016$). In both cases, however, the logistic regression models explain relatively little variance in the data (McFadden's pseudo-$R^2=0.07$, in the model with more samples). 
+
+The above modelling results provide additional supporting evidence for the OLS as a discriminant measure of orchestration load, but also highlight some of the limitations of the proposed method in terms of the amount of data needed to build the statistical models of orchestration load. Especially in cases like this one, where we look at data representing only \textit{a part} of a session (vs. stretches of multiple sessions, as in previous studies), a coding of the full extent of the session (vs. only the `agreement episodes') might be in order, so as to gather enough information to build the models.
 
 %\begin{itemize}
 %\item To validate whether the OLS is a good predictor for orchestration load in this context, we assume as a ground truth that the lessons orchestrated without an assistant represented a higher load (Load=1) than the ones orchestrated with the assistant (Load=0) -- at least, for the parts of the lesson where the assistant had a role 
@@ -1076,20 +1078,34 @@ As we can see in Table \ref{tab:case3results}, once we take away the influence o
 \centering
 %% Some packages, such as MDW tools, offer better commands for making tables
 %% than the plain LaTeX2e tabular which is used here.
-\begin{tabular}{|p{2.8cm}||r|r|r|r|}
+\begin{tabular}{|p{2.7cm}||r|r|r|r|}
 \hline
 Coefficient & Estimate & Std. error & z & p-value\\
 \hline
 \hline
-Intercept (Monitoring, Class-level, Focus on student faces) & -0.09 & 0.62 & -0.15 & 0.88 \\
-Activity: Questioning & 0.67 & 0.58 & 1.16 & 0.25 \\
-Activity: Repairs & 0.95 & 0.41 & 2.30 & 0.02* \\
-Activity: Task distribution & -0.37 & 0.64 & -0.58 & 0.56 \\
-Social: Small group & -0.18 & 0.66 & -0.27 & 0.79 \\
-Focus: Student backs & 1.65 & 1.27 & 1.30 & 0.19 \\
-Focus: Projector & 0.11 & 0.71 & 0.15 & 0.88 \\
-Focus: Tabletop computer & 0.88 & 0.72 & 1.23 & 0.22 \\
-\textbf{OLS} & \textbf{0.86} & \textbf{0.57} & \textbf{1.51} & \textbf{0.13} \\
+% Model with agreement episodes only (n=163)
+%Intercept (Monitoring, Class-level, Focus on student faces) & -0.09 & 0.62 & -0.15 & 0.88 \\
+%Activity: Questioning & 0.67 & 0.58 & 1.16 & 0.25 \\
+%Activity: Repairs & 0.95 & 0.41 & 2.30 & 0.02* \\
+%Activity: Task distribution & -0.37 & 0.64 & -0.58 & 0.56 \\
+%Social: Small group & -0.18 & 0.66 & -0.27 & 0.79 \\
+%Focus: Student backs & 1.65 & 1.27 & 1.30 & 0.19 \\
+%Focus: Projector & 0.11 & 0.71 & 0.15 & 0.88 \\
+%Focus: Tabletop computer & 0.88 & 0.72 & 1.23 & 0.22 \\
+%\textbf{OLS} & \textbf{0.86} & \textbf{0.57} & \textbf{1.51} & \textbf{0.13} \\
+% Model with coding of all episodes (n=610)
+Intercept (Monitoring, Class-level, Focus on student faces) & -0.64 & 0.35 & -1.84 & 0.066 \\ 
+Activity: Questioning & 1.14 & 0.36 & 3.15 & 0.002** \\ 
+Activity: Repairs & 0.87 & 0.22 & 4.04 & $<0.001$*** \\ 
+Activity: Task distribution & -0.04 & 0.31 & -0.13 & 0.896 \\ 
+Social: Small group & 0.16 & 0.26 & 0.61 & 0.543 \\ 
+Focus: Student backs & 0.43 & 0.47 & 0.91 & 0.362 \\ 
+Focus: Projector & -0.05 & 0.38 & -0.13 & 0.893 \\ 
+Focus: Tabletop computer & 0.41 & 0.36 & 1.14 & 0.256 \\ 
+Focus: Teacher's computer & 0.86 & 0.77 & 1.11 & 0.265 \\ 
+Focus: Other teacher & -16.13 & 637.80 & -0.03 & 0.980 \\ 
+Focus: Teacher papers & 0.84 & 0.64 & 1.32 & 0.187 \\ 
+\textbf{OLS} & \textbf{0.38} & \textbf{0.16} & \textbf{2.41} & \textbf{0.016*} \\
 \hline
 \end{tabular}
 \end{table}
