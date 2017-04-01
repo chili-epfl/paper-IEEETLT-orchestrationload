@@ -730,7 +730,7 @@ Therefore, to have an estimate of the load experienced by a teacher and enable m
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=\linewidth]{img/ModelFactorsOL}
+\includegraphics[width=\linewidth]{ModelFactorsOL}
 \caption{A model of factors influencing orchestration load}
 \label{fig:model}
 \end{figure}
@@ -791,7 +791,7 @@ To summarize, we propose to use physiological data (from mobile eye-tracking tec
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=\linewidth]{img/AnalysisMethodBase.png}
+\includegraphics[width=\linewidth]{AnalysisMethodBase.png}
 \caption{Diagram representing our proposed method for the physiological-behavioral estimation of orchestration load}
 \label{fig:analysis}
 \end{figure}
@@ -807,11 +807,11 @@ To summarize, we propose to use physiological data (from mobile eye-tracking tec
 This last step, the statistical modeling of orchestration load, deserves further discussion. Depending on the aim of our studies, this modelling can take two forms:
 
 \begin{itemize}
-\item To \textit{validate} the OLS as a reliable mesure of load, a logistic regression model can be built to predict a known binary `ground truth' (the comparison of data from two classroom situations in which we know the orchestration load is noticeably different) as a function of the process variables and the OLS. Checking the significance of the OLS as a predictor of such ground truth would provide evidence of its goodness as an estimator of orchestration load. This use is demonstrated in sections \ref{sec:study1}, \ref{sec:study2} and \ref{sec:study3}.
+\item To \textit{validate} the OLS as a reliable measure of load, a logistic regression model can be built to predict a known binary `ground truth' (the comparison of data from two classroom situations in which we know the orchestration load is noticeably different) as a function of the process variables and the OLS. Checking the significance of the OLS as a predictor of such ground truth would provide evidence of its goodness as an estimator of orchestration load. This use is demonstrated in sections \ref{sec:study1}, \ref{sec:study2} and \ref{sec:study3}.
 \item Assuming that the OLS is a good measure of instantaneous orchestration load, a linear regression model of the OLS as a function of the observed process variables can be built to derive \textit{insights} about the influence of such variables on orchestration load, for a certain classroom situation. This kind of use is illustrated in section \ref{sec:study4} and in section \ref{sec:discussion}.
 \end{itemize}
 
-As noted in section \ref{sec:model}, our choice of (generalized) linear models is mainly motivated by their advantages in terms of interpretability and generalizability. More concretely, the linear/regression models used in this paper enabled us to express orchestration load with an easily understandable formula, to test the significance of predictors, and measure effect sizes and relative influence of the model's components. The process variables were represented as categorical variables, to match the categories the research team used when coding the first-person audiovisual feed. However, other kinds of modelling (e.g., non-linear) and representation of variables (e.g., fuzzy variables) could also be proposed, under the same basic methods proposed here.
+As noted in section \ref{sec:model}, our choice of (generalized) linear models is mainly motivated by their advantages in terms of interpretability and generalizability. More concretely, the linear/logistic regression models used in this paper enabled us to express orchestration load with an easily understandable formula, to test the significance of predictors, and measure effect sizes and relative influence of the model's components. The process variables were represented as categorical variables, to match the categories the research team used when coding the first-person audiovisual feed. However, other kinds of modelling (e.g., non-linear) and representation of variables (e.g., fuzzy variables) could also be proposed, under the same basic methods proposed here.
 
 
 
@@ -868,7 +868,7 @@ Initial explorations of the datasets from Studies 1 and 4 have been published be
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=\linewidth]{img/PCA.png}
+\includegraphics[width=\linewidth]{PCA.png}
 \caption{Projection of the four eye-tracking measures recorded throughout the four case studies, on the space spanned by the first two PCA components. The Orchestration Load Score (OLS) is the linear combination of the four measures, with loadings represented by the projection of the four measures on the \textit{horizontal} axis}
 \label{fig:pca}
 \end{figure}
@@ -924,7 +924,7 @@ The study took place during an authentic master-level course on `Digital educati
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=\linewidth]{img/Case1Picture}
+\includegraphics[width=\linewidth]{Case1Picture}
 \caption{Classroom setup during Case study 1 (master-level course)}
 \label{fig:case1picture}
 \end{figure}
@@ -999,7 +999,7 @@ In order to answer this question, we conducted another study in the context of f
 
 \begin{figure*}[!t]
 \centering
-\includegraphics[width=\linewidth]{img/Case2Picture}
+\includegraphics[width=\linewidth]{Case2Picture}
 \caption{Classroom setup during two of the sessions in Case study 2: using usual laptop (left) and novel tabletop technology (right)}
 \label{fig:case2picture}
 \end{figure*}
@@ -1075,7 +1075,7 @@ To answer this question, we set up a semi-authentic study in the context of an o
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=\linewidth]{img/Case3Picture}
+\includegraphics[width=\linewidth]{Case3Picture}
 \caption{Classroom setup during Case study 3 (open-doors day)}
 \label{fig:case3picture}
 \end{figure}
@@ -1165,7 +1165,7 @@ In this kind of classroom context, we did not manipulate any variable of the orc
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=\linewidth]{img/Case4Picture}
+\includegraphics[width=\linewidth]{Case4Picture}
 \caption{Classroom setup during Case study 4 (unmanipulated open-doors day)}
 \label{fig:case4picture}
 \end{figure}
@@ -1176,7 +1176,7 @@ To get the main orchestration load trends, after calculating the OLS and video-c
 
 As we can see in table \ref{tab:case4results}, the main orchestration load trends, i.e., those coefficients that are significant predictors, are: a) that small-group interactions tended to be lower load than the reference level (class-level interactions); b) that looking at students' backs was lower load than looking at their faces (the reference level); or c) that looking at the tabletop itself tended to be lower load. Finally, we also see that d) the second and third sessions were on average higher load than the first session.
 
-We can also speculate about the reasons behind these trends, not directly from the model, but from our contextual knowledge of the classroom situation and our observation of the videos. Class-level interactions may represent higher load than small-group ones due to the teacher needing to track and model the understanding of more students simultaneously (aside from keeping in mind the content of the lesson); the fact that student backs have no meaningful information to read about the progress of the students (as opposed to their faces, which may have) can be linked to the second trend. The other two trends initially seem counter-intuitive: however, the fact that the orchestrator was one of the designers of the tabletop application, and hence knew really well the user interface, might have lead to lower loads when looking at the tabletop; the expectation that session 1 would be more load than the others due to the novelty of the situation, might have been offset by the fact that the three sessions occurred almost back-to-back and hence the fatigue might have had a greater role in the load than the relative novelty of the first session. However, these post-hoc rationalizations of the evidence should be taken rather cautiously, as usual in many studies on cognitive load \cite{de2010cognitive}.
+We can also speculate about the reasons behind these trends, not directly from the model, but from our contextual knowledge of the classroom situation and our observation of the videos. Class-level interactions may represent higher load than small-group ones due to the teacher needing to track and model the understanding of more students simultaneously (aside from keeping in mind the content of the lesson); the fact that student backs have no meaningful information to read about the progress of the students (as opposed to their faces, which may have) can be linked to the second trend. The other two trends initially seem counter-intuitive: however, the fact that the orchestrator was one of the designers of the tabletop application, and hence knew really well the user interface, might have led to lower loads when looking at the tabletop; the expectation that session 1 would be more load than the others due to the novelty of the situation, might have been offset by the fact that the three sessions occurred almost back-to-back and hence the fatigue might have had a greater role in the load than the relative novelty of the first session. However, these post-hoc rationalizations of the evidence should be taken rather cautiously, as usual in many studies on cognitive load \cite{de2010cognitive}.
 
 %\begin{itemize}
 %\item To get the main orchestration load trends and patterns, we train a linear regression model to try to predict OLS using the known process variables (activity, social, focus -- coded from the video by a researcher), plus (e.g., if we want to know which session was more difficult)
@@ -1191,7 +1191,7 @@ We can also speculate about the reasons behind these trends, not directly from t
 %\renewcommand{\arraystretch}{1.3}
 % if using array.sty, it might be a good idea to tweak the value of
 % \extrarowheight as needed to properly center the text within the cells
-\caption{Linear regression model to predict the orchstration load score (OLS) in case study 4}
+\caption{Linear regression model to predict the orchestration load score (OLS) in case study 4}
 \label{tab:case4results}
 \centering
 %% Some packages, such as MDW tools, offer better commands for making tables
@@ -1471,19 +1471,19 @@ This research was supported by a Marie Curie Fellowship within the 7\textsupersc
 %\end{IEEEbiography}
 
 
-\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{img/LPPhoto.jpg}}]{Luis P. Prieto} received his Ph.D. in Information and Communication Technologies from the University of Valladolid (Spain). He is a Marie Curie Fellow at the CHILI Lab in the \'Ecole Polytechnique F\'ed\'erale de Lausanne (EPFL). His research interests include classroom orchestration and the use of wearable technologies to capture and understand complex practice with ICT and the use of such data for reflection. He has authored more than fifty academic publications on these topics.
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{LPPhoto.jpg}}]{Luis P. Prieto} received his Ph.D. in Information and Communication Technologies from the University of Valladolid (Spain). He is a Marie Curie Fellow at the CHILI Lab in the \'Ecole Polytechnique F\'ed\'erale de Lausanne (EPFL). His research interests include classroom orchestration and the use of wearable technologies to capture and understand complex practice with ICT and the use of such data for reflection. He has authored more than fifty academic publications on these topics.
 \end{IEEEbiography}
 
 
-\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip]{img/Sharma.png}}]{Kshitij Sharma} received his Ph.D. in Computer Science from the École Polytechnique Fédérale de Lausanne (EPFL, Switzerland). He is a Postdoctoral researcher at the CHILI lab in EPFL and at the Faculty of Business and Economics (HEC) in the University of Lausanne, Switzerland. His research interests include eye-tracking, MOOCs, collaborative learning, big data analysis, and statistics. He has authored more than twenty five academic publications on these topics.
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip]{Sharma.png}}]{Kshitij Sharma} received his Ph.D. in Computer Science from the École Polytechnique Fédérale de Lausanne (EPFL, Switzerland). He is a Postdoctoral researcher at the CHILI lab in EPFL and at the Faculty of Business and Economics (HEC) in the University of Lausanne, Switzerland. His research interests include eye-tracking, MOOCs, collaborative learning, big data analysis, and statistics. He has authored more than twenty five academic publications on these topics.
 \end{IEEEbiography}
 
-\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{img/Kidzinski2.jpg}}]{{\L}ukasz~Kidzi\'nski}
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{Kidzinski2.jpg}}]{{\L}ukasz~Kidzi\'nski}
  is a researcher in the CHILI Lab at the EPFL. His research involves designing adaptive learning systems, analysing datasets from massive open on-line courses and managing other data-heavy projects in the laboratory. In 2014, he received a Ph.D. in mathematical statistics from the Universit\'e Libre de Bruxelles, developing spectral methods for functional time series. He received two master degrees, in mathematics and in computer science, at the University of Warsaw.
 \end{IEEEbiography}
 
 
-\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{img/Dillenbourg.jpg}}]{Pierre Dillenbourg} is a former school teacher and graduated in educational science (University of Mons, Belgium). He obtained a PhD in computer science from the University of Lancaster (UK), in the domain of AI for educational software. He is currently full professor in learning technologies in the School of Computer \& Communication Sciences, where he is the head of the Computer-Human Interaction for Learning \& Instruction Lab. He is also the academic director at the Center for Digital Education.
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{Dillenbourg.jpg}}]{Pierre Dillenbourg} is a former school teacher and graduated in educational science (University of Mons, Belgium). He obtained a PhD in computer science from the University of Lancaster (UK), in the domain of AI for educational software. He is currently full professor in learning technologies in the School of Computer \& Communication Sciences, where he is the head of the Computer-Human Interaction for Learning \& Instruction Lab. He is also the academic director at the Center for Digital Education.
 \end{IEEEbiography}
 
 % You can push biographies down or up by placing
